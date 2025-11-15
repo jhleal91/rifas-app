@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /gestionar/
+Disallow: /participantes/
+Disallow: /anunciantes/
+
+# Sitemap
+Sitemap: https://sorteohub.com/sitemap.xml
+

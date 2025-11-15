@@ -1,0 +1,34 @@
+{
+  "short_name": "SorteoHub",
+  "name": "SorteoHub - Plataforma profesional para crear rifas sin fines de lucro. Made by AureLA Solutions",
+  "description": "Plataforma profesional para crear rifas sin fines de lucro. Made by AureLA Solutions",
+  "icons": [
+    {
+      "src": "icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/AureLA.png",
+      "sizes": "any",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#1e22aa",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "categories": ["business", "productivity", "utilities"],
+  "lang": "es",
+  "dir": "ltr",
+  "scope": "/",
+  "id": "sorteohub-rifas-app"
+}

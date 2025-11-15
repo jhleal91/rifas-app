@@ -1,0 +1,750 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "confirm": "Confirm",
+    "search": "Search",
+    "filter": "Filter",
+    "all": "All",
+    "none": "None",
+    "date": "Date:",
+    "status": "Status:"
+  },
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "createRaffle": "Create Raffle",
+    "viewRaffles": "View Raffles",
+    "checkWinners": "Check Winners",
+    "forAdvertisers": "For Advertisers",
+    "myPortal": "My Portal",
+    "myRaffles": "My Raffles",
+    "advertisers": "Advertisers",
+    "plans": "Plans",
+    "logout": "Logout",
+    "login": "Login",
+    "register": "Register",
+    "menu": "Menu",
+    "hello": "Hello",
+    "admin": "👑 Admin",
+    "guest": "👤 Guest",
+    "advertiser": "📣 Advertiser",
+    "settings": "Settings"
+  },
+  "adCarousel": {
+    "promotionalTitle": "Promote Your Business Here",
+    "promotionalDescription": "Reach thousands of raffle participants. Advertise your product or service and increase your sales.",
+    "advertising": "Advertising",
+    "opportunity": "Opportunity",
+    "thousandsOfUsers": "Thousands of users",
+    "completeDashboard": "Complete Dashboard",
+    "plansFrom": "Plans from $99/month",
+    "registerAsAdvertiser": "Register as Advertiser",
+    "viewMoreInfo": "View more information"
+  },
+  "landing": {
+    "title": "SorteoHub",
+    "subtitle": "The professional platform to create non-profit raffles",
+    "description": "Organize raffles safely, transparently and professionally. Manage participants, live draws and payments easily and reliably.",
+    "createAccount": "Create Account for Raffles",
+    "iAmAdvertiser": "I'm an Advertiser",
+    "alreadyHaveAccount": "Already have an account to create raffles?",
+    "login": "Log In"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "phone": "Phone",
+    "login": "Log In",
+    "register": "Register",
+    "forgotPassword": "Forgot your password?",
+    "dontHaveAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?",
+    "loginSuccess": "Login successful",
+    "registerSuccess": "Registration successful",
+    "loginError": "Login error",
+    "registerError": "Registration error"
+  },
+  "raffle": {
+    "create": "Create Raffle",
+    "edit": "Edit Raffle",
+    "delete": "Delete Raffle",
+    "name": "Raffle Name",
+    "description": "Description",
+    "price": "Price",
+    "endDate": "End Date",
+    "type": "Type",
+    "active": "Active",
+    "inactive": "Inactive",
+    "participants": "Participants",
+    "revenue": "Revenue",
+    "available": "Available",
+    "sold": "Sold",
+    "reserved": "Reserved"
+  },
+  "plans": {
+    "title": "Plans",
+    "subtitle": "Choose the plan that best fits your raffles",
+    "currentPlan": "Current Plan",
+    "choosePlan": "Choose Plan",
+    "commission": "Commission",
+    "activeRaffles": "Active raffles",
+    "unlimited": "Unlimited",
+    "elementsPerRaffle": "Elements per raffle",
+    "perMonth": "/month",
+    "features": {
+      "1RifaActiva": "1 active raffle",
+      "10RifasActivas": "10 active raffles",
+      "rifasIlimitadas": "Unlimited raffles",
+      "comision65": "Commission 6.5%",
+      "comision55": "Commission 5.5%",
+      "comision45": "Commission 4.5%",
+      "pagoSeguroStripe": "Secure payment with Stripe",
+      "whatsappParticipantes": "WhatsApp for participants",
+      "soporteEmail": "Email support",
+      "soportePrioritario": "Priority support",
+      "soporteDedicado": "Dedicated support",
+      "estadisticasDetalladas": "Detailed statistics",
+      "estadisticasAvanzadas": "Advanced statistics",
+      "gestionParticipantes": "Participant management"
+    }
+  },
+  "advertiser": {
+    "title": "Advertiser Portal",
+    "whatIsAdvertiser": "What is an Advertiser in SorteoHub?",
+    "advertiserDescription": "An advertiser is a business or brand that wants to reach thousands of raffle participants and organizers with offers, coupons and relevant products.",
+    "register": "Register as Advertiser",
+    "login": "Log In",
+    "businessName": "Business Name",
+    "category": "Category",
+    "hero": {
+      "title": "What is an",
+      "titleHighlight": "Advertiser",
+      "titleSuffix": "in SorteoHub?",
+      "description1": "An",
+      "description1Bold": "advertiser",
+      "description2": "is a business or brand that wants to reach thousands of raffle participants and organizers with offers, coupons and relevant products.",
+      "description3": "With SorteoHub, your ads are strategically displayed in the Raffle Portal, where thousands of active users are looking for opportunities and prizes."
+    },
+    "benefits": {
+      "preciseTargeting": {
+        "title": "Precise Targeting",
+        "description": "Reach your ideal audience by location, raffle category and specific interests"
+      },
+      "measurableResults": {
+        "title": "Measurable Results",
+        "description": "Detailed reports of impressions, clicks and conversions in real time"
+      },
+      "flexiblePlans": {
+        "title": "Flexible Plans",
+        "description": "Choose locations and budgets that fit your business. No long-term contracts"
+      },
+      "quickImplementation": {
+        "title": "Quick Implementation",
+        "description": "Your ad can be active in minutes. Intuitive dashboard and dedicated support"
+      }
+    },
+    "auth": {
+      "title": "Start Your Advertising",
+      "subtitle": "Access your account or create a new one to start advertising",
+      "login": "Log In",
+      "register": "Create Account",
+      "email": "Email",
+      "password": "Password",
+      "emailPlaceholder": "your-email@business.com",
+      "passwordPlaceholder": "Your password",
+      "loginButton": "Access my Dashboard",
+      "loginButtonLoading": "Logging in...",
+      "registerButton": "Create Free Account",
+      "registerButtonLoading": "Creating account...",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Sign up here",
+      "haveAccount": "Already have an account?",
+      "loginLink": "Log in here",
+      "businessNameLabel": "Business Name *",
+      "businessNamePlaceholder": "Ex: TechStore Mexico",
+      "phone": "Phone",
+      "phonePlaceholder": "+1 555 123 4567",
+      "passwordMin": "Minimum 8 characters",
+      "categoryLabel": "Category",
+      "categoryPlaceholder": "Select category",
+      "categories": {
+        "electronics": "Electronics",
+        "restaurants": "Restaurants",
+        "fashion": "Fashion",
+        "services": "Services",
+        "entertainment": "Entertainment",
+        "other": "Other"
+      },
+      "successLogin": "Login successful",
+      "successRegister": "Registration successful! Welcome to SorteoHub"
+    },
+    "dashboard": {
+      "title": "Advertiser Dashboard",
+      "loading": "Loading...",
+      "nav": {
+        "overview": "Overview",
+        "ads": "My Ads",
+        "newAd": "+ New Ad",
+        "coupons": "🎟️ Coupons"
+      },
+      "credits": {
+        "title": "💰 Available Credits",
+        "loadCredits": "+ Load Credits",
+        "cancel": "Cancel",
+        "available": "Available Credit",
+        "totalLoaded": "Total Loaded Historically",
+        "noCredits": "⚠️ You have no available credit. Load credits so your ads work.",
+        "howItWorks": "💡 How does it work?",
+        "howItWorks1": "Credits are automatically deducted with each impression and click",
+        "howItWorks2": "You can create multiple ads without limits",
+        "howItWorks3": "Each ad has its own monthly budget limit",
+        "howItWorks4": "If credits run out, ads are automatically paused",
+        "loadForm": {
+          "title": "Amount to Load (MXN) *",
+          "placeholder": "Ex: 300.00",
+          "tip1": "💡 Credits are automatically deducted with each impression/click of your ads",
+          "tip2": "⚠️ Minimum amount: $10.00 MXN (required by Stripe)",
+          "tip3": "🔒 Secure payment with Stripe",
+          "continue": "Continue →",
+          "summary": "Credit load summary",
+          "amount": "Amount:",
+          "changeAmount": "← Change amount",
+          "invalidAmount": "Please enter a valid amount greater than $0",
+          "minAmount": "The minimum amount to load credits is $10.00 MXN (required by Stripe)"
+        }
+      },
+      "stats": {
+        "title": "📊 Performance",
+        "last7Days": "Last 7 days",
+        "impressions": "Impressions",
+        "clicks": "Clicks",
+        "ctr": "CTR",
+        "activeAds": "Active Ads",
+        "budget": "💰 Budget",
+        "last7DaysLabel": "last 7 days",
+        "vsPrevious": "vs previous 7 days",
+        "viewDetail": "👆 View detail",
+        "clickThroughRate": "Click-Through Rate",
+        "clicksLabel": "clicks",
+        "impressionsLabel": "impressions",
+        "insufficientData": "Insufficient data",
+        "ofTotal": "of",
+        "total": "total",
+        "published": "Published ads",
+        "ofAssigned": "of",
+        "assigned": "assigned",
+        "used": "used",
+        "available": "Available:",
+        "noLimit": "No limit",
+        "noBudget": "No budget assigned",
+        "budgetAlmostExhausted": "⚠️ Budget almost exhausted"
+      },
+      "clicks": {
+        "title": "📊 Click Details",
+        "ad": "Ad:",
+        "allAds": "All ads",
+        "updateLocations": "🔄 Update Locations",
+        "updateLocationsConfirm": "Update click locations without geographic information? This may take a few minutes.",
+        "update": "Update",
+        "backToAds": "← Back to Ads",
+        "filters": {
+          "title": "🔍 Advanced Filters",
+          "clear": "✕ Clear Filters",
+          "campaign": "📊 Campaign",
+          "ad": "Ad",
+          "allAds": "All ads",
+          "clicksTotal": "total clicks",
+          "dateRange": "📅 Date Range",
+          "from": "From",
+          "to": "To",
+          "location": "📍 Location",
+          "country": "Country",
+          "allCountries": "All countries",
+          "state": "State/Region",
+          "allStates": "All states",
+          "city": "City",
+          "allCities": "All cities",
+          "technical": "💻 Technical",
+          "browser": "Browser",
+          "allBrowsers": "All browsers",
+          "showAll": "Show all results (no pagination limit)",
+          "apply": "🔍 Apply Filters",
+          "showing": "Showing",
+          "of": "of",
+          "clicks": "clicks"
+        },
+        "loading": "Loading clicks...",
+        "noClicks": "No clicks registered for this ad",
+        "table": {
+          "dateTime": "Date and Time",
+          "campaign": "Campaign",
+          "location": "Location",
+          "page": "Page",
+          "browser": "Browser",
+          "na": "N/A"
+        },
+        "pagination": {
+          "previous": "← Previous",
+          "next": "Next →",
+          "page": "Page",
+          "of": "of",
+          "total": "total"
+        }
+      },
+      "ads": {
+        "title": "My Ads",
+        "noAds": "You have no ads created",
+        "createFirst": "Create First Ad",
+        "cardsView": "🗃️ Cards",
+        "tableView": "📊 Table",
+        "table": {
+          "ad": "Ad",
+          "status": "Status",
+          "locations": "Locations",
+          "budget": "Budget",
+          "impressions": "Impressions",
+          "clicks": "Clicks",
+          "ctr": "CTR",
+          "spend": "Spend",
+          "actions": "Actions",
+          "active": "🟢 Active",
+          "inactive": "🔴 Inactive",
+          "viewClicks": "View clicks",
+          "edit": "Edit",
+          "deactivate": "Deactivate",
+          "activate": "Activate",
+          "delete": "Delete"
+        },
+        "card": {
+          "locations": "📍 Locations:",
+          "viewClicks": "📊 View Clicks",
+          "edit": "Edit",
+          "deactivate": "Desactivate",
+          "activate": "Activate",
+          "delete": "Delete",
+          "model": "📋 Model:",
+          "hybrid": "🔄 Hybrid",
+          "cpm": "👁️ CPM",
+          "cpc": "🖱️ CPC",
+          "impressions": "👁️ Impressions:",
+          "clicks": "🖱️ Clicks:",
+          "ctr": "📊 CTR:",
+          "spend": "💰 Spend:",
+          "budget": "Budget:",
+          "used": "used",
+          "remaining": "Remaining",
+          "budgetExhausted": "Budget exhausted"
+        },
+        "locations": {
+          "portalTop": "Portal - Top",
+          "portalCard": "Portal - Card",
+          "landingInline": "Landing - Inline",
+          "dashboardBanner": "Dashboard Admin",
+          "sponsoredBusiness": "Sponsored Businesses (Featured section)"
+        }
+      },
+      "adForm": {
+        "edit": "Edit Ad",
+        "new": "New Ad",
+        "title": "Title *",
+        "shortDescription": "Short Description",
+        "destinationUrl": "Destination URL *",
+        "imageUrl": "Image URL",
+        "imageUrlPlaceholder": "https://example.com/image.jpg",
+        "imageUrlWarning": "⚠️ Use a direct image URL (not redirect URLs from Google, Shutterstock, etc.)",
+        "displayLocations": "Display Locations * (Select one or more)",
+        "mustSelectLocation": "⚠️ You must select at least one location",
+        "category": "Category",
+        "monthlyBudget": "Monthly Budget Limit (USD) *",
+        "monthlyBudgetPlaceholder": "Maximum:",
+        "monthlyBudgetTip1": "💡 Important:",
+        "monthlyBudgetTip2": "• This is the maximum limit you can spend this month",
+        "monthlyBudgetTip3": "• Cannot exceed your available credits",
+        "monthlyBudgetTip4": "• You are only charged for what you actually spend (impressions + clicks)",
+        "monthlyBudgetTip5": "• You need to have credits loaded for the ad to work",
+        "monthlyBudgetTip6": "• The ad is automatically deactivated when it reaches the monthly limit or credits run out",
+        "monthlyBudgetTip7": "• Example: If you set $500 limit but only spend $45, we charge you $45",
+        "pricingInfo": "💡 Platform fixed prices:",
+        "pricingInfo1": "• CPM: $2.00 USD per 1,000 impressions",
+        "pricingInfo2": "• CPC: $0.50 USD per click",
+        "pricingInfo3": "The hybrid model combines both for greater flexibility",
+        "save": "Update Ad",
+        "create": "Create Ad",
+        "cancel": "Cancel",
+        "validation": {
+          "selectLocation": "You must select at least one display location",
+          "locationRequired": "Location required",
+          "budgetExceeded": "The monthly budget limit cannot be greater than your available credits. Please reduce the limit or load more credits.",
+          "limitExceeded": "Limit exceeded",
+          "budgetCannotExceed": "The limit cannot be greater than your available credits"
+        }
+      },
+      "coupons": {
+        "title": "🎟️ My Coupons",
+        "create": "+ Create Coupon",
+        "noCoupons": "You have no coupons created yet.",
+        "createFirst": "Create your first coupon to offer discounts to your customers.",
+        "status": {
+          "exhausted": "Exhausted",
+          "active": "Active",
+          "inactive": "Inactive"
+        },
+        "valid": "Valid:",
+        "minimum": "Minimum:",
+        "uses": "Uses:",
+        "edit": "✏️ Edit",
+        "delete": "🗑️ Delete",
+        "deleteConfirm": "Are you sure you want to delete the coupon",
+        "form": {
+          "edit": "Edit Coupon",
+          "new": "New Coupon",
+          "back": "← Back",
+          "code": "Coupon Code *",
+          "codePlaceholder": "Ex: DISCOUNT20",
+          "title": "Title *",
+          "titlePlaceholder": "Ex: Special Discount",
+          "description": "Description",
+          "descriptionPlaceholder": "Coupon description",
+          "discountType": "Discount Type *",
+          "percentage": "Percentage",
+          "fixed": "Fixed Amount",
+          "discountValue": "Discount Value *",
+          "discountValuePlaceholder": "Ex: 20",
+          "percentageHint": "Enter a percentage between 0 and 100",
+          "fixedHint": "Enter the fixed amount in USD",
+          "minimumAmount": "Minimum Amount",
+          "minimumAmountPlaceholder": "Ex: 100",
+          "startDate": "Start Date *",
+          "endDate": "End Date *",
+          "maxUses": "Max Uses",
+          "maxUsesPlaceholder": "Ex: 100 (leave empty for unlimited)",
+          "imageUrl": "Image URL",
+          "imageUrlPlaceholder": "https://example.com/image.jpg",
+          "save": "Save Coupon",
+          "update": "Update Coupon"
+        }
+      }
+    }
+  },
+  "about": {
+    "title": "What is SorteoHub?",
+    "description1": "SorteoHub is a professional digital platform that allows you to create, manage and sell raffles online in an automated and transparent way. Unlike traditional paper raffles, our system gives you complete control over sales, real-time ticket validation, transparent winner selection and complete management of participants and payments.",
+    "description2": "Designed specifically for organizers looking to professionalize their non-profit raffles, SorteoHub allows you to monetize products, services or special events without the limitations of physical format, with unlimited geographic reach and advanced management tools.",
+    "forWhoTitle": "Who is SorteoHub for?",
+    "audience": {
+      "entrepreneurs": {
+        "title": "Entrepreneurs",
+        "description": "Monetize products or services through non-profit raffles."
+      },
+      "nonprofit": {
+        "title": "Non-Profit Organizations",
+        "description": "Raise funds transparently and professionally."
+      },
+      "businesses": {
+        "title": "Small and Medium Businesses",
+        "description": "Increase engagement with your customers through promotional raffles."
+      },
+      "professionals": {
+        "title": "Professional Organizers",
+        "description": "Manage raffles as a main activity with professional tools."
+      }
+    }
+  },
+  "features": {
+    "title": "Why choose SorteoHub?",
+    "items": {
+      "customizable": {
+        "title": "Customizable Raffles",
+        "description": "Create raffles with the number of tickets you need. From quick 100-ticket raffles to massive draws of thousands. Participants select their favorite numbers in real time."
+      },
+      "multipleTypes": {
+        "title": "Multiple Raffle Types",
+        "description": "Not just numbers. Create raffles with cards, alphabet, animals, colors, sports teams, emojis and more. Each raffle can have multiple prizes with photos."
+      },
+      "securePayments": {
+        "title": "Secure Payments with Stripe",
+        "description": "Payments processed securely by Stripe. Participants pay by card and money is automatically transferred to the bank account you register when creating your raffle. Fast, secure and reliable process."
+      },
+      "transparency": {
+        "title": "Total Transparency",
+        "description": "Publish the winning number transparently. Participants can verify if they won. Live draws with witnesses to ensure total transparency."
+      },
+      "management": {
+        "title": "Complete Management",
+        "description": "Control participants, payments, sold tickets and real-time statistics. Access complete reports on sales and participant database."
+      },
+      "unlimitedReach": {
+        "title": "Unlimited Reach",
+        "description": "Sell tickets to people anywhere in the country or internationally without needing to be physically present. Eliminates geographic barriers."
+      }
+    },
+    "benefits": {
+      "title": "Key Advantages",
+      "reduceCosts": {
+        "title": "Reduces Costs",
+        "description": "Eliminates printing, distribution and cash collection expenses. Everything is managed digitally."
+      },
+      "credibility": {
+        "title": "Greater Credibility",
+        "description": "A professional system conveys seriousness. Participants trust transparent and automated platforms more."
+      },
+      "scalable": {
+        "title": "Scalable",
+        "description": "Create multiple raffles simultaneously, manage hundreds or thousands of tickets and scale according to demand."
+      },
+      "totalControl": {
+        "title": "Total Control",
+        "description": "Complete visibility from your panel: sales, payments, statistics and participants. Make informed decisions easily."
+      }
+    }
+  },
+  "howItWorks": {
+    "title": "How does it work?",
+    "steps": {
+      "register": {
+        "title": "Sign Up",
+        "description": "Create your free account in seconds and verify your identity."
+      },
+      "create": {
+        "title": "Create your Raffle",
+        "description": "Set up prizes, rules, dates and payment methods easily."
+      },
+      "share": {
+        "title": "Share",
+        "description": "Send the link to your participants and manage sales."
+      },
+      "draw": {
+        "title": "Conduct the Draw",
+        "description": "Do the live draw with witnesses and deliver the prizes."
+      }
+    }
+  },
+  "cta": {
+    "title": "Ready to create your first raffle?",
+    "subtitle": "Join thousands of organizers who already trust SorteoHub",
+    "button": "Get Started"
+  },
+  "advertisersSection": {
+    "title": "Have a Business?",
+    "subtitle": "Promote your products and services to thousands of active raffle participants. Reach your ideal audience with precise targeting and measurable results.",
+    "primaryButton": "I Want to Advertise my Business",
+    "secondaryButton": "Learn More"
+  },
+  "portal": {
+    "title": "Raffle Portal",
+    "subtitle": "Discover and participate in the best raffles in your region",
+    "loadingRaffles": "Loading raffles...",
+    "errorLoading": "Error loading raffles",
+    "errorDescription": "Could not load raffles at this time. Please try again later.",
+    "reloadRaffles": "🔄 Reload Raffles",
+    "reloadPage": "🔃 Reload Page",
+    "searchPlaceholder": "Search by name or description...",
+    "clearSearch": "Clear search",
+    "filters": {
+      "all": "All",
+      "active": "Active",
+      "finished": "Finished",
+      "allCountries": "🌍 All countries",
+      "allStates": "📍 All states",
+      "allScopes": "📏 All scopes",
+      "handlesShipping": "📦 Handles shipping",
+      "clear": "✕ Clear",
+      "type": "Type:",
+      "price": "Price:",
+      "progress": "Progress:",
+      "min": "Min",
+      "max": "Max",
+      "allTypes": "All types",
+      "allProgress": "All",
+      "new": "New (0%)",
+      "inProgress": "In Progress",
+      "completed": "Completed (100%)"
+    },
+    "viewMode": {
+      "cards": "🗃️ Cards",
+      "table": "📊 Table",
+      "cardsTitle": "Card view",
+      "tableTitle": "Table view"
+    },
+    "emptyState": {
+      "noRaffles": "No raffles available at the moment",
+      "noRafflesDescription": "Want to be part of SorteoHub? Sign up and start creating your own raffles to reach thousands of participants.",
+      "signUp": "✨ Sign up for SorteoHub",
+      "goHome": "🏠 Go Home",
+      "noResults": "No raffles found",
+      "noResultsDescription": "There are no raffles matching your filters or search. Try adjusting your search criteria.",
+      "clearFilters": "🔄 Clear filters"
+    },
+    "table": {
+      "raffle": "Raffle",
+      "organizer": "Organizer",
+      "status": "Status",
+      "price": "Price",
+      "type": "Type",
+      "progress": "Progress",
+      "location": "Location",
+      "timeRemaining": "Time Remaining",
+      "actions": "Actions",
+      "active": "🟢 Active",
+      "finished": "🔴 Finished",
+      "participate": "Participate",
+      "viewDetails": "View details",
+      "noName": "No name"
+    },
+    "card": {
+      "price": "Price:",
+      "date": "Date:",
+      "location": "Location:",
+      "noImage": "No image",
+      "viewPrizes": "View Prizes",
+      "hidePrizes": "Hide Prizes"
+    },
+    "pagination": {
+      "previous": "← Previous",
+      "next": "Next →"
+    },
+    "winnerCheck": {
+      "title": "🔍 Already bought your ticket?",
+      "description": "Check if your number was the winner",
+      "button": "🔎 Check Winners"
+    },
+    "raffleTypes": {
+      "numeros": "Numbers",
+      "loteria": "Lottery",
+      "baraja": "Deck",
+      "animales": "Zodiac Animals",
+      "colores": "Colors",
+      "equipos": "Sports Teams",
+      "abecedario": "Alphabet",
+      "emojis": "Emojis",
+      "paises": "Countries of the World"
+    },
+    "timeRemaining": {
+      "finished": "Finished",
+      "endsToday": "Ends today",
+      "dayRemaining": "1 day remaining",
+      "daysRemaining": "{{count}} days remaining"
+    },
+    "scopes": {
+      "local": "🏘️ Local",
+      "nacional": "🇲🇽 National",
+      "internacional": "🌍 International"
+    }
+  },
+  "winnerCheck": {
+    "title": "Winner Check",
+    "subtitle": "Verify if your number was the winner in our raffles",
+    "description": "Enter your ticket number and discover if you won",
+    "steps": {
+      "selectRaffle": "Select Raffle",
+      "enterNumber": "Enter Number",
+      "viewResult": "View Result"
+    },
+    "selectRaffle": {
+      "title": "Select the Raffle",
+      "description": "Search and select the raffle you participated in",
+      "searchPlaceholder": "Search by name, description or type...",
+      "status": {
+        "all": "All",
+        "active": "Active",
+        "finished": "Finished"
+      },
+      "date": {
+        "all": "All",
+        "recent": "Recent",
+        "upcoming": "Upcoming"
+      },
+      "loading": "Loading raffles...",
+      "noRaffles": "No raffles available at the moment",
+      "noResults": "No raffles found with those criteria",
+      "clearFilters": "Clear filters",
+      "found": "raffle found",
+      "foundPlural": "raffles found",
+      "showing": "Showing 50 of",
+      "refineSearch": "Refine your search to see more results",
+      "change": "Change",
+      "total": "Total:",
+      "numbers": "numbers"
+    },
+    "enterNumber": {
+      "title": "Enter your Number",
+      "description": "Write your participation ticket number",
+      "placeholder": "Ex: 000123",
+      "verify": "Verify",
+      "verifying": "Verifying..."
+    },
+    "result": {
+      "title": "Result",
+      "winner": {
+        "title": "Congratulations! You are a Winner",
+        "ticketNumber": "Ticket number:",
+        "prizeValue": "Total prize value:",
+        "message": "Contact the organizer to claim your prize!",
+        "verifyAnother": "Verify Another Number"
+      },
+      "notWinner": {
+        "title": "You didn't win this time",
+        "yourNumber": "Your number:",
+        "message": "Your number doesn't match the winner. Good luck in the next raffle!",
+        "winnerNumber": "Winner number:",
+        "verifyAnother": "Verify Another Number"
+      },
+      "pending": {
+        "title": "Pending Result",
+        "message": "The result of this raffle has not been published yet. Come back later.",
+        "verifyAnother": "Verify Another Number"
+      },
+      "noResult": {
+        "title": "No Result",
+        "message": "There is no winner number registered for this raffle yet.",
+        "verifyAnother": "Verify Another Number"
+      },
+      "error": {
+        "title": "Error",
+        "tryAgain": "Try Again"
+      }
+    }
+  },
+  "footer": {
+    "tagline": "Professional raffle platform",
+    "description": "The most reliable platform to create and manage non-profit raffles. We connect organizers with participants safely and transparently.",
+    "sections": {
+      "product": "Product",
+      "resources": "Resources",
+      "legal": "Legal",
+      "contact": "Contact"
+    },
+    "links": {
+      "features": "Features",
+      "pricing": "Pricing",
+      "demo": "Demo",
+      "api": "API",
+      "help": "Help Center",
+      "docs": "Documentation",
+      "tutorials": "Tutorials",
+      "blog": "Blog",
+      "terms": "Terms and Conditions",
+      "privacy": "Privacy Policy",
+      "cookies": "Cookie Policy",
+      "legal": "Legal Notice",
+      "support": "Technical Support",
+      "sales": "Sales"
+    },
+    "copyright": "All rights reserved",
+    "productOf": "SorteoHub is a product of AureLA Solutions",
+    "paymentInfo": "Payments processed securely by"
+  }
+}
+

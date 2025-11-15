@@ -1,0 +1,750 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "close": "Cerrar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "confirm": "Confirmar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "all": "Todos",
+    "none": "Ninguno",
+    "date": "Fecha:",
+    "status": "Estado:"
+  },
+  "nav": {
+    "home": "Inicio",
+    "dashboard": "Dashboard",
+    "createRaffle": "Crear Rifa",
+    "viewRaffles": "Ver Rifas",
+    "checkWinners": "Consulta Ganadores",
+    "forAdvertisers": "Para Anunciantes",
+    "myPortal": "Mi Portal",
+    "myRaffles": "Mis Rifas",
+    "advertisers": "Anunciantes",
+    "plans": "Planes",
+    "logout": "Salir",
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "menu": "Menú",
+    "hello": "¡Hola",
+    "admin": "👑 Admin",
+    "guest": "👤 Invitado",
+    "advertiser": "📣 Anunciante",
+    "settings": "Configuración"
+  },
+  "adCarousel": {
+    "promotionalTitle": "Promociona tu Negocio Aquí",
+    "promotionalDescription": "Llega a miles de participantes de rifas. Anuncia tu producto o servicio y aumenta tus ventas.",
+    "advertising": "Publicidad",
+    "opportunity": "Oportunidad",
+    "thousandsOfUsers": "Miles de usuarios",
+    "completeDashboard": "Dashboard completo",
+    "plansFrom": "Planes desde $99/mes",
+    "registerAsAdvertiser": "Regístrate como Anunciante",
+    "viewMoreInfo": "Ver más información"
+  },
+  "landing": {
+    "title": "SorteoHub",
+    "subtitle": "La plataforma profesional para crear rifas sin fines de lucro",
+    "description": "Organiza rifas de manera segura, transparente y profesional. Gestiona participantes, sorteos en vivo y pagos de forma fácil y confiable.",
+    "createAccount": "Crear Cuenta para Rifas",
+    "iAmAdvertiser": "Soy Anunciante",
+    "alreadyHaveAccount": "¿Ya tienes cuenta para crear rifas?",
+    "login": "Iniciar Sesión"
+  },
+  "auth": {
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "name": "Nombre",
+    "phone": "Teléfono",
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "dontHaveAccount": "¿No tienes cuenta?",
+    "alreadyHaveAccount": "¿Ya tienes cuenta?",
+    "loginSuccess": "Inicio de sesión exitoso",
+    "registerSuccess": "Registro exitoso",
+    "loginError": "Error al iniciar sesión",
+    "registerError": "Error al registrarse"
+  },
+  "raffle": {
+    "create": "Crear Rifa",
+    "edit": "Editar Rifa",
+    "delete": "Eliminar Rifa",
+    "name": "Nombre de la Rifa",
+    "description": "Descripción",
+    "price": "Precio",
+    "endDate": "Fecha de Finalización",
+    "type": "Tipo",
+    "active": "Activa",
+    "inactive": "Inactiva",
+    "participants": "Participantes",
+    "revenue": "Recaudado",
+    "available": "Disponibles",
+    "sold": "Vendidos",
+    "reserved": "Reservados"
+  },
+  "plans": {
+    "title": "Planes",
+    "subtitle": "Elige el plan que mejor se adapte a tus rifas",
+    "currentPlan": "Plan Actual",
+    "choosePlan": "Elegir Plan",
+    "commission": "Comisión",
+    "activeRaffles": "Rifas activas",
+    "unlimited": "Ilimitadas",
+    "elementsPerRaffle": "Elementos por rifa",
+    "perMonth": "/mes",
+    "features": {
+      "1RifaActiva": "1 rifa activa",
+      "10RifasActivas": "10 rifas activas",
+      "rifasIlimitadas": "Rifas ilimitadas",
+      "comision65": "Comisión 6.5%",
+      "comision55": "Comisión 5.5%",
+      "comision45": "Comisión 4.5%",
+      "pagoSeguroStripe": "Pago seguro con Stripe",
+      "whatsappParticipantes": "WhatsApp para participantes",
+      "soporteEmail": "Soporte por email",
+      "soportePrioritario": "Soporte prioritario",
+      "soporteDedicado": "Soporte dedicado",
+      "estadisticasDetalladas": "Estadísticas detalladas",
+      "estadisticasAvanzadas": "Estadísticas avanzadas",
+      "gestionParticipantes": "Gestión de participantes"
+    }
+  },
+  "advertiser": {
+    "title": "Portal de Anunciantes",
+    "whatIsAdvertiser": "¿Qué es un Anunciante en SorteoHub?",
+    "advertiserDescription": "Un anunciante es un negocio o marca que desea llegar a miles de participantes y organizadores de rifas con ofertas, cupones y productos relevantes.",
+    "register": "Registrarse como Anunciante",
+    "login": "Iniciar Sesión",
+    "businessName": "Nombre del Negocio",
+    "category": "Categoría",
+    "hero": {
+      "title": "¿Qué es un",
+      "titleHighlight": "Anunciante",
+      "titleSuffix": "en SorteoHub?",
+      "description1": "Un",
+      "description1Bold": "anunciante",
+      "description2": "es un negocio o marca que desea llegar a miles de participantes y organizadores de rifas con ofertas, cupones y productos relevantes.",
+      "description3": "Con SorteoHub, tus anuncios se muestran estratégicamente en el Portal de Rifas, donde miles de usuarios activos buscan oportunidades y premios."
+    },
+    "benefits": {
+      "preciseTargeting": {
+        "title": "Segmentación Precisa",
+        "description": "Llega a tu audiencia ideal por ubicación, categoría de rifa e intereses específicos"
+      },
+      "measurableResults": {
+        "title": "Resultados Medibles",
+        "description": "Reportes detallados de impresiones, clics y conversiones en tiempo real"
+      },
+      "flexiblePlans": {
+        "title": "Planes Flexibles",
+        "description": "Elige ubicaciones y presupuestos que se adapten a tu negocio. Sin contratos largos"
+      },
+      "quickImplementation": {
+        "title": "Implementación Rápida",
+        "description": "Tu anuncio puede estar activo en minutos. Dashboard intuitivo y soporte dedicado"
+      }
+    },
+    "auth": {
+      "title": "Inicia tu Publicidad",
+      "subtitle": "Accede a tu cuenta o crea una nueva para comenzar a anunciar",
+      "login": "Ingresar",
+      "register": "Crear Cuenta",
+      "email": "Email",
+      "password": "Contraseña",
+      "emailPlaceholder": "tu-email@negocio.com",
+      "passwordPlaceholder": "Tu contraseña",
+      "loginButton": "Ingresar a mi Dashboard",
+      "loginButtonLoading": "Iniciando sesión...",
+      "registerButton": "Crear Cuenta Gratuita",
+      "registerButtonLoading": "Creando cuenta...",
+      "noAccount": "¿No tienes cuenta?",
+      "registerLink": "Regístrate aquí",
+      "haveAccount": "¿Ya tienes cuenta?",
+      "loginLink": "Inicia sesión aquí",
+      "businessNameLabel": "Nombre del Negocio *",
+      "businessNamePlaceholder": "Ej: TechStore México",
+      "phone": "Teléfono",
+      "phonePlaceholder": "+52 55 1234 5678",
+      "passwordMin": "Mínimo 8 caracteres",
+      "categoryLabel": "Categoría",
+      "categoryPlaceholder": "Selecciona categoría",
+      "categories": {
+        "electronics": "Electrónicos",
+        "restaurants": "Restaurantes",
+        "fashion": "Moda",
+        "services": "Servicios",
+        "entertainment": "Entretenimiento",
+        "other": "Otros"
+      },
+      "successLogin": "Login exitoso",
+      "successRegister": "¡Registro exitoso! Bienvenido a SorteoHub"
+    },
+    "dashboard": {
+      "title": "Dashboard de Anunciante",
+      "loading": "Cargando...",
+      "nav": {
+        "overview": "Resumen",
+        "ads": "Mis Anuncios",
+        "newAd": "+ Nuevo Anuncio",
+        "coupons": "🎟️ Cupones"
+      },
+      "credits": {
+        "title": "💰 Créditos Disponibles",
+        "loadCredits": "+ Cargar Créditos",
+        "cancel": "Cancelar",
+        "available": "Crédito Disponible",
+        "totalLoaded": "Total Cargado Históricamente",
+        "noCredits": "⚠️ No tienes crédito disponible. Carga créditos para que tus anuncios funcionen.",
+        "howItWorks": "💡 ¿Cómo funciona?",
+        "howItWorks1": "Los créditos se descuentan automáticamente con cada impresión y click",
+        "howItWorks2": "Puedes crear múltiples anuncios sin límites",
+        "howItWorks3": "Cada anuncio tiene su propio límite mensual de presupuesto",
+        "howItWorks4": "Si se acaban los créditos, los anuncios se pausan automáticamente",
+        "loadForm": {
+          "title": "Monto a Cargar (MXN) *",
+          "placeholder": "Ej: 300.00",
+          "tip1": "💡 Los créditos se descuentan automáticamente con cada impresión/click de tus anuncios",
+          "tip2": "⚠️ Monto mínimo: $10.00 MXN (requerido por Stripe)",
+          "tip3": "🔒 Pago seguro con Stripe",
+          "continue": "Continuar →",
+          "summary": "Resumen de carga de créditos",
+          "amount": "Monto:",
+          "changeAmount": "← Cambiar monto",
+          "invalidAmount": "Por favor, ingresa un monto válido mayor a $0",
+          "minAmount": "El monto mínimo para cargar créditos es $10.00 MXN (requerido por Stripe)"
+        }
+      },
+      "stats": {
+        "title": "📊 Rendimiento",
+        "last7Days": "Últimos 7 días",
+        "impressions": "Impresiones",
+        "clicks": "Clicks",
+        "ctr": "CTR",
+        "activeAds": "Anuncios Activos",
+        "budget": "💰 Presupuesto",
+        "last7DaysLabel": "últimos 7 días",
+        "vsPrevious": "vs 7 días anteriores",
+        "viewDetail": "👆 Ver detalle",
+        "clickThroughRate": "Click-Through Rate",
+        "clicksLabel": "clicks",
+        "impressionsLabel": "impresiones",
+        "insufficientData": "Sin datos suficientes",
+        "ofTotal": "de",
+        "total": "totales",
+        "published": "Anuncios publicados",
+        "ofAssigned": "de",
+        "assigned": "asignado",
+        "used": "usado",
+        "available": "Disponible:",
+        "noLimit": "Sin límite",
+        "noBudget": "No hay presupuesto asignado",
+        "budgetAlmostExhausted": "⚠️ Presupuesto casi agotado"
+      },
+      "clicks": {
+        "title": "📊 Detalle de Clicks",
+        "ad": "Anuncio:",
+        "allAds": "Todos los anuncios",
+        "updateLocations": "🔄 Actualizar Ubicaciones",
+        "updateLocationsConfirm": "¿Actualizar ubicaciones de clicks sin información geográfica? Esto puede tardar unos minutos.",
+        "update": "Actualizar",
+        "backToAds": "← Volver a Anuncios",
+        "filters": {
+          "title": "🔍 Filtros Avanzados",
+          "clear": "✕ Limpiar Filtros",
+          "campaign": "📊 Campaña",
+          "ad": "Anuncio",
+          "allAds": "Todos los anuncios",
+          "clicksTotal": "clicks totales",
+          "dateRange": "📅 Rango de Fechas",
+          "from": "Desde",
+          "to": "Hasta",
+          "location": "📍 Ubicación",
+          "country": "País",
+          "allCountries": "Todos los países",
+          "state": "Estado/Región",
+          "allStates": "Todos los estados",
+          "city": "Ciudad",
+          "allCities": "Todas las ciudades",
+          "technical": "💻 Técnico",
+          "browser": "Navegador",
+          "allBrowsers": "Todos los navegadores",
+          "showAll": "Mostrar todos los resultados (sin límite de paginación)",
+          "apply": "🔍 Aplicar Filtros",
+          "showing": "Mostrando",
+          "of": "de",
+          "clicks": "clicks"
+        },
+        "loading": "Cargando clicks...",
+        "noClicks": "No hay clicks registrados para este anuncio",
+        "table": {
+          "dateTime": "Fecha y Hora",
+          "campaign": "Campaña",
+          "location": "Ubicación",
+          "page": "Página",
+          "browser": "Navegador",
+          "na": "N/A"
+        },
+        "pagination": {
+          "previous": "← Anterior",
+          "next": "Siguiente →",
+          "page": "Página",
+          "of": "de",
+          "total": "total"
+        }
+      },
+      "ads": {
+        "title": "Mis Anuncios",
+        "noAds": "No tienes anuncios creados",
+        "createFirst": "Crear Primer Anuncio",
+        "cardsView": "🗃️ Cards",
+        "tableView": "📊 Tabla",
+        "table": {
+          "ad": "Anuncio",
+          "status": "Estado",
+          "locations": "Ubicaciones",
+          "budget": "Presupuesto",
+          "impressions": "Impresiones",
+          "clicks": "Clicks",
+          "ctr": "CTR",
+          "spend": "Gasto",
+          "actions": "Acciones",
+          "active": "🟢 Activo",
+          "inactive": "🔴 Inactivo",
+          "viewClicks": "Ver clicks",
+          "edit": "Editar",
+          "deactivate": "Desactivar",
+          "activate": "Activar",
+          "delete": "Eliminar"
+        },
+        "card": {
+          "locations": "📍 Ubicaciones:",
+          "viewClicks": "📊 Ver Clicks",
+          "edit": "Editar",
+          "deactivate": "Desactivar",
+          "activate": "Activar",
+          "delete": "Eliminar",
+          "model": "📋 Modelo:",
+          "hybrid": "🔄 Híbrido",
+          "cpm": "👁️ CPM",
+          "cpc": "🖱️ CPC",
+          "impressions": "👁️ Impresiones:",
+          "clicks": "🖱️ Clicks:",
+          "ctr": "📊 CTR:",
+          "spend": "💰 Gasto:",
+          "budget": "Presupuesto:",
+          "used": "usado",
+          "remaining": "Quedan",
+          "budgetExhausted": "Presupuesto agotado"
+        },
+        "locations": {
+          "portalTop": "Portal - Superior",
+          "portalCard": "Portal - Tarjeta",
+          "landingInline": "Landing - Inline",
+          "dashboardBanner": "Dashboard Admin",
+          "sponsoredBusiness": "Negocios Patrocinadores (Sección destacada)"
+        }
+      },
+      "adForm": {
+        "edit": "Editar Anuncio",
+        "new": "Nuevo Anuncio",
+        "title": "Título *",
+        "shortDescription": "Descripción Corta",
+        "destinationUrl": "URL de Destino *",
+        "imageUrl": "URL de Imagen",
+        "imageUrlPlaceholder": "https://ejemplo.com/imagen.jpg",
+        "imageUrlWarning": "⚠️ Usa una URL directa de imagen (no URLs de redirección de Google, Shutterstock, etc.)",
+        "displayLocations": "Ubicaciones de Display * (Selecciona una o más)",
+        "mustSelectLocation": "⚠️ Debes seleccionar al menos una ubicación",
+        "category": "Categoría",
+        "monthlyBudget": "Límite de Presupuesto Mensual (USD) *",
+        "monthlyBudgetPlaceholder": "Máximo:",
+        "monthlyBudgetTip1": "💡 Importante:",
+        "monthlyBudgetTip2": "• Este es el límite máximo que puedes gastar este mes",
+        "monthlyBudgetTip3": "• No puede exceder tus créditos disponibles",
+        "monthlyBudgetTip4": "• Se cobra solo lo que realmente gastas (impresiones + clicks)",
+        "monthlyBudgetTip5": "• Necesitas tener créditos cargados para que el anuncio funcione",
+        "monthlyBudgetTip6": "• El anuncio se desactiva automáticamente cuando alcanza el límite mensual o se agotan los créditos",
+        "monthlyBudgetTip7": "• Ejemplo: Si pones $500 de límite pero solo gastas $45, te cobramos $45",
+        "pricingInfo": "💡 Precios fijos de la plataforma:",
+        "pricingInfo1": "• CPM: $2.00 USD por cada 1,000 impresiones",
+        "pricingInfo2": "• CPC: $0.50 USD por cada click",
+        "pricingInfo3": "El modelo híbrido combina ambos para mayor flexibilidad",
+        "save": "Actualizar Anuncio",
+        "create": "Crear Anuncio",
+        "cancel": "Cancelar",
+        "validation": {
+          "selectLocation": "Debes seleccionar al menos una ubicación de display",
+          "locationRequired": "Ubicación requerida",
+          "budgetExceeded": "El límite de presupuesto mensual no puede ser mayor a tus créditos disponibles. Por favor, reduce el límite o carga más créditos.",
+          "limitExceeded": "Límite excedido",
+          "budgetCannotExceed": "El límite no puede ser mayor a tus créditos disponibles"
+        }
+      },
+      "coupons": {
+        "title": "🎟️ Mis Cupones",
+        "create": "+ Crear Cupón",
+        "noCoupons": "No tienes cupones creados aún.",
+        "createFirst": "Crea tu primer cupón para ofrecer descuentos a tus clientes.",
+        "status": {
+          "exhausted": "Agotado",
+          "active": "Activo",
+          "inactive": "Inactivo"
+        },
+        "valid": "Válido:",
+        "minimum": "Mínimo:",
+        "uses": "Usos:",
+        "edit": "✏️ Editar",
+        "delete": "🗑️ Eliminar",
+        "deleteConfirm": "¿Estás seguro de eliminar el cupón",
+        "form": {
+          "edit": "Editar Cupón",
+          "new": "Nuevo Cupón",
+          "back": "← Volver",
+          "code": "Código del Cupón *",
+          "codePlaceholder": "Ej: DESCUENTO20",
+          "title": "Título *",
+          "titlePlaceholder": "Ej: Descuento Especial",
+          "description": "Descripción",
+          "descriptionPlaceholder": "Descripción del cupón",
+          "discountType": "Tipo de Descuento *",
+          "percentage": "Porcentaje",
+          "fixed": "Monto Fijo",
+          "discountValue": "Valor del Descuento *",
+          "discountValuePlaceholder": "Ej: 20",
+          "percentageHint": "Ingresa un porcentaje entre 0 y 100",
+          "fixedHint": "Ingresa el monto fijo en USD",
+          "minimumAmount": "Monto Mínimo",
+          "minimumAmountPlaceholder": "Ej: 100",
+          "startDate": "Fecha de Inicio *",
+          "endDate": "Fecha de Fin *",
+          "maxUses": "Usos Máximos",
+          "maxUsesPlaceholder": "Ej: 100 (dejar vacío para ilimitado)",
+          "imageUrl": "URL de Imagen",
+          "imageUrlPlaceholder": "https://ejemplo.com/imagen.jpg",
+          "save": "Guardar Cupón",
+          "update": "Actualizar Cupón"
+        }
+      }
+    }
+  },
+  "about": {
+    "title": "¿Qué es SorteoHub?",
+    "description1": "SorteoHub es una plataforma digital profesional que te permite crear, gestionar y vender rifas por internet de manera automatizada y transparente. A diferencia de las rifas tradicionales en papel, nuestro sistema te ofrece control total sobre las ventas, validación de tickets en tiempo real, selección transparente de ganadores y gestión completa de participantes y pagos.",
+    "description2": "Diseñado específicamente para organizadores que buscan profesionalizar sus sorteos sin fines de lucro, SorteoHub te permite monetizar productos, servicios o eventos especiales sin las limitaciones del formato físico, con un alcance geográfico ilimitado y herramientas avanzadas de gestión.",
+    "forWhoTitle": "¿Para quién es SorteoHub?",
+    "audience": {
+      "entrepreneurs": {
+        "title": "Emprendedores",
+        "description": "Monetiza productos o servicios mediante sorteos sin fines de lucro."
+      },
+      "nonprofit": {
+        "title": "Organizaciones Sin Fines de Lucro",
+        "description": "Recauda fondos de manera transparente y profesional."
+      },
+      "businesses": {
+        "title": "Pequeñas y Medianas Empresas",
+        "description": "Aumenta engagement con tus clientes mediante sorteos promocionales."
+      },
+      "professionals": {
+        "title": "Organizadores Profesionales",
+        "description": "Gestiona rifas como actividad principal con herramientas profesionales."
+      }
+    }
+  },
+  "features": {
+    "title": "¿Por qué elegir SorteoHub?",
+    "items": {
+      "customizable": {
+        "title": "Rifas Personalizables",
+        "description": "Crea rifas con la cantidad de números que necesites. Desde rifas rápidas de 100 números hasta sorteos masivos de miles. Los participantes seleccionan sus números favoritos en tiempo real."
+      },
+      "multipleTypes": {
+        "title": "Múltiples Tipos de Rifas",
+        "description": "No solo números. Crea rifas con baraja, abecedario, animales, colores, equipos deportivos, emojis y más. Cada rifa puede tener múltiples premios con fotos."
+      },
+      "securePayments": {
+        "title": "Pagos Seguros con Stripe",
+        "description": "Pagos procesados de forma segura por Stripe. Los participantes pagan con tarjeta y el dinero se transfiere automáticamente a la cuenta bancaria que registres al crear tu rifa. Proceso rápido, seguro y confiable."
+      },
+      "transparency": {
+        "title": "Transparencia Total",
+        "description": "Publica el número ganador de forma transparente. Los participantes pueden verificar si ganaron. Sorteos en vivo con testigos para garantizar total transparencia."
+      },
+      "management": {
+        "title": "Gestión Completa",
+        "description": "Controla participantes, pagos, números vendidos y estadísticas en tiempo real. Accede a reportes completos sobre ventas y base de datos de participantes."
+      },
+      "unlimitedReach": {
+        "title": "Alcance Ilimitado",
+        "description": "Vende tickets a personas en cualquier parte del país o internacionalmente sin necesidad de estar físicamente presente. Elimina barreras geográficas."
+      }
+    },
+    "benefits": {
+      "title": "Ventajas Clave",
+      "reduceCosts": {
+        "title": "Reduce Costos",
+        "description": "Elimina gastos de impresión, distribución y recolección de dinero en efectivo. Todo se gestiona digitalmente."
+      },
+      "credibility": {
+        "title": "Mayor Credibilidad",
+        "description": "Un sistema profesional transmite seriedad. Los participantes confían más en plataformas transparentes y automatizadas."
+      },
+      "scalable": {
+        "title": "Escalable",
+        "description": "Crea múltiples rifas simultáneamente, gestiona cientos o miles de tickets y escala según la demanda."
+      },
+      "totalControl": {
+        "title": "Control Total",
+        "description": "Visibilidad completa desde tu panel: ventas, pagos, estadísticas y participantes. Toma decisiones informadas fácilmente."
+      }
+    }
+  },
+  "howItWorks": {
+    "title": "¿Cómo funciona?",
+    "steps": {
+      "register": {
+        "title": "Regístrate",
+        "description": "Crea tu cuenta gratuita en segundos y verifica tu identidad."
+      },
+      "create": {
+        "title": "Crea tu Rifa",
+        "description": "Configura premios, reglas, fechas y métodos de pago de forma fácil."
+      },
+      "share": {
+        "title": "Comparte",
+        "description": "Envía el enlace a tus participantes y gestiona las ventas."
+      },
+      "draw": {
+        "title": "Realiza el Sorteo",
+        "description": "Haz el sorteo en vivo con testigos y entrega los premios."
+      }
+    }
+  },
+  "cta": {
+    "title": "¿Listo para crear tu primera rifa?",
+    "subtitle": "Únete a miles de organizadores que ya confían en SorteoHub",
+    "button": "Empezar Ahora"
+  },
+  "advertisersSection": {
+    "title": "¿Tienes un Negocio?",
+    "subtitle": "Promociona tus productos y servicios frente a miles de participantes activos de rifas. Llega a tu audiencia ideal con segmentación precisa y resultados medibles.",
+    "primaryButton": "Quiero Anunciar mi Negocio",
+    "secondaryButton": "Saber Más"
+  },
+  "portal": {
+    "title": "Portal de Rifas",
+    "subtitle": "Descubre y participa en las mejores rifas de tu región",
+    "loadingRaffles": "Cargando rifas...",
+    "errorLoading": "Error al cargar rifas",
+    "errorDescription": "No se pudieron cargar las rifas en este momento. Por favor, intenta de nuevo más tarde.",
+    "reloadRaffles": "🔄 Recargar Rifas",
+    "reloadPage": "🔃 Recargar Página",
+    "searchPlaceholder": "Buscar por nombre o descripción...",
+    "clearSearch": "Limpiar búsqueda",
+    "filters": {
+      "all": "Todas",
+      "active": "Activas",
+      "finished": "Finalizadas",
+      "allCountries": "🌍 Todos los países",
+      "allStates": "📍 Todos los estados",
+      "allScopes": "📏 Todos los alcances",
+      "handlesShipping": "📦 Maneja envío",
+      "clear": "✕ Limpiar",
+      "type": "Tipo:",
+      "price": "Precio:",
+      "progress": "Progreso:",
+      "min": "Mín",
+      "max": "Máx",
+      "allTypes": "Todos los tipos",
+      "allProgress": "Todas",
+      "new": "Nuevas (0%)",
+      "inProgress": "En Progreso",
+      "completed": "Completadas (100%)"
+    },
+    "viewMode": {
+      "cards": "🗃️ Cards",
+      "table": "📊 Tabla",
+      "cardsTitle": "Vista de tarjetas",
+      "tableTitle": "Vista de tabla"
+    },
+    "emptyState": {
+      "noRaffles": "Sin rifas disponibles por el momento",
+      "noRafflesDescription": "¿Quieres formar parte de SorteoHub? Inscríbete y comienza a crear tus propias rifas para llegar a miles de participantes.",
+      "signUp": "✨ Inscríbete en SorteoHub",
+      "goHome": "🏠 Ir al Inicio",
+      "noResults": "No se encontraron rifas",
+      "noResultsDescription": "No hay rifas que coincidan con tus filtros o búsqueda. Intenta ajustar los criterios de búsqueda.",
+      "clearFilters": "🔄 Limpiar filtros"
+    },
+    "table": {
+      "raffle": "Rifa",
+      "organizer": "Organizador",
+      "status": "Estado",
+      "price": "Precio",
+      "type": "Tipo",
+      "progress": "Progreso",
+      "location": "Ubicación",
+      "timeRemaining": "Tiempo Restante",
+      "actions": "Acciones",
+      "active": "🟢 Activa",
+      "finished": "🔴 Finalizada",
+      "participate": "Participar",
+      "viewDetails": "Ver detalles",
+      "noName": "Sin nombre"
+    },
+    "card": {
+      "price": "Precio:",
+      "date": "Fecha:",
+      "location": "Ubicación:",
+      "noImage": "Sin imagen",
+      "viewPrizes": "Ver Premios",
+      "hidePrizes": "Ocultar Premios"
+    },
+    "pagination": {
+      "previous": "← Anterior",
+      "next": "Siguiente →"
+    },
+    "winnerCheck": {
+      "title": "🔍 ¿Ya compraste tu boleto?",
+      "description": "Consulta si tu número fue el ganador",
+      "button": "🔎 Consultar Ganadores"
+    },
+    "raffleTypes": {
+      "numeros": "Números",
+      "loteria": "Lotería",
+      "baraja": "Baraja",
+      "animales": "Animales del Zodiaco",
+      "colores": "Colores",
+      "equipos": "Equipos Deportivos",
+      "abecedario": "Abecedario",
+      "emojis": "Emojis",
+      "paises": "Países del Mundo"
+    },
+    "timeRemaining": {
+      "finished": "Finalizada",
+      "endsToday": "Termina hoy",
+      "dayRemaining": "1 día restante",
+      "daysRemaining": "{{count}} días restantes"
+    },
+    "scopes": {
+      "local": "🏘️ Local",
+      "nacional": "🇲🇽 Nacional",
+      "internacional": "🌍 Internacional"
+    }
+  },
+  "winnerCheck": {
+    "title": "Consulta de Ganadores",
+    "subtitle": "Verifica si tu número fue el ganador en nuestras rifas",
+    "description": "Ingresa tu número de boleto y descubre si ganaste",
+    "steps": {
+      "selectRaffle": "Seleccionar Rifa",
+      "enterNumber": "Ingresar Número",
+      "viewResult": "Ver Resultado"
+    },
+    "selectRaffle": {
+      "title": "Selecciona el Sorteo",
+      "description": "Busca y selecciona la rifa en la que participaste",
+      "searchPlaceholder": "Buscar por nombre, descripción o tipo...",
+      "status": {
+        "all": "Todas",
+        "active": "Activas",
+        "finished": "Finalizadas"
+      },
+      "date": {
+        "all": "Todas",
+        "recent": "Recientes",
+        "upcoming": "Próximas"
+      },
+      "loading": "Cargando rifas...",
+      "noRaffles": "No hay rifas disponibles en este momento",
+      "noResults": "No se encontraron rifas con esos criterios",
+      "clearFilters": "Limpiar filtros",
+      "found": "rifa encontrada",
+      "foundPlural": "rifas encontradas",
+      "showing": "Mostrando 50 de",
+      "refineSearch": "Refina tu búsqueda para ver más resultados",
+      "change": "Cambiar",
+      "total": "Total:",
+      "numbers": "números"
+    },
+    "enterNumber": {
+      "title": "Ingresa tu Número",
+      "description": "Escribe el número de tu boleto de participación",
+      "placeholder": "Ej: 000123",
+      "verify": "Verificar",
+      "verifying": "Verificando..."
+    },
+    "result": {
+      "title": "Resultado",
+      "winner": {
+        "title": "¡Felicidades! Eres Ganador",
+        "ticketNumber": "Número de boleto:",
+        "prizeValue": "Valor total del premio:",
+        "message": "¡Contacta al organizador para reclamar tu premio!",
+        "verifyAnother": "Verificar Otro Número"
+      },
+      "notWinner": {
+        "title": "No ganaste esta vez",
+        "yourNumber": "Tu número:",
+        "message": "Tu número no coincide con el ganador. ¡Suerte en la próxima rifa!",
+        "winnerNumber": "Número ganador:",
+        "verifyAnother": "Verificar Otro Número"
+      },
+      "pending": {
+        "title": "Resultado Pendiente",
+        "message": "El resultado de esta rifa todavía no ha sido publicado. Vuelve más tarde.",
+        "verifyAnother": "Verificar Otro Número"
+      },
+      "noResult": {
+        "title": "Sin Resultado",
+        "message": "No hay número ganador registrado para esta rifa aún.",
+        "verifyAnother": "Verificar Otro Número"
+      },
+      "error": {
+        "title": "Error",
+        "tryAgain": "Intentar de Nuevo"
+      }
+    }
+  },
+  "footer": {
+    "tagline": "Plataforma profesional para rifas",
+    "description": "La plataforma más confiable para crear y gestionar rifas sin fines de lucro. Conectamos organizadores con participantes de manera segura y transparente.",
+    "sections": {
+      "product": "Producto",
+      "resources": "Recursos",
+      "legal": "Legal",
+      "contact": "Contacto"
+    },
+    "links": {
+      "features": "Características",
+      "pricing": "Precios",
+      "demo": "Demo",
+      "api": "API",
+      "help": "Centro de Ayuda",
+      "docs": "Documentación",
+      "tutorials": "Tutoriales",
+      "blog": "Blog",
+      "terms": "Términos y Condiciones",
+      "privacy": "Política de Privacidad",
+      "cookies": "Política de Cookies",
+      "legal": "Aviso Legal",
+      "support": "Soporte Técnico",
+      "sales": "Ventas"
+    },
+    "copyright": "Todos los derechos reservados",
+    "productOf": "SorteoHub es un producto de AureLA Solutions",
+    "paymentInfo": "Pagos procesados de forma segura por"
+  }
+}
+

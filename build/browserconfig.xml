@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<browserconfig>
+    <msapplication>
+        <tile>
+            <square150x150logo src="/icons/AureLA.png"/>
+            <TileColor>#1e22aa</TileColor>
+        </tile>
+    </msapplication>
+</browserconfig>

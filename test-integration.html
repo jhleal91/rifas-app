@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Integración - Rifas</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        pre { background-color: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test de Integración - Sistema de Rifas</h1>
+    
+    <div class="test-section">
+        <h2>1. Test de Conexión al Backend</h2>
+        <button onclick="testConnection()">Probar Conexión</button>
+        <div id="connection-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Test de Login</h2>
+        <button onclick="testLogin()">Probar Login</button>
+        <div id="login-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Test de Obtener Mis Rifas</h2>
+        <button onclick="testMyRifas()">Obtener Mis Rifas</button>
+        <div id="rifas-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Test de Crear Rifa</h2>
+        <button onclick="testCreateRifa()">Crear Rifa de Prueba</button>
+        <div id="create-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>5. Estado Actual</h2>
+        <button onclick="showStatus()">Ver Estado</button>
+        <div id="status-result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5001/api';
+        let authToken = null;
+        let currentUser = null;
+
+        async function testConnection() {
+            const resultDiv = document.getElementById('connection-result');
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✅ Conexión Exitosa</h3>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Error de Conexión</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function testLogin() {
+            const resultDiv = document.getElementById('login-result');
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: 'horacioleal91@hotmail.com',
+                        password: 'Master123'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    authToken = data.token;
+                    currentUser = data.user;
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✅ Login Exitoso</h3>
+                            <p><strong>Usuario:</strong> ${data.user.nombre} (${data.user.email})</p>
+                            <p><strong>Rol:</strong> ${data.user.rol}</p>
+                            <p><strong>ID:</strong> ${data.user.id}</p>
+                            <pre>Token: ${data.token.substring(0, 50)}...</pre>
+                        </div>
+                    `;
+                } else {
+                    throw new Error(data.error || `HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Error de Login</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function testMyRifas() {
+            const resultDiv = document.getElementById('rifas-result');
+            
+            if (!authToken) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Error</h3>
+                        <p>Primero debes hacer login. Token actual: ${authToken || 'null'}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/rifas/my`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✅ Rifas Obtenidas</h3>
+                            <p><strong>Total de rifas:</strong> ${data.total}</p>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    throw new Error(data.error || `HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Error al Obtener Rifas</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function testCreateRifa() {
+            const resultDiv = document.getElementById('create-result');
+            
+            if (!authToken) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Error</h3>
+                        <p>Primero debes hacer login</p>
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                const rifaData = {
+                    nombre: `Rifa de Prueba ${Date.now()}`,
+                    descripcion: 'Rifa creada desde test de integración',
+                    precio: 100,
+                    fechaFin: '2025-12-31T23:59:59.000Z',
+                    tipo: 'numeros',
+                    cantidadElementos: 50,
+                    premios: [{
+                        nombre: 'Premio de Prueba',
+                        descripcion: 'Premio creado desde test',
+                        posicion: 1
+                    }],
+                    reglas: 'Reglas de la rifa de prueba',
+                    esPrivada: false
+                };
+
+                const response = await fetch(`${API_BASE}/rifas`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(rifaData)
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✅ Rifa Creada Exitosamente</h3>
+                            <p><strong>ID:</strong> ${data.rifa.id}</p>
+                            <p><strong>Nombre:</strong> ${data.rifa.nombre}</p>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    throw new Error(data.error || `HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Error al Crear Rifa</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function showStatus() {
+            const resultDiv = document.getElementById('status-result');
+            resultDiv.innerHTML = `
+                <div class="test-section">
+                    <h3>Estado Actual</h3>
+                    <p><strong>Token:</strong> ${authToken ? '✅ Presente' : '❌ Ausente'}</p>
+                    <p><strong>Usuario:</strong> ${currentUser ? `${currentUser.nombre} (${currentUser.email})` : '❌ No logueado'}</p>
+                    <p><strong>Token Preview:</strong> ${authToken ? authToken.substring(0, 50) + '...' : 'null'}</p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
