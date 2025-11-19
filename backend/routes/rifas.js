@@ -8,7 +8,7 @@ const router = express.Router();
 // GET /api/rifas - Obtener rifas públicas
 router.get('/', optionalAuth, async (req, res) => {
   try {
-    const { tipo, precio_min, precio_max, disponibles, search, resultado_publicado } = req.query;
+    const { tipo, precio_min, precio_max, disponibles, search, resultado_publicado, categoria } = req.query;
     let whereConditions = ['r.es_privada = false'];
     let queryParams = [];
     let paramCount = 0;
@@ -27,6 +27,13 @@ router.get('/', optionalAuth, async (req, res) => {
       paramCount++;
       whereConditions.push(`r.tipo = $${paramCount}`);
       queryParams.push(tipo);
+    }
+
+    // Filtro por categoría
+    if (categoria && categoria !== 'all' && categoria !== 'todas') {
+      paramCount++;
+      whereConditions.push(`r.categoria = $${paramCount}`);
+      queryParams.push(categoria);
     }
 
     // Filtro por rango de precio
@@ -557,6 +564,56 @@ router.put('/:id/resultado', authenticateToken, requireAdmin, async (req, res) =
     );
 
     const result = await query('SELECT numero_ganador, resultado_publicado FROM rifas WHERE id = $1', [id]);
+    
+    // Notificar cuando se selecciona un ganador
+    if (numero_ganador && resultado_publicado) {
+      try {
+        const { notifyWinnerSelected } = require('../services/notifications');
+        const io = req.app.get('io');
+        await notifyWinnerSelected(id, numero_ganador, io);
+      } catch (notifError) {
+        console.error('❌ Error enviando notificación de ganador:', notifError);
+        // No fallar la operación por error de notificación
+      }
+      
+      // Enviar email al ganador
+      try {
+        // Buscar el participante que tiene el número ganador
+        const ganadorResult = await query(`
+          SELECT DISTINCT p.id, p.nombre, p.email, p.rifa_id, r.nombre as rifa_nombre
+          FROM participantes p
+          JOIN elementos_vendidos ev ON p.id = ev.participante_id AND p.rifa_id = ev.rifa_id
+          JOIN rifas r ON p.rifa_id = r.id
+          WHERE ev.rifa_id = $1 AND ev.elemento = $2 AND p.estado = 'confirmado'
+          LIMIT 1
+        `, [id, numero_ganador]);
+        
+        if (ganadorResult.rows.length > 0) {
+          const ganador = ganadorResult.rows[0];
+          const rifaInfo = await query('SELECT nombre FROM rifas WHERE id = $1', [id]);
+          
+          const emailService = require('../config/email');
+          await emailService.sendWinnerNotification(
+            {
+              nombre: ganador.nombre,
+              email: ganador.email
+            },
+            {
+              id: id,
+              nombre: rifaInfo.rows[0]?.nombre || ganador.rifa_nombre,
+              numero_ganador: numero_ganador
+            }
+          );
+          console.log('✅ Email al ganador enviado');
+        } else {
+          console.log('⚠️  No se encontró participante con el número ganador');
+        }
+      } catch (emailError) {
+        console.error('❌ Error enviando email al ganador:', emailError);
+        // No fallar la operación por error de email
+      }
+    }
+    
     res.json({ message: 'Resultado actualizado', resultado: result.rows[0] });
   } catch (error) {
     console.error('Error actualizando resultado de rifa:', error);
@@ -621,7 +678,8 @@ router.post('/', authenticateToken, requireAdmin, sanitizeInput, validateRifa, a
       estado,
       ciudad,
       manejaEnvio,
-      alcance
+      alcance,
+      categoria
     } = req.body;
 
     // Generar ID único
@@ -633,17 +691,17 @@ router.post('/', authenticateToken, requireAdmin, sanitizeInput, validateRifa, a
         id, usuario_id, nombre, descripcion, precio, fecha_fin, tipo, 
         cantidad_elementos, elementos_personalizados, reglas, es_privada,
         fecha_sorteo, plataforma_transmision, otra_plataforma, enlace_transmision,
-        metodo_sorteo, testigos, pais, estado, ciudad, maneja_envio, alcance,
+        metodo_sorteo, testigos, pais, estado, ciudad, maneja_envio, alcance, categoria,
         numero_ganador, resultado_publicado
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22,
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23,
         NULL, false
       ) RETURNING *
     `, [
       rifaId, req.user.id, nombre, descripcion, precio, fechaFin, tipo,
       cantidadElementos, JSON.stringify(elementosPersonalizados || []), reglas, esPrivada || false,
       fechaSorteo, plataformaTransmision, otraPlataforma, enlaceTransmision,
-      metodoSorteo, testigos, pais, estado, ciudad, manejaEnvio || false, alcance || 'local'
+      metodoSorteo, testigos, pais, estado, ciudad, manejaEnvio || false, alcance || 'local', categoria || null
     ]);
 
     const rifa = rifaResult.rows[0];

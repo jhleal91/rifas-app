@@ -111,7 +111,7 @@ export const validateTelefono = (telefono, required = false) => {
   }
 
   // Remover espacios, guiones, paréntesis y puntos para validar
-  const cleaned = telefono.replace(/[\s\-\(\)\.]/g, '');
+  const cleaned = telefono.replace(/[\s\-().]/g, '');
   
   // Validar que solo contenga números y el símbolo + al inicio
   if (!/^\+?[0-9]+$/.test(cleaned)) {

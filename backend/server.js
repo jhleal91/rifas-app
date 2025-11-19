@@ -1,6 +1,8 @@
 const express = require('express');
+const http = require('http');
 const cors = require('cors');
 const helmet = require('helmet');
+const { Server } = require('socket.io');
 require('dotenv').config({ path: './config.env' });
 
 // Inicializar Sentry ANTES de cualquier otra importación
@@ -47,12 +49,26 @@ const ratingsRoutes = require('./routes/ratings');
 const creatorPlansRoutes = require('./routes/creatorPlans');
 const uploadRoutes = require('./routes/upload');
 const stripeRoutes = require('./routes/stripe');
+const notificationsRoutes = require('./routes/notifications');
 
 // Importar scheduler
 const { startScheduler } = require('./scheduler/emailScheduler');
 
 const app = express();
+const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
+
+// Configurar Socket.io
+const io = new Server(server, {
+  cors: {
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+    credentials: true
+  }
+});
+
+// Almacenar Socket.io en app para acceso desde rutas
+app.set('io', io);
 
 // Validar JWT_SECRET al iniciar (solo en producción)
 if (process.env.NODE_ENV === 'production') {
@@ -158,6 +174,7 @@ app.use('/api/ratings', apiRateLimiter, ratingsRoutes);
 app.use('/api/creator-plans', apiRateLimiter, creatorPlansRoutes);
 app.use('/api/upload', uploadRateLimiter, uploadRoutes);
 app.use('/api/stripe', paymentRateLimiter, stripeRoutes);
+app.use('/api/notifications', apiRateLimiter, notificationsRoutes);
 
 // Ruta de administración para desarrollo - Resetear rate limit
 if (process.env.NODE_ENV === 'development') {
@@ -318,13 +335,46 @@ const startServer = async () => {
     ]);
     logger.info('Conexión a base de datos exitosa');
     
+    // Configurar Socket.io connection handler
+    const jwt = require('jsonwebtoken');
+    io.use((socket, next) => {
+      const token = socket.handshake.auth.token || socket.handshake.headers.token;
+      
+      if (!token) {
+        return next(new Error('Token no proporcionado'));
+      }
+      
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        socket.userId = decoded.userId || decoded.id;
+        next();
+      } catch (error) {
+        next(new Error('Token inválido'));
+      }
+    });
+    
+    io.on('connection', (socket) => {
+      logger.info('Cliente conectado a Socket.io', { userId: socket.userId });
+      
+      // Unirse a la sala del usuario para recibir notificaciones
+      if (socket.userId) {
+        socket.join(`user:${socket.userId}`);
+      }
+      
+      socket.on('disconnect', () => {
+        logger.info('Cliente desconectado de Socket.io', { userId: socket.userId });
+      });
+    });
+    
     // Iniciar servidor
-    server = app.listen(PORT, () => {
+    server.listen(PORT, () => {
       logger.info('Servidor iniciado exitosamente', {
         port: PORT,
         environment: process.env.NODE_ENV || 'development',
         url: `http://localhost:${PORT}`
       });
+      
+      logger.info('Socket.io configurado y listo');
       
       // Enviar alerta de inicio
       alerts.serverStarted(PORT, process.env.NODE_ENV || 'development');
@@ -372,7 +422,6 @@ const startServer = async () => {
 };
 
 // Variables globales para manejo graceful
-let server = null;
 let isShuttingDown = false;
 
 // Función para cierre graceful

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { API_BASE } from '../config/api';
 
 const ParticipanteView = () => {
   const { rifaId, participanteId } = useParams();
@@ -12,7 +13,7 @@ const ParticipanteView = () => {
     const cargarDatos = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:5001/api/participantes/${rifaId}/participante/${participanteId}`);
+        const response = await fetch(`${API_BASE}/participantes/${rifaId}/participante/${participanteId}`);
         
         if (!response.ok) {
           const errorData = await response.json();

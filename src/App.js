@@ -4,14 +4,14 @@ import { useTranslation } from 'react-i18next';
 import './App.css';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { RifasProvider, useRifas } from './contexts/RifasContext';
-import { rifasService } from './services/api';
+import { NotificationsProvider } from './contexts/NotificationsContext';
+import { API_BASE } from './config/api';
 import LandingPage from './components/LandingPage';
 import RafflePortal from './components/RafflePortal';
 import RifaManagement from './components/RifaManagement';
 import PublicRifaView from './components/PublicRifaView';
 import ParticipateRaffle from './components/ParticipateRaffle';
 import UserDashboard from './components/UserDashboard';
-import ActiveRifas from './components/ActiveRifas';
 import CreateRifaWizard from './components/CreateRifaWizard';
 import ParticipantesPage from './components/ParticipantesPage';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -33,6 +33,7 @@ import AvisoLegal from './components/AvisoLegal';
 import AllCuponesPage from './components/AllCuponesPage';
 import CookieBanner from './components/CookieBanner';
 import LanguageSwitcher from './components/LanguageSwitcher';
+import NotificationBadge from './components/NotificationBadge';
 import './components/ErrorBoundary.css';
 
 // Componente interno que usa useLocation dentro del Router
@@ -48,7 +49,7 @@ function LogoutRoute() {
 
 function AppWithRouter() {
   const { t } = useTranslation();
-  const { user, logout, isAdmin, loading } = useAuth();
+  const { user, isAdmin, loading } = useAuth();
   const { myRifas, rifas: publicRifas, createRifa } = useRifas();
   const location = useLocation();
   const navigate = useNavigate();
@@ -83,14 +84,10 @@ function AppWithRouter() {
     estado: '',
     ciudad: '',
     manejaEnvio: false,
-    alcance: 'local' // 'local', 'nacional', 'internacional'
+    alcance: 'local', // 'local', 'nacional', 'internacional'
+    categoria: '' // Categoría de la rifa
   });
 
-  // Función para cerrar sesión
-  const handleLogout = () => {
-    logout();
-    navigate('/landing', { replace: true });
-  };
 
   // Funciones para manejar menús
   const toggleMenu = () => {
@@ -117,7 +114,7 @@ function AppWithRouter() {
           const payload = JSON.parse(atob(token.split('.')[1]));
           if (payload.advertiserId) {
             // Hacer fetch para obtener info del anunciante
-            const res = await fetch(`http://localhost:5001/api/advertisers/me`, {
+            const res = await fetch(`${API_BASE}/advertisers/me`, {
               headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
@@ -443,7 +440,8 @@ function AppWithRouter() {
             estado: '',
             ciudad: '',
             manejaEnvio: false,
-            alcance: 'local'
+            alcance: 'local',
+            categoria: ''
           });
           return response.rifa.id;
         }
@@ -469,50 +467,6 @@ function AppWithRouter() {
     });
   };
 
-  // Manejar elementos personalizados
-  const actualizarElemento = (index, nuevoValor) => {
-    const nuevosElementos = [...nuevaRifa.elementosPersonalizados];
-    nuevosElementos[index] = nuevoValor;
-    setNuevaRifa({
-        ...nuevaRifa,
-      elementosPersonalizados: nuevosElementos
-    });
-  };
-
-  const agregarElemento = () => {
-    let nuevoElemento;
-    if (nuevaRifa.tipo === 'emojis') {
-      // Agregar un emoji aleatorio de la lista
-      const emojisDisponibles = ['😀', '😃', '😄', '😁', '😆', '😅', '🤣', '😂', '🙂', '🙃', '😉', '😊', '😇', '🥰', '😍', '🤩', '😘', '😗', '😚', '😙', '😋', '😛', '😜', '🤪', '😝', '🤑', '🤗', '🤭', '🤫', '🤔'];
-      nuevoElemento = emojisDisponibles[Math.floor(Math.random() * emojisDisponibles.length)];
-    } else {
-      nuevoElemento = `Nuevo ${tiposRifas[nuevaRifa.tipo]?.elementos || 'elemento'}`;
-    }
-    
-    setNuevaRifa({
-      ...nuevaRifa,
-      elementosPersonalizados: [...nuevaRifa.elementosPersonalizados, nuevoElemento],
-      cantidadNumeros: nuevaRifa.elementosPersonalizados.length + 1
-    });
-  };
-
-  const eliminarElemento = (index) => {
-    const nuevosElementos = nuevaRifa.elementosPersonalizados.filter((_, i) => i !== index);
-    setNuevaRifa({
-      ...nuevaRifa,
-      elementosPersonalizados: nuevosElementos,
-      cantidadNumeros: nuevosElementos.length
-    });
-  };
-
-  const resetearElementos = () => {
-    const elementosIniciales = generarElementosRifa(nuevaRifa.tipo, tiposRifas[nuevaRifa.tipo].cantidadDefault);
-    setNuevaRifa({
-      ...nuevaRifa,
-      elementosPersonalizados: elementosIniciales,
-      cantidadNumeros: elementosIniciales.length
-    });
-  };
 
   const agregarPremio = () => {
     const nuevoPremio = {
@@ -577,12 +531,6 @@ function AppWithRouter() {
 
   // Nota: No hacemos early-return para permitir acceso a rutas públicas como /portal y /public/:id
 
-  // Botón temporal para limpiar localStorage y ver landing page
-  const clearStorageAndReload = () => {
-    localStorage.clear();
-    window.location.reload();
-  };
-
   return (
     <div className="App">
         {/* Top Navigation Bar */}
@@ -602,11 +550,6 @@ function AppWithRouter() {
               <span className={`hamburger-line ${isMenuOpen ? 'active' : ''}`}></span>
               <span className={`hamburger-line ${isMenuOpen ? 'active' : ''}`}></span>
             </button>
-
-            {/* Language Switcher */}
-            <div className="nav-language desktop-only">
-              <LanguageSwitcher />
-            </div>
 
             {/* Navigation Links - Desktop */}
             <div className="nav-links desktop-only">
@@ -690,10 +633,15 @@ function AppWithRouter() {
             <div className="nav-user">
               {user ? (
                 <>
+                  <NotificationBadge />
                   <button className="user-menu-btn" onClick={toggleUserMenu}>
                     <span className="user-avatar">👤</span>
                     <span className="user-name-mobile">{user.nombre}</span>
                   </button>
+                  {/* Language Switcher - Desktop */}
+                  <div className="nav-language desktop-only">
+                    <LanguageSwitcher />
+                  </div>
                   {isUserMenuOpen && (
                     <div className="user-dropdown">
                       <div className="user-info">
@@ -715,6 +663,10 @@ function AppWithRouter() {
                     <span className="user-avatar">📣</span>
                     <span className="user-name-mobile">{advertiser.nombre_comercial || advertiser.nombre}</span>
                   </button>
+                  {/* Language Switcher - Desktop */}
+                  <div className="nav-language desktop-only">
+                    <LanguageSwitcher />
+                  </div>
                   {isUserMenuOpen && (
                     <div className="user-dropdown">
                       <div className="user-info">
@@ -749,6 +701,10 @@ function AppWithRouter() {
                 </>
               ) : (
                 <div className="guest-actions">
+                  {/* Language Switcher - Desktop */}
+                  <div className="nav-language desktop-only">
+                    <LanguageSwitcher />
+                  </div>
                 </div>
               )}
             </div>
@@ -948,12 +904,14 @@ function App() {
     <ErrorBoundary>
       <AuthProvider>
         <RifasProvider>
-          <Router>
-            <AppWithRouter />
-          </Router>
-          <NotificationToast />
-          <ConfirmDialog />
-          <CookieBanner />
+          <NotificationsProvider>
+            <Router>
+              <AppWithRouter />
+            </Router>
+            <NotificationToast />
+            <ConfirmDialog />
+            <CookieBanner />
+          </NotificationsProvider>
         </RifasProvider>
       </AuthProvider>
     </ErrorBoundary>

@@ -6,9 +6,9 @@ import { catalogosService } from '../services/api';
 import AdBanner from './AdBanner';
 import AdCarousel from './AdCarousel';
 import AffiliateLinks from './AffiliateLinks';
-import { RatingDisplay } from './RatingComponent';
 import SponsoredBusinessesSection from './SponsoredBusinessesSection';
 import CuponesSection from './CuponesSection';
+import CountdownTimer from './CountdownTimer';
 import SEO from './SEO';
 import analytics from '../services/analytics';
 import './RafflePortal.css';
@@ -37,6 +37,7 @@ const RafflePortal = () => {
   const [precioMin, setPrecioMin] = useState('');
   const [precioMax, setPrecioMax] = useState('');
   const [progresoFiltro, setProgresoFiltro] = useState(''); // 'todas', 'nuevas', 'en-progreso', 'completadas'
+  const [categoriaFiltro, setCategoriaFiltro] = useState(''); // Filtro por categoría
   const [sortBy, setSortBy] = useState(''); // 'nombre', 'precio', 'progreso', 'tiempo', 'organizador'
   const [sortOrder, setSortOrder] = useState('asc'); // 'asc', 'desc'
   
@@ -271,7 +272,10 @@ const RafflePortal = () => {
       coincideProgreso = progreso >= 1;
     }
     
-    return coincideFiltro && coincideBusqueda && coincidePais && coincideEstado && coincideAlcance && coincideEnvio && coincideTipo && coincidePrecioMin && coincidePrecioMax && coincideProgreso;
+    // Filtro por categoría
+    const coincideCategoria = categoriaFiltro === '' || categoriaFiltro === 'todas' || rifa.categoria === categoriaFiltro;
+    
+    return coincideFiltro && coincideBusqueda && coincidePais && coincideEstado && coincideAlcance && coincideEnvio && coincideTipo && coincidePrecioMin && coincidePrecioMax && coincideProgreso && coincideCategoria;
   });
   
   // Ordenamiento
@@ -313,7 +317,39 @@ const RafflePortal = () => {
   const rifasActivas = rifasArray.filter(rifa => rifa.activa).length;
   const rifasFinalizadas = rifasArray.filter(rifa => !rifa.activa).length;
 
-  // Paginación
+  // Función para calcular horas restantes
+  const getHoursRemaining = (fechaFin) => {
+    if (!fechaFin) return Infinity;
+    const now = new Date().getTime();
+    const end = new Date(fechaFin).getTime();
+    const difference = end - now;
+    return difference > 0 ? Math.floor(difference / (1000 * 60 * 60)) : 0;
+  };
+
+  // Agrupar rifas por urgencia (solo activas)
+  const rifasActivasFiltradas = rifasFiltradas.filter(rifa => rifa.activa);
+  
+  const rifasTerminandoPronto = rifasActivasFiltradas.filter(rifa => {
+    const hours = getHoursRemaining(rifa.fecha_fin);
+    return hours > 0 && hours < 24;
+  });
+
+  const rifasEstaSemana = rifasActivasFiltradas.filter(rifa => {
+    const hours = getHoursRemaining(rifa.fecha_fin);
+    return hours >= 24 && hours < 168; // 7 días
+  });
+
+  const rifasEsteMes = rifasActivasFiltradas.filter(rifa => {
+    const hours = getHoursRemaining(rifa.fecha_fin);
+    return hours >= 168 && hours < 720; // 30 días
+  });
+
+  const rifasProximamente = rifasActivasFiltradas.filter(rifa => {
+    const hours = getHoursRemaining(rifa.fecha_fin);
+    return hours >= 720;
+  });
+
+  // Paginación (para vista tradicional, si no usamos secciones)
   const totalPages = Math.ceil(rifasFiltradas.length / cardsPerPage);
   const startIndex = (currentPage - 1) * cardsPerPage;
   const endIndex = startIndex + cardsPerPage;
@@ -322,6 +358,195 @@ const RafflePortal = () => {
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
     // Mantener la posición del scroll al cambiar de página
+  };
+
+  // Función helper para renderizar una card de rifa
+  const renderRifaCard = (rifa) => {
+    // Formatear ubicación
+    const partesUbicacion = [];
+    if (rifa.ciudad) partesUbicacion.push(rifa.ciudad);
+    if (rifa.estado) partesUbicacion.push(rifa.estado);
+    
+    const paisInfo = paises.find(p => p.codigo === rifa.pais);
+    const nombrePais = paisInfo ? (paisInfo.nombre_es || paisInfo.nombre) : (rifa.pais || '');
+    if (nombrePais) partesUbicacion.push(nombrePais);
+    
+    const ubicacionTexto = partesUbicacion.length > 0 ? partesUbicacion.join(', ') : null;
+    
+    const emojiPais = rifa.pais === 'MX' || rifa.pais === 'MEX' ? '🇲🇽' : 
+                     rifa.pais === 'US' || rifa.pais === 'USA' ? '🇺🇸' :
+                     rifa.pais === 'CO' || rifa.pais === 'COL' ? '🇨🇴' :
+                     rifa.pais === 'VE' || rifa.pais === 'VEN' ? '🇻🇪' :
+                     rifa.pais === 'PE' || rifa.pais === 'PER' ? '🇵🇪' :
+                     rifa.pais === 'CL' || rifa.pais === 'CHL' ? '🇨🇱' :
+                     rifa.pais === 'AR' || rifa.pais === 'ARG' ? '🇦🇷' :
+                     rifa.pais === 'EC' || rifa.pais === 'ECU' ? '🇪🇨' : '🌍';
+    
+    // Normalizar fotosPremios
+    let fotosPremios = [];
+    if (rifa.fotosPremios) {
+      if (Array.isArray(rifa.fotosPremios)) {
+        fotosPremios = rifa.fotosPremios;
+      } else if (typeof rifa.fotosPremios === 'string') {
+        try {
+          fotosPremios = JSON.parse(rifa.fotosPremios);
+        } catch (e) {
+          console.error('Error parsing fotosPremios:', e);
+        }
+      }
+    }
+    
+    const primeraFoto = fotosPremios.length > 0 
+      ? (fotosPremios[0].url || fotosPremios[0].url_foto || fotosPremios[0].url_foto)
+      : null;
+    const tieneFotos = fotosPremios.length > 0;
+    const isExpanded = expandedCards.has(rifa.id);
+    
+    const toggleFotos = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const newExpanded = new Set(expandedCards);
+      if (isExpanded) {
+        newExpanded.delete(rifa.id);
+      } else {
+        newExpanded.add(rifa.id);
+      }
+      setExpandedCards(newExpanded);
+    };
+    
+    return (
+      <div key={rifa.id} className="rifa-portal-card-compact-wrapper">
+        <Link 
+          to={`/public/${rifa.id}`}
+          className="rifa-portal-card-compact"
+        >
+          {/* Imagen del premio con countdown timer */}
+          {primeraFoto ? (
+            <div className="rifa-card-compact-image">
+              <img 
+                src={primeraFoto} 
+                alt={rifa.nombre}
+                onError={(e) => {
+                  console.error('Error cargando imagen:', primeraFoto);
+                  e.target.style.display = 'none';
+                }}
+              />
+              {fotosPremios.length > 1 && (
+                <span className="fotos-count-badge">+{fotosPremios.length - 1}</span>
+              )}
+              {/* Badges de la rifa */}
+              <div className="rifa-card-badges">
+                {/* Badge "Nuevo" - Para rifas creadas en últimas 24h */}
+                {(() => {
+                  const horasDesdeCreacion = (new Date().getTime() - new Date(rifa.fecha_creacion || rifa.created_at).getTime()) / (1000 * 60 * 60);
+                  return horasDesdeCreacion < 24 ? (
+                    <span className="rifa-badge rifa-badge-new" title={t('portal.card.badges.new')}>
+                      🆕 {t('portal.card.badges.new')}
+                    </span>
+                  ) : null;
+                })()}
+                {/* Badge "Popular" - Para rifas con muchos participantes */}
+                {rifa.total_participantes && parseInt(rifa.total_participantes) >= 10 ? (
+                  <span className="rifa-badge rifa-badge-popular" title={t('portal.card.badges.popular')}>
+                    🔥 {t('portal.card.badges.popular')}
+                  </span>
+                ) : null}
+              </div>
+              {/* Countdown Timer en la esquina superior derecha */}
+              {rifa.activa && rifa.fecha_fin && (
+                <div className="rifa-card-countdown">
+                  <CountdownTimer fechaFin={rifa.fecha_fin} size="small" />
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="rifa-card-compact-image-placeholder">
+              <span className="placeholder-icon">🏆</span>
+              <span className="placeholder-text">{t('portal.card.noImage')}</span>
+              {/* Countdown Timer incluso sin imagen */}
+              {rifa.activa && rifa.fecha_fin && (
+                <div className="rifa-card-countdown">
+                  <CountdownTimer fechaFin={rifa.fecha_fin} size="small" />
+                </div>
+              )}
+            </div>
+          )}
+          
+          {/* Información del Organizador */}
+          {rifa.creador_nombre && (
+            <div className="rifa-card-organizer">
+              <div className="organizer-avatar">
+                {rifa.creador_nombre.charAt(0).toUpperCase()}
+              </div>
+              <div className="organizer-info">
+                <span className="organizer-name">{rifa.creador_nombre}</span>
+                {rifa.creador_verificado && (
+                  <span className="verified-badge" title={t('portal.card.verified')}>
+                    ✓
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+          
+          <div className="rifa-card-compact-header">
+            <h3 className="rifa-card-compact-title">{rifa.nombre}</h3>
+            <span className={`rifa-card-compact-status ${rifa.activa ? 'activa' : 'finalizada'}`}>
+              {rifa.activa ? '🟢' : '🔴'}
+            </span>
+          </div>
+          <div className="rifa-card-compact-info">
+            <div className="rifa-card-compact-price">
+              <span className="rifa-card-compact-price-label">{t('portal.card.price')}</span>
+              <span className="rifa-card-compact-price-value">${rifa.precio}</span>
+            </div>
+            {ubicacionTexto && (
+              <div className="rifa-card-compact-location">
+                <span className="rifa-card-compact-location-label">{t('portal.card.location')}</span>
+                <span className="rifa-card-compact-location-value">
+                  {ubicacionTexto} {emojiPais}
+                </span>
+              </div>
+            )}
+          </div>
+        </Link>
+        {tieneFotos && (
+          <div className="rifa-card-premios-toggle">
+            <button 
+              className={`btn-ver-premios ${isExpanded ? 'expanded' : ''}`}
+              onClick={toggleFotos}
+              type="button"
+            >
+              <span className="btn-icon">{isExpanded ? '📸' : '🏆'}</span>
+              <span>{isExpanded ? t('portal.card.hidePrizes') : t('portal.card.viewPrizes')}</span>
+              <span className="btn-arrow">{isExpanded ? '▲' : '▼'}</span>
+            </button>
+            {isExpanded && (
+              <div className="rifa-card-premios-fotos">
+                <div className="premios-fotos-grid">
+                  {fotosPremios.map((foto, index) => (
+                    <div key={foto.id || index} className="premio-foto-item">
+                      <img 
+                        src={foto.url || foto.url_foto} 
+                        alt={foto.descripcion || `Premio ${index + 1}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          window.open(foto.url || foto.url_foto, '_blank');
+                        }}
+                      />
+                      {foto.descripcion && (
+                        <div className="premio-foto-desc">{foto.descripcion}</div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -356,31 +581,8 @@ const RafflePortal = () => {
       />
 
       <div className="portal-controls-compact">
-        {/* Búsqueda y filtros en una sola línea */}
+        {/* Filtros de Estado - Compactos */}
         <div className="portal-controls-row">
-          <div className="search-box-compact">
-            <div className="search-wrapper-compact">
-              <input
-                type="text"
-                placeholder={t('portal.searchPlaceholder')}
-                value={busqueda}
-                onChange={(e) => setBusqueda(e.target.value)}
-                className="search-input-compact"
-              />
-              {busqueda && (
-                <button 
-                  className="clear-search-btn-compact"
-                  onClick={() => setBusqueda('')}
-                  aria-label={t('portal.clearSearch')}
-                  type="button"
-                >
-                  ✕
-                </button>
-              )}
-            </div>
-          </div>
-          
-          {/* Filtros de Estado - Compactos */}
           <div className="filtros-portal-compact">
             <button 
               className={`filtro-portal-btn-compact ${filtro === 'todas' ? 'activo' : ''}`}
@@ -406,8 +608,136 @@ const RafflePortal = () => {
           </div>
         </div>
         
+        {/* Filtros de Categorías - Pills horizontales */}
+        <div className="categoria-filters-container">
+          <div className="categoria-filters-scroll">
+            <button
+              className={`categoria-filter-pill ${categoriaFiltro === '' || categoriaFiltro === 'todas' ? 'active' : ''}`}
+              onClick={() => setCategoriaFiltro('')}
+              type="button"
+            >
+              {t('portal.categories.all')}
+            </button>
+            <button
+              className={`categoria-filter-pill ${categoriaFiltro === 'propiedades' ? 'active' : ''}`}
+              onClick={() => setCategoriaFiltro('propiedades')}
+              type="button"
+            >
+              {t('portal.categories.properties')}
+            </button>
+            <button
+              className={`categoria-filter-pill ${categoriaFiltro === 'vehiculos' ? 'active' : ''}`}
+              onClick={() => setCategoriaFiltro('vehiculos')}
+              type="button"
+            >
+              {t('portal.categories.vehicles')}
+            </button>
+            <button
+              className={`categoria-filter-pill ${categoriaFiltro === 'tecnologia' ? 'active' : ''}`}
+              onClick={() => setCategoriaFiltro('tecnologia')}
+              type="button"
+            >
+              {t('portal.categories.technology')}
+            </button>
+            <button
+              className={`categoria-filter-pill ${categoriaFiltro === 'experiencias' ? 'active' : ''}`}
+              onClick={() => setCategoriaFiltro('experiencias')}
+              type="button"
+            >
+              {t('portal.categories.experiences')}
+            </button>
+            <button
+              className={`categoria-filter-pill ${categoriaFiltro === 'deportes' ? 'active' : ''}`}
+              onClick={() => setCategoriaFiltro('deportes')}
+              type="button"
+            >
+              {t('portal.categories.sports')}
+            </button>
+            <button
+              className={`categoria-filter-pill ${categoriaFiltro === 'joyeria' ? 'active' : ''}`}
+              onClick={() => setCategoriaFiltro('joyeria')}
+              type="button"
+            >
+              {t('portal.categories.jewellery')}
+            </button>
+            <button
+              className={`categoria-filter-pill ${categoriaFiltro === 'viajes' ? 'active' : ''}`}
+              onClick={() => setCategoriaFiltro('viajes')}
+              type="button"
+            >
+              {t('portal.categories.travel')}
+            </button>
+            <button
+              className={`categoria-filter-pill ${categoriaFiltro === 'moda' ? 'active' : ''}`}
+              onClick={() => setCategoriaFiltro('moda')}
+              type="button"
+            >
+              {t('portal.categories.fashion')}
+            </button>
+            <button
+              className={`categoria-filter-pill ${categoriaFiltro === 'alimentos' ? 'active' : ''}`}
+              onClick={() => setCategoriaFiltro('alimentos')}
+              type="button"
+            >
+              {t('portal.categories.food')}
+            </button>
+            <button
+              className={`categoria-filter-pill ${categoriaFiltro === 'salud' ? 'active' : ''}`}
+              onClick={() => setCategoriaFiltro('salud')}
+              type="button"
+            >
+              {t('portal.categories.health')}
+            </button>
+            <button
+              className={`categoria-filter-pill ${categoriaFiltro === 'ninos' ? 'active' : ''}`}
+              onClick={() => setCategoriaFiltro('ninos')}
+              type="button"
+            >
+              {t('portal.categories.kids')}
+            </button>
+            <button
+              className={`categoria-filter-pill ${categoriaFiltro === 'efectivo' ? 'active' : ''}`}
+              onClick={() => setCategoriaFiltro('efectivo')}
+              type="button"
+            >
+              {t('portal.categories.cash')}
+            </button>
+            <button
+              className={`categoria-filter-pill ${categoriaFiltro === 'otros' ? 'active' : ''}`}
+              onClick={() => setCategoriaFiltro('otros')}
+              type="button"
+            >
+              {t('portal.categories.other')}
+            </button>
+          </div>
+        </div>
+        
         {/* Filtros Avanzados - Compactos en una línea */}
         <div className="filtros-avanzados-compact">
+          {/* Barra de búsqueda */}
+          <div className="filtro-item-compact search-item-compact">
+            <div className="search-wrapper-compact">
+              <span className="search-icon-compact">🔍</span>
+              <input
+                type="text"
+                placeholder={t('portal.searchPlaceholder')}
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+                className="search-input-compact"
+              />
+              {busqueda && (
+                <button 
+                  className="clear-search-btn-compact"
+                  onClick={() => setBusqueda('')}
+                  aria-label={t('portal.clearSearch')}
+                  type="button"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
+          
           <div className="filtro-item-compact">
             <select
               value={paisFiltro}
@@ -833,163 +1163,90 @@ const RafflePortal = () => {
           </div>
         ) : (
         <>
-          <div className="rifas-portal-grid-compact">
-            {rifasPaginadas.map(rifa => {
-            // Formatear ubicación: Ciudad, Código Estado, País
-            const partesUbicacion = [];
-            if (rifa.ciudad) partesUbicacion.push(rifa.ciudad);
-            if (rifa.estado) partesUbicacion.push(rifa.estado); // Código del estado (ej: NLE)
-            
-            const paisInfo = paises.find(p => p.codigo === rifa.pais);
-            const nombrePais = paisInfo ? (paisInfo.nombre_es || paisInfo.nombre) : (rifa.pais || '');
-            if (nombrePais) partesUbicacion.push(nombrePais);
-            
-            const ubicacionTexto = partesUbicacion.length > 0 ? partesUbicacion.join(', ') : null;
-            
-            const emojiPais = rifa.pais === 'MX' || rifa.pais === 'MEX' ? '🇲🇽' : 
-                             rifa.pais === 'US' || rifa.pais === 'USA' ? '🇺🇸' :
-                             rifa.pais === 'CO' || rifa.pais === 'COL' ? '🇨🇴' :
-                             rifa.pais === 'VE' || rifa.pais === 'VEN' ? '🇻🇪' :
-                             rifa.pais === 'PE' || rifa.pais === 'PER' ? '🇵🇪' :
-                             rifa.pais === 'CL' || rifa.pais === 'CHL' ? '🇨🇱' :
-                             rifa.pais === 'AR' || rifa.pais === 'ARG' ? '🇦🇷' :
-                             rifa.pais === 'EC' || rifa.pais === 'ECU' ? '🇪🇨' : '🌍';
-            
-            // Normalizar fotosPremios - puede venir como array o como JSON string
-            let fotosPremios = [];
-            if (rifa.fotosPremios) {
-              if (Array.isArray(rifa.fotosPremios)) {
-                fotosPremios = rifa.fotosPremios;
-              } else if (typeof rifa.fotosPremios === 'string') {
-                try {
-                  fotosPremios = JSON.parse(rifa.fotosPremios);
-                } catch (e) {
-                  console.error('Error parsing fotosPremios:', e);
-                }
-              }
-            }
-            
-            const primeraFoto = fotosPremios.length > 0 
-              ? (fotosPremios[0].url || fotosPremios[0].url_foto || fotosPremios[0].url_foto)
-              : null;
-            const tieneFotos = fotosPremios.length > 0;
-            const isExpanded = expandedCards.has(rifa.id);
-            
-            const toggleFotos = (e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              const newExpanded = new Set(expandedCards);
-              if (isExpanded) {
-                newExpanded.delete(rifa.id);
-              } else {
-                newExpanded.add(rifa.id);
-              }
-              setExpandedCards(newExpanded);
-            };
-            
-            return (
-              <div key={rifa.id} className="rifa-portal-card-compact-wrapper">
-                <Link 
-                  to={`/public/${rifa.id}`}
-                  className="rifa-portal-card-compact"
-                >
-                  {/* Imagen del premio - siempre visible si existe */}
-                  {primeraFoto ? (
-                    <div className="rifa-card-compact-image">
-                      <img 
-                        src={primeraFoto} 
-                        alt={rifa.nombre}
-                        onError={(e) => {
-                          console.error('Error cargando imagen:', primeraFoto);
-                          e.target.style.display = 'none';
-                        }}
-                      />
-                      {fotosPremios.length > 1 && (
-                        <span className="fotos-count-badge">+{fotosPremios.length - 1}</span>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="rifa-card-compact-image-placeholder">
-                      <span className="placeholder-icon">🏆</span>
-                      <span className="placeholder-text">{t('portal.card.noImage')}</span>
-                    </div>
-                  )}
-                  
-                  <div className="rifa-card-compact-header">
-                    <h3 className="rifa-card-compact-title">{rifa.nombre}</h3>
-                    <span className={`rifa-card-compact-status ${rifa.activa ? 'activa' : 'finalizada'}`}>
-                      {rifa.activa ? '🟢' : '🔴'}
-                    </span>
-                  </div>
-                  <div className="rifa-card-compact-info">
-                    <div className="rifa-card-compact-price">
-                      <span className="rifa-card-compact-price-label">{t('portal.card.price')}</span>
-                      <span className="rifa-card-compact-price-value">${rifa.precio}</span>
-                    </div>
-                    {rifa.fecha_fin && (
-                      <div className="rifa-card-compact-date">
-                        <span className="rifa-card-compact-date-label">{t('portal.card.date')}</span>
-                        <span className="rifa-card-compact-date-value">
-                          {new Date(rifa.fecha_fin).toLocaleDateString('es-MX', { 
-                            day: '2-digit', 
-                            month: 'short', 
-                            year: 'numeric' 
-                          })}
-                        </span>
-                      </div>
-                    )}
-                    {ubicacionTexto && (
-                      <div className="rifa-card-compact-location">
-                        <span className="rifa-card-compact-location-label">{t('portal.card.location')}</span>
-                        <span className="rifa-card-compact-location-value">
-                          {ubicacionTexto} {emojiPais}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </Link>
-                {tieneFotos && (
-                  <div className="rifa-card-premios-toggle">
-                    <button 
-                      className={`btn-ver-premios ${isExpanded ? 'expanded' : ''}`}
-                      onClick={toggleFotos}
-                      type="button"
-                    >
-                      <span className="btn-icon">{isExpanded ? '📸' : '🏆'}</span>
-                      <span>{isExpanded ? t('portal.card.hidePrizes') : t('portal.card.viewPrizes')}</span>
-                      <span className="btn-arrow">{isExpanded ? '▲' : '▼'}</span>
-                    </button>
-                    {isExpanded && (
-                      <div className="rifa-card-premios-fotos">
-                        <div className="premios-fotos-grid">
-                          {fotosPremios.map((foto, index) => (
-                            <div key={foto.id || index} className="premio-foto-item">
-                              <img 
-                                src={foto.url || foto.url_foto} 
-                                alt={foto.descripcion || `Premio ${index + 1}`}
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  window.open(foto.url || foto.url_foto, '_blank');
-                                }}
-                              />
-                              {foto.descripcion && (
-                                <div className="premio-foto-desc">{foto.descripcion}</div>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
+          {/* Secciones agrupadas por urgencia */}
+          {rifasTerminandoPronto.length > 0 && (
+            <div className="portal-section">
+              <div className="portal-section-header">
+                <h2 className="portal-section-title">
+                  <span className="section-icon">⏰</span>
+                  {t('portal.sections.endingSoon')}
+                </h2>
+                <span className="section-count">{rifasTerminandoPronto.length}</span>
               </div>
-            );
-            })}
-          </div>
-          
-          {/* Controles de Paginación */}
-          {totalPages > 1 && (
+              <div className="rifas-portal-grid-compact">
+                {rifasTerminandoPronto.map(rifa => renderRifaCard(rifa))}
+              </div>
+            </div>
+          )}
+
+          {rifasEstaSemana.length > 0 && (
+            <div className="portal-section">
+              <div className="portal-section-header">
+                <h2 className="portal-section-title">
+                  <span className="section-icon">📅</span>
+                  {t('portal.sections.thisWeek')}
+                </h2>
+                <span className="section-count">{rifasEstaSemana.length}</span>
+              </div>
+              <div className="rifas-portal-grid-compact">
+                {rifasEstaSemana.map(rifa => renderRifaCard(rifa))}
+              </div>
+            </div>
+          )}
+
+          {rifasEsteMes.length > 0 && (
+            <div className="portal-section">
+              <div className="portal-section-header">
+                <h2 className="portal-section-title">
+                  <span className="section-icon">🗓️</span>
+                  {t('portal.sections.thisMonth')}
+                </h2>
+                <span className="section-count">{rifasEsteMes.length}</span>
+              </div>
+              <div className="rifas-portal-grid-compact">
+                {rifasEsteMes.map(rifa => renderRifaCard(rifa))}
+              </div>
+            </div>
+          )}
+
+          {rifasProximamente.length > 0 && (
+            <div className="portal-section">
+              <div className="portal-section-header">
+                <h2 className="portal-section-title">
+                  <span className="section-icon">🔮</span>
+                  {t('portal.sections.upcoming')}
+                </h2>
+                <span className="section-count">{rifasProximamente.length}</span>
+              </div>
+              <div className="rifas-portal-grid-compact">
+                {rifasProximamente.map(rifa => renderRifaCard(rifa))}
+              </div>
+            </div>
+          )}
+
+          {/* Vista tradicional con paginación (si no hay secciones o como fallback) */}
+          {rifasTerminandoPronto.length === 0 && 
+           rifasEstaSemana.length === 0 && 
+           rifasEsteMes.length === 0 && 
+           rifasProximamente.length === 0 && (
+            <div className="rifas-portal-grid-compact">
+              {rifasPaginadas.map(rifa => renderRifaCard(rifa))}
+            </div>
+          )}
+
+          {/* Vista tradicional con paginación (si hay filtros activos que no muestran secciones) */}
+          {filtro === 'finalizadas' && (
+            <div className="rifas-portal-grid-compact">
+              {rifasPaginadas.map(rifa => renderRifaCard(rifa))}
+            </div>
+          )}
+
+          {/* Controles de Paginación (solo para vista tradicional) */}
+          {totalPages > 1 && (filtro === 'finalizadas' || 
+            (rifasTerminandoPronto.length === 0 && 
+             rifasEstaSemana.length === 0 && 
+             rifasEsteMes.length === 0 && 
+             rifasProximamente.length === 0)) && (
             <div className="pagination-controls">
               <button
                 className="pagination-btn"

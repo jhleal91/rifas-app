@@ -129,7 +129,73 @@ async function checkAndSendDrawReminders() {
   }
 }
 
+// Verificar rifas que terminan en 24 horas y enviar recordatorio
+async function checkAndSendEndingSoonReminders() {
+  try {
+    console.log('🔍 Verificando rifas que terminan en 24 horas...');
+    
+    // Buscar rifas activas que terminan en las próximas 24 horas
+    const rifasResult = await query(`
+      SELECT 
+        r.*,
+        u.nombre as creador_nombre,
+        u.email as creador_email,
+        COUNT(DISTINCT ev.elemento) as elementos_vendidos
+      FROM rifas r
+      LEFT JOIN usuarios u ON r.usuario_id = u.id
+      LEFT JOIN elementos_vendidos ev ON r.id = ev.rifa_id
+      WHERE r.fecha_fin IS NOT NULL 
+        AND r.fecha_fin BETWEEN NOW() AND NOW() + INTERVAL '24 hours'
+        AND r.activa = true
+        AND r.deleted_at IS NULL
+      GROUP BY r.id, u.nombre, u.email
+    `);
+
+    console.log(`📊 Encontradas ${rifasResult.rows.length} rifas que terminan en 24 horas`);
+
+    for (const rifa of rifasResult.rows) {
+      // Verificar si ya se envió el recordatorio
+      const reminderResult = await query(`
+        SELECT * FROM rifa_notifications 
+        WHERE rifa_id = $1 AND tipo = 'ending_soon'
+      `, [rifa.id]);
+
+      if (reminderResult.rows.length === 0) {
+        console.log(`⏰ Enviando recordatorio de finalización para rifa: ${rifa.nombre}`);
+        
+        // Preparar datos de la rifa con estadísticas
+        const rifaData = {
+          ...rifa,
+          cantidad_elementos: parseInt(rifa.cantidad_elementos) || 0,
+          elementos_vendidos: parseInt(rifa.elementos_vendidos) || 0,
+          precio: parseFloat(rifa.precio) || 0
+        };
+        
+        const emailResult = await emailService.sendEndingSoonReminder(rifaData);
+        
+        if (emailResult.success) {
+          // Registrar que se envió el recordatorio
+          await query(`
+            INSERT INTO rifa_notifications (rifa_id, tipo, fecha_envio, status)
+            VALUES ($1, 'ending_soon', CURRENT_TIMESTAMP, 'sent')
+          `, [rifa.id]);
+          
+          console.log(`✅ Recordatorio de finalización enviado para rifa: ${rifa.nombre}`);
+        } else {
+          console.error(`❌ Error enviando recordatorio de finalización para rifa ${rifa.nombre}:`, emailResult.error);
+        }
+      } else {
+        console.log(`ℹ️ Recordatorio de finalización ya enviado para rifa: ${rifa.nombre}`);
+      }
+    }
+
+  } catch (error) {
+    console.error('❌ Error verificando recordatorios de finalización:', error);
+  }
+}
+
 module.exports = {
   checkAndNotifySoldOut,
-  checkAndSendDrawReminders
+  checkAndSendDrawReminders,
+  checkAndSendEndingSoonReminders
 };

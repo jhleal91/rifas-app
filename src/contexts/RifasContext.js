@@ -68,7 +68,6 @@ const procesarRifa = (rifa, isGuest = false) => {
   
   // Para usuarios autenticados, usar los números del backend (más confiable)
   // El backend ya calcula correctamente los números vendidos y reservados
-  const participantes = rifa.participantes || [];
   // Usar los números vendidos y reservados del backend (ya vienen normalizados)
   const numerosVendidos = (rifa.numerosVendidos || []).map(n => String(n));
   const numerosReservados = (rifa.numerosReservados || []).map(n => String(n));

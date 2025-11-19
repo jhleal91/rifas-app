@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { showSuccess, showError, showInfo } from '../utils/swal';
 import './StripeConnectButton.css';
 
-const API_BASE = 'http://localhost:5001/api';
+import { API_BASE } from '../config/api';
 
 const StripeConnectButton = () => {
   const [status, setStatus] = useState(null);

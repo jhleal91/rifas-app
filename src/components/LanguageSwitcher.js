@@ -5,29 +5,32 @@ import './LanguageSwitcher.css';
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
 
-  const changeLanguage = (lng) => {
+  const changeLanguage = (event) => {
+    const lng = event.target.value;
     i18n.changeLanguage(lng);
   };
 
+  const languages = [
+    { code: 'es', flag: '🇲🇽', name: 'Español' },
+    { code: 'en', flag: '🇺🇸', name: 'English' }
+  ];
+
   return (
     <div className="language-switcher">
-      <button
-        className={`lang-btn ${i18n.language === 'es' ? 'active' : ''}`}
-        onClick={() => changeLanguage('es')}
-        title="Español"
+      <select
+        className="language-select"
+        value={i18n.language || 'es'}
+        onChange={changeLanguage}
+        title={languages.find(l => l.code === (i18n.language || 'es'))?.name}
       >
-        🇪🇸 ES
-      </button>
-      <button
-        className={`lang-btn ${i18n.language === 'en' ? 'active' : ''}`}
-        onClick={() => changeLanguage('en')}
-        title="English"
-      >
-        🇺🇸 EN
-      </button>
+        {languages.map((lang) => (
+          <option key={lang.code} value={lang.code}>
+            {lang.flag} {lang.name}
+          </option>
+        ))}
+      </select>
     </div>
   );
 };
 
 export default LanguageSwitcher;
-

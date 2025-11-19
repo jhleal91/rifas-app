@@ -69,8 +69,8 @@ const HeroSection = ({ onShowRegister, onShowLogin }) => {
   // Rifas para mostrar (usar activas si hay, sino usar ejemplo como fallback)
   const rifasEjemplo = rifasActivas.length > 0 ? rifasActivas : [
     {
-      nombre: "Cargando rifas...",
-      premio: "Próximamente",
+      nombre: t('landing.heroCard.loadingRaffles'),
+      premio: t('landing.heroCard.comingSoon'),
       disponibles: 0,
       dias: 0,
       precio: 0
@@ -135,7 +135,7 @@ const HeroSection = ({ onShowRegister, onShowLogin }) => {
           <div className="hero-card">
             <div className="card-header">
               <span className="card-icon">🎯</span>
-              <span>Rifa Activa</span>
+              <span>{t('landing.heroCard.activeRaffle')}</span>
               <div className="card-indicators">
                 {rifasEjemplo.map((_, index) => (
                   <span 
@@ -151,11 +151,11 @@ const HeroSection = ({ onShowRegister, onShowLogin }) => {
                   <h3>{rifasEjemplo[currentRifaIndex].nombre}</h3>
                   <div className="card-stats">
                     <div className="stat">
-                      <span className="stat-label">Disponibles</span>
+                      <span className="stat-label">{t('landing.heroCard.available')}</span>
                       <span className="stat-value available">{rifasEjemplo[currentRifaIndex].disponibles}</span>
                     </div>
                     <div className="stat">
-                      <span className="stat-label">Días restantes</span>
+                      <span className="stat-label">{t('landing.heroCard.daysRemaining')}</span>
                       <span className={`stat-value days ${rifasEjemplo[currentRifaIndex].dias <= 5 ? 'urgent' : rifasEjemplo[currentRifaIndex].dias <= 10 ? 'warning' : 'normal'}`}>
                         {rifasEjemplo[currentRifaIndex].dias}
                       </span>
@@ -166,7 +166,7 @@ const HeroSection = ({ onShowRegister, onShowLogin }) => {
                     <span>{rifasEjemplo[currentRifaIndex].premio}</span>
                   </div>
                   <div className="card-price">
-                    <span className="price-label">Precio por boleto:</span>
+                    <span className="price-label">{t('landing.heroCard.pricePerTicket')}</span>
                     <span className="price-value">${rifasEjemplo[currentRifaIndex].precio.toFixed(2)}</span>
                   </div>
                   {rifasEjemplo[currentRifaIndex].id && (
@@ -174,13 +174,13 @@ const HeroSection = ({ onShowRegister, onShowLogin }) => {
                       to={`/public/${rifasEjemplo[currentRifaIndex].id}`}
                       className="btn-ver-rifa-hero"
                     >
-                      Ver Rifa →
+                      {t('landing.heroCard.viewRaffle')}
                     </Link>
                   )}
                 </>
               ) : (
                 <div className="card-loading">
-                  <p>Cargando rifas activas...</p>
+                  <p>{t('landing.heroCard.loading')}</p>
                 </div>
               )}
             </div>

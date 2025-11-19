@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-const API_BASE = 'http://localhost:5001/api';
+import { API_BASE } from '../config/api';
 
 // Banner promocional por defecto - se traduce dinámicamente
 const getPromotionalBanner = (t) => ({
@@ -21,7 +21,7 @@ const AdCarousel = ({
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [ads, setAds] = useState([]);
+  const [, setAds] = useState([]);
   const [displayItems, setDisplayItems] = useState([]); // Anuncios + banners promocionales
   const [currentIndex, setCurrentIndex] = useState(0);
   const [imageErrors, setImageErrors] = useState({});

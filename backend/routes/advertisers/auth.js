@@ -49,7 +49,7 @@ router.post('/login', sanitizeInput, async (req, res) => {
       return res.status(400).json({ error: 'Email y password son requeridos' });
     }
 
-    const result = await query('SELECT id, nombre, email, telefono, categoria, presupuesto_mensual, activo, nombre_comercial, pagina_url, descripcion_negocio, logo_url, activo_sponsor FROM anunciantes WHERE email = $1', [email]);
+    const result = await query('SELECT id, nombre, email, telefono, categoria, presupuesto_mensual, activo, nombre_comercial, pagina_url, descripcion_negocio, logo_url, activo_sponsor, password_hash FROM anunciantes WHERE email = $1', [email]);
     if (result.rows.length === 0) {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }

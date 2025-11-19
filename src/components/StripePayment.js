@@ -2,21 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { showSuccess, showError, showLoading, close } from '../utils/swal';
+import { API_BASE, STRIPE_PUBLISHABLE_KEY } from '../config/api';
 import './StripePayment.css';
-
-const API_BASE = 'http://localhost:5001/api';
-
-// Cargar Stripe con la clave pública
-// IMPORTANTE: Configura REACT_APP_STRIPE_PUBLISHABLE_KEY en tu archivo .env en la raíz del proyecto
-const STRIPE_PUBLISHABLE_KEY = process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || 'pk_test_51STPDgABU839iIC0VajE2A6njrQXmpknFxrmaKlqx5y56qbwqj5jplIfRPkqIMPIiHDYS9EYj7CM0STnb2Zi7LNJ00ci0YVKF2';
 
 if (!STRIPE_PUBLISHABLE_KEY || STRIPE_PUBLISHABLE_KEY === 'pk_test_...') {
   console.warn('⚠️ REACT_APP_STRIPE_PUBLISHABLE_KEY no configurado. Crea un archivo .env en la raíz del proyecto con: REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_test_...');
 }
 
-const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
+const stripePromise = STRIPE_PUBLISHABLE_KEY ? loadStripe(STRIPE_PUBLISHABLE_KEY) : null;
 
-function CheckoutForm({ rifaId, amount, numerosSeleccionados, onSuccess, onCancel, clientSecret }) {
+function CheckoutForm({ rifaId, amount, numerosSeleccionados, participanteId, onSuccess, onCancel, clientSecret }) {
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
@@ -73,6 +68,34 @@ function CheckoutForm({ rifaId, amount, numerosSeleccionados, onSuccess, onCance
         showError('Error en el pago', error.message);
         setLoading(false);
       } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+        // Confirmar pago en el backend para procesar inmediatamente
+        try {
+          const token = localStorage.getItem('token');
+          const confirmResponse = await fetch(`${API_BASE}/stripe/confirm-payment`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': token ? `Bearer ${token}` : ''
+            },
+            body: JSON.stringify({
+              paymentIntentId: paymentIntent.id,
+              participanteId: participanteId,
+              rifaId: rifaId
+            })
+          });
+          
+          if (!confirmResponse.ok) {
+            const errorData = await confirmResponse.json();
+            console.warn('Error confirmando pago en backend:', errorData);
+            // Continuar de todas formas, el webhook lo procesará
+          } else {
+            console.log('✅ Pago confirmado y procesado en backend');
+          }
+        } catch (confirmError) {
+          console.error('Error confirmando pago:', confirmError);
+          // Continuar de todas formas, el webhook lo procesará
+        }
+        
         await showSuccess(
           '¡Pago exitoso!', 
           'Tu participación ha sido registrada. El organizador recibirá una notificación.'
@@ -170,15 +193,25 @@ function CheckoutForm({ rifaId, amount, numerosSeleccionados, onSuccess, onCance
   );
 }
 
-export default function StripePayment({ rifaId, amount, numerosSeleccionados, onSuccess, onCancel }) {
+export default function StripePayment({ rifaId, amount, numerosSeleccionados, participanteId, onSuccess, onCancel }) {
   const [clientSecret, setClientSecret] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isCreatingIntent, setIsCreatingIntent] = useState(false);
   
   useEffect(() => {
+    // Prevenir ejecución duplicada
+    if (isCreatingIntent || clientSecret) {
+      return;
+    }
+    
     const createPaymentIntent = async () => {
       try {
+        setIsCreatingIntent(true);
         setLoading(true);
+        setError(null);
+        console.log('🔄 Creando Payment Intent...', { rifaId, amount, numerosSeleccionados });
+        
         const token = localStorage.getItem('token');
         const response = await fetch(`${API_BASE}/stripe/payment-intent`, {
           method: 'POST',
@@ -191,29 +224,46 @@ export default function StripePayment({ rifaId, amount, numerosSeleccionados, on
             amount,
             currency: 'mxn',
             numerosSeleccionados,
-            paymentMethod: 'card'
+            paymentMethod: 'card',
+            participanteId: participanteId || null
           })
         });
         
+        console.log('📡 Respuesta del servidor:', response.status, response.statusText);
+        
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Error al crear intención de pago');
+          const errorData = await response.json().catch(() => ({ error: 'Error desconocido' }));
+          console.error('❌ Error del servidor:', errorData);
+          throw new Error(errorData.error || `Error ${response.status}: ${response.statusText}`);
         }
         
         const data = await response.json();
+        console.log('✅ Payment Intent creado:', data.clientSecret ? 'ClientSecret recibido' : 'Sin clientSecret');
+        
+        if (!data.clientSecret) {
+          throw new Error('No se recibió clientSecret del servidor');
+        }
+        
         setClientSecret(data.clientSecret);
         setError(null);
       } catch (err) {
-        console.error('Error creando Payment Intent:', err);
-        setError(err.message);
-        showError('Error', err.message);
+        console.error('❌ Error creando Payment Intent:', err);
+        const errorMessage = err.message || 'Error al crear intención de pago. Por favor, intenta nuevamente.';
+        setError(errorMessage);
+        showError('Error al inicializar pago', errorMessage);
       } finally {
         setLoading(false);
+        setIsCreatingIntent(false);
       }
     };
     
-    createPaymentIntent();
-  }, [rifaId, amount]);
+    if (rifaId && amount && !clientSecret) {
+      createPaymentIntent();
+    } else if (!rifaId || !amount) {
+      setError('Faltan datos necesarios para crear el pago');
+      setLoading(false);
+    }
+  }, [rifaId, amount, isCreatingIntent, clientSecret]);
   
   if (loading) {
     return (
@@ -228,15 +278,35 @@ export default function StripePayment({ rifaId, amount, numerosSeleccionados, on
     return (
       <div className="stripe-payment-error">
         <p>❌ {error || 'Error al inicializar el pago'}</p>
+        <p style={{ fontSize: '0.9rem', color: '#64748b', marginTop: '0.5rem' }}>
+          Por favor, verifica que el creador de la rifa tenga configurados sus datos de pago.
+        </p>
         {onCancel && (
-          <button className="btn-cancel" onClick={onCancel}>
-            Volver
+          <button className="btn-cancel" onClick={onCancel} style={{ marginTop: '1rem' }}>
+            ← Volver
           </button>
         )}
       </div>
     );
   }
   
+  // Verificar que Stripe esté configurado
+  if (!stripePromise) {
+    return (
+      <div className="stripe-payment-error">
+        <p>❌ Stripe no está configurado</p>
+        <p style={{ fontSize: '0.9rem', color: '#64748b', marginTop: '0.5rem' }}>
+          Por favor, configura REACT_APP_STRIPE_PUBLISHABLE_KEY en el archivo .env
+        </p>
+        {onCancel && (
+          <button className="btn-cancel" onClick={onCancel} style={{ marginTop: '1rem' }}>
+            ← Volver
+          </button>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="stripe-payment-container">
       <Elements 
@@ -248,14 +318,15 @@ export default function StripePayment({ rifaId, amount, numerosSeleccionados, on
           },
         }}
       >
-        <CheckoutForm 
-          rifaId={rifaId}
-          amount={amount}
-          numerosSeleccionados={numerosSeleccionados}
-          onSuccess={onSuccess}
-          onCancel={onCancel}
-          clientSecret={clientSecret}
-        />
+            <CheckoutForm 
+              rifaId={rifaId}
+              amount={amount}
+              numerosSeleccionados={numerosSeleccionados}
+              participanteId={participanteId}
+              onSuccess={onSuccess}
+              onCancel={onCancel}
+              clientSecret={clientSecret}
+            />
       </Elements>
     </div>
   );

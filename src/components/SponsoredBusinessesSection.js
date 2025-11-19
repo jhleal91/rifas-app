@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-const API_BASE = 'http://localhost:5001/api';
+import { API_BASE } from '../config/api';
 
 const SponsoredBusinessesSection = () => {
   const [sponsoredBusinesses, setSponsoredBusinesses] = useState([]);

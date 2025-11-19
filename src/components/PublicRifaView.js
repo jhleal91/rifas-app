@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useRifas } from '../contexts/RifasContext';
 
 const PublicRifaView = ({ rifas }) => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const [rifa, setRifa] = useState(null);
   const [filtro, setFiltro] = useState('disponibles'); // Por defecto mostrar disponibles
@@ -13,17 +15,17 @@ const PublicRifaView = ({ rifas }) => {
   // Función para obtener el nombre del tipo de rifa
   const obtenerNombreTipo = (tipo) => {
     const tipos = {
-      'numeros': 'Números',
-      'lotería': 'Lotería',
-      'baraja': 'Baraja',
-      'animales': 'Animales del Zodiaco',
-      'colores': 'Colores',
-      'equipos': 'Equipos Deportivos',
-      'abecedario': 'Abecedario',
-      'emojis': 'Emojis',
-      'paises': 'Países del Mundo'
+      'numeros': t('publicRifaView.raffleTypes.numeros'),
+      'lotería': t('publicRifaView.raffleTypes.loteria'),
+      'baraja': t('publicRifaView.raffleTypes.baraja'),
+      'animales': t('publicRifaView.raffleTypes.animales'),
+      'colores': t('publicRifaView.raffleTypes.colores'),
+      'equipos': t('publicRifaView.raffleTypes.equipos'),
+      'abecedario': t('publicRifaView.raffleTypes.abecedario'),
+      'emojis': t('publicRifaView.raffleTypes.emojis'),
+      'paises': t('publicRifaView.raffleTypes.paises')
     };
-    return tipos[tipo] || 'Números';
+    return tipos[tipo] || t('publicRifaView.raffleTypes.numeros');
   };
 
   useEffect(() => {
@@ -95,13 +97,13 @@ const PublicRifaView = ({ rifas }) => {
       <div className="public-container">
         <div className="header-top">
           <Link to="/portal" className="btn-back-to-rifas">
-            ← Regresar a las Rifas
+            {t('publicRifaView.backToRifas')}
           </Link>
         </div>
         <div className="error-message">
-          <h2>Rifa no encontrada</h2>
-          <p>La rifa que buscas no existe o ha sido eliminada.</p>
-          <Link to="/" className="btn-primary">Ver Todas las Rifas</Link>
+          <h2>{t('publicRifaView.notFound.title')}</h2>
+          <p>{t('publicRifaView.notFound.message')}</p>
+          <Link to="/" className="btn-primary">{t('publicRifaView.notFound.viewAll')}</Link>
         </div>
       </div>
     );
@@ -173,7 +175,7 @@ const PublicRifaView = ({ rifas }) => {
     <div className="public-container">
       <div className="header-top">
         <Link to="/portal" className="btn-back-to-rifas">
-          ← Regresar a las Rifas
+          {t('publicRifaView.backToRifas')}
         </Link>
       </div>
 
@@ -211,7 +213,7 @@ const PublicRifaView = ({ rifas }) => {
                         {fotoActual.premio_posicion > 3 && `#${fotoActual.premio_posicion}`}
                       </span>
                       <span className="premio-text">
-                        Premio {fotoActual.premio_posicion}
+                        {t('publicRifaView.prizes.prize')} {fotoActual.premio_posicion}
                         {fotoActual.premio_nombre && `: ${fotoActual.premio_nombre}`}
                       </span>
                     </div>
@@ -223,14 +225,14 @@ const PublicRifaView = ({ rifas }) => {
                       <button 
                         className="carousel-btn carousel-btn-prev"
                         onClick={anteriorImagen}
-                        aria-label="Imagen anterior"
+                        aria-label={t('publicRifaView.carousel.previousImage')}
                       >
                         <span>‹</span>
                       </button>
                       <button 
                         className="carousel-btn carousel-btn-next"
                         onClick={siguienteImagen}
-                        aria-label="Siguiente imagen"
+                        aria-label={t('publicRifaView.carousel.nextImage')}
                       >
                         <span>›</span>
                       </button>
@@ -242,8 +244,8 @@ const PublicRifaView = ({ rifas }) => {
                             key={index}
                             className={`carousel-indicator ${index === indiceImagenActual ? 'active' : ''}`}
                             onClick={() => irAImagen(index)}
-                            aria-label={`Ir a imagen ${index + 1}${foto.premio_posicion ? ` - Premio ${foto.premio_posicion}` : ''}`}
-                            title={foto.premio_posicion ? `Premio ${foto.premio_posicion}${foto.premio_nombre ? `: ${foto.premio_nombre}` : ''} - Imagen ${index + 1}` : `Imagen ${index + 1}`}
+                            aria-label={`${t('publicRifaView.carousel.goToImage')} ${index + 1}${foto.premio_posicion ? ` - ${t('publicRifaView.carousel.prize')} ${foto.premio_posicion}` : ''}`}
+                            title={foto.premio_posicion ? `${t('publicRifaView.carousel.prize')} ${foto.premio_posicion}${foto.premio_nombre ? `: ${foto.premio_nombre}` : ''} - ${t('publicRifaView.carousel.image')} ${index + 1}` : `${t('publicRifaView.carousel.image')} ${index + 1}`}
                           />
                         ))}
                       </div>
@@ -252,7 +254,7 @@ const PublicRifaView = ({ rifas }) => {
                       <div className="carousel-counter">
                         {fotoActual.premio_posicion ? (
                           <span className="counter-with-premio">
-                            <span className="counter-premio">Premio {fotoActual.premio_posicion}</span>
+                            <span className="counter-premio">{t('publicRifaView.prizes.prize')} {fotoActual.premio_posicion}</span>
                             <span className="counter-separator">•</span>
                             <span className="counter-numbers">{indiceImagenActual + 1} / {fotosPremios.length}</span>
                           </span>
@@ -267,7 +269,7 @@ const PublicRifaView = ({ rifas }) => {
             ) : (
               <div className="rifa-main-image-placeholder">
                 <span className="placeholder-icon-large">🏆</span>
-                <span className="placeholder-text-large">Sin imagen</span>
+                <span className="placeholder-text-large">{t('publicRifaView.info.noImage')}</span>
               </div>
             )}
             
@@ -276,21 +278,21 @@ const PublicRifaView = ({ rifas }) => {
               <div className="info-item">
                 <span className="icon">💰</span>
                 <div className="info-content">
-                  <span className="info-label">Precio:</span>
+                  <span className="info-label">{t('publicRifaView.info.price')}</span>
                   <span className="info-value">${rifa.precio}</span>
                 </div>
               </div>
               <div className="info-item">
                 <span className="icon">📊</span>
                 <div className="info-content">
-                  <span className="info-label">Progreso:</span>
+                  <span className="info-label">{t('publicRifaView.info.progress')}</span>
                   <span className="info-value">{porcentajeVendido}%</span>
                 </div>
               </div>
               <div className="info-item">
                 <span className="icon">🎯</span>
                 <div className="info-content">
-                  <span className="info-label">Tipo:</span>
+                  <span className="info-label">{t('publicRifaView.info.type')}</span>
                   <span className="info-value">{obtenerNombreTipo(rifa.tipo)}</span>
                 </div>
               </div>
@@ -298,7 +300,7 @@ const PublicRifaView = ({ rifas }) => {
                 <div className="info-item">
                   <span className="icon">📅</span>
                   <div className="info-content">
-                    <span className="info-label">Finaliza:</span>
+                    <span className="info-label">{t('publicRifaView.info.ends')}</span>
                     <span className="info-value">{new Date(rifa.fecha_fin).toLocaleDateString()}</span>
                   </div>
                 </div>
@@ -323,8 +325,8 @@ const PublicRifaView = ({ rifas }) => {
             <div className="seleccion-resumen-flotante">
               <div className="seleccion-resumen-content">
                 <div className="seleccion-info">
-                  <span className="seleccion-count">{numerosSeleccionados.length} número{numerosSeleccionados.length !== 1 ? 's' : ''} seleccionado{numerosSeleccionados.length !== 1 ? 's' : ''}</span>
-                  <span className="seleccion-total">Total: ${(rifa.precio * numerosSeleccionados.length).toFixed(2)}</span>
+                  <span className="seleccion-count">{numerosSeleccionados.length} {numerosSeleccionados.length !== 1 ? t('publicRifaView.selection.numbers') : t('publicRifaView.selection.number')} {numerosSeleccionados.length !== 1 ? t('publicRifaView.selection.selectedPlural') : t('publicRifaView.selection.selected')}</span>
+                  <span className="seleccion-total">{t('publicRifaView.selection.total')} ${(rifa.precio * numerosSeleccionados.length).toFixed(2)}</span>
                 </div>
                 <div className="seleccion-actions">
                   <button 
@@ -332,14 +334,14 @@ const PublicRifaView = ({ rifas }) => {
                     onClick={() => setNumerosSeleccionados([])}
                     type="button"
                   >
-                    Limpiar
+                    {t('publicRifaView.selection.clear')}
                   </button>
                   <Link 
                     to={`/participar/${rifa.id}`} 
                     state={{ numerosSeleccionados }}
                     className="btn-participar-ahora"
                   >
-                    Participar Ahora →
+                    {t('publicRifaView.selection.participateNow')}
                   </Link>
                 </div>
               </div>
@@ -349,11 +351,11 @@ const PublicRifaView = ({ rifas }) => {
           {/* Sección de Selección de Números */}
           <div className="seleccion-numeros-section">
             <div className="seleccion-header">
-              <h2>🎯 Selecciona tus Números</h2>
+              <h2>{t('publicRifaView.selection.title')}</h2>
               {numerosSeleccionados.length > 0 && (
                 <div className="seleccion-resumen-inline">
-                  <span>{numerosSeleccionados.length} seleccionado{numerosSeleccionados.length !== 1 ? 's' : ''}</span>
-                  <span className="total-preview">Total: ${(rifa.precio * numerosSeleccionados.length).toFixed(2)}</span>
+                  <span>{numerosSeleccionados.length} {numerosSeleccionados.length !== 1 ? t('publicRifaView.selection.selectedPlural') : t('publicRifaView.selection.selected')}</span>
+                  <span className="total-preview">{t('publicRifaView.selection.total')} ${(rifa.precio * numerosSeleccionados.length).toFixed(2)}</span>
                 </div>
               )}
             </div>
@@ -363,7 +365,7 @@ const PublicRifaView = ({ rifas }) => {
                 className={`filtro-btn ${filtro === 'disponibles' ? 'activo' : ''}`}
                 onClick={() => setFiltro('disponibles')}
               >
-                Disponibles ({(() => {
+                {t('publicRifaView.filters.available')} ({(() => {
                   const vendidosStr = (rifa.numerosVendidos || []).map(n => String(n));
                   const reservadosStr = (rifa.numerosReservados || []).map(n => String(n));
                   return rifa.numerosDisponibles.filter(n => {
@@ -376,19 +378,19 @@ const PublicRifaView = ({ rifas }) => {
                 className={`filtro-btn ${filtro === 'todos' ? 'activo' : ''}`}
                 onClick={() => setFiltro('todos')}
               >
-                Todos ({totalNumeros})
+                {t('publicRifaView.filters.all')} ({totalNumeros})
               </button>
               <button 
                 className={`filtro-btn ${filtro === 'vendidos' ? 'activo' : ''}`}
                 onClick={() => setFiltro('vendidos')}
               >
-                Vendidos ({rifa.numerosVendidos.length})
+                {t('publicRifaView.filters.sold')} ({rifa.numerosVendidos.length})
               </button>
               <button 
                 className={`filtro-btn ${filtro === 'reservados' ? 'activo' : ''}`}
                 onClick={() => setFiltro('reservados')}
               >
-                Reservados ({(rifa.numerosReservados || []).length})
+                {t('publicRifaView.filters.reserved')} ({(rifa.numerosReservados || []).length})
               </button>
             </div>
 
@@ -402,17 +404,17 @@ const PublicRifaView = ({ rifas }) => {
                   const participante = vendido ? obtenerParticipantePorNumero(numero) : null;
                   
                   let estado = 'disponible';
-                  let titulo = 'Disponible - Click para seleccionar';
+                  let titulo = t('publicRifaView.numberStates.available');
                   
                   if (vendido) {
                     estado = 'vendido';
-                    titulo = `Vendido a: ${participante?.nombre}`;
+                    titulo = `${t('publicRifaView.numberStates.sold')} ${participante?.nombre}`;
                   } else if (reservado) {
                     estado = 'reservado';
-                    titulo = 'Reservado temporalmente';
+                    titulo = t('publicRifaView.numberStates.reserved');
                   } else if (seleccionado) {
                     estado = 'seleccionado';
-                    titulo = 'Seleccionado - Click para deseleccionar';
+                    titulo = t('publicRifaView.numberStates.selected');
                   }
                   
                   return (
@@ -448,14 +450,14 @@ const PublicRifaView = ({ rifas }) => {
                 {numerosSeleccionados.length > 0 ? (
                   <div className="participar-con-seleccion">
                     <div className="seleccion-summary">
-                      <h3>Tu Selección</h3>
+                      <h3>{t('publicRifaView.selection.yourSelection')}</h3>
                       <div className="numeros-seleccionados-preview">
                         {numerosSeleccionados.sort((a, b) => a - b).map(num => (
                           <span key={num} className="numero-preview">{num}</span>
                         ))}
                       </div>
                       <div className="total-participacion">
-                        <span className="total-label">Total a pagar:</span>
+                        <span className="total-label">{t('publicRifaView.selection.totalToPay')}</span>
                         <span className="total-amount">${(rifa.precio * numerosSeleccionados.length).toFixed(2)}</span>
                       </div>
                     </div>
@@ -464,17 +466,17 @@ const PublicRifaView = ({ rifas }) => {
                       state={{ numerosSeleccionados }}
                       className="btn-primary btn-participar-grande"
                     >
-                      🎫 Participar con {numerosSeleccionados.length} número{numerosSeleccionados.length !== 1 ? 's' : ''}
+                      {t('publicRifaView.selection.participateWith')} {numerosSeleccionados.length} {numerosSeleccionados.length !== 1 ? t('publicRifaView.selection.numbers') : t('publicRifaView.selection.number')}
                     </Link>
                   </div>
                 ) : (
                   <div className="participar-sin-seleccion">
-                    <p>Selecciona tus números arriba o continúa para elegirlos en el siguiente paso</p>
+                    <p>{t('publicRifaView.selection.selectNumbersAbove')}</p>
                     <Link 
                       to={`/participar/${rifa.id}`} 
                       className="btn-primary btn-participar-grande"
                     >
-                      🎫 Participar en esta Rifa
+                      {t('publicRifaView.selection.participateInRaffle')}
                     </Link>
                   </div>
                 )}
@@ -487,7 +489,7 @@ const PublicRifaView = ({ rifas }) => {
       {/* Sección de Premios - Debajo del layout principal */}
       {rifa.premios && Array.isArray(rifa.premios) && rifa.premios.length > 0 && (
         <div className="premios-public">
-          <h3>🏆 Premios</h3>
+          <h3>{t('publicRifaView.prizes.title')}</h3>
           <div className="premios-grid">
             {rifa.premios.map((premio, index) => (
               <div key={premio.id || index} className="premio-public">
@@ -497,7 +499,7 @@ const PublicRifaView = ({ rifas }) => {
                   {index === 2 && '🥉'}
                   {index > 2 && `#${index + 1}`}
                 </div>
-                <h4>{premio.nombre || `Premio ${index + 1}`}</h4>
+                <h4>{premio.nombre || `${t('publicRifaView.prizes.prize')} ${index + 1}`}</h4>
                 {premio.descripcion && <p>{premio.descripcion}</p>}
               </div>
             ))}
@@ -542,11 +544,11 @@ const PublicRifaView = ({ rifas }) => {
                     {premio.posicion > 3 && `#${premio.posicion}`}
                     {premio.posicion === 0 && '🏆'}
                     <span className="premio-fotos-nombre">
-                      Premio {premio.posicion || 'General'}
+                      {t('publicRifaView.prizes.prize')} {premio.posicion || t('publicRifaView.prizes.general')}
                       {premio.nombre && premio.posicion !== 0 && `: ${premio.nombre}`}
                     </span>
                   </h4>
-                  <span className="premio-fotos-count">{premio.fotos.length} foto{premio.fotos.length !== 1 ? 's' : ''}</span>
+                  <span className="premio-fotos-count">{premio.fotos.length} {premio.fotos.length !== 1 ? t('publicRifaView.prizes.photosPlural') : t('publicRifaView.prizes.photos')}</span>
                 </div>
                 <div className="fotos-grid">
                   {premio.fotos.map((foto, index) => (
@@ -571,7 +573,7 @@ const PublicRifaView = ({ rifas }) => {
       {/* Sección de Reglas */}
       {rifa.reglas && (
         <div className="reglas-public">
-          <h3>📋 Reglas de la Rifa</h3>
+          <h3>{t('publicRifaView.rules.title')}</h3>
           <div className="reglas-content">
             <p>{rifa.reglas}</p>
           </div>
@@ -579,16 +581,16 @@ const PublicRifaView = ({ rifas }) => {
       )}
 
       <div className="participantes-public">
-        <h3>👥 Participantes ({rifa.participantes ? rifa.participantes.length : 0})</h3>
+        <h3>{t('publicRifaView.participants.title')} ({rifa.participantes ? rifa.participantes.length : 0})</h3>
         {(!rifa.participantes || rifa.participantes.length === 0) ? (
-          <p>No hay participantes aún</p>
+          <p>{t('publicRifaView.participants.none')}</p>
         ) : (
             <div className="participantes-grid">
               {rifa.participantes.map(participante => (
                 <div key={participante.id} className="participante-public">
                   <h4>{participante.nombre}</h4>
-                  <p>🎫 Números: {participante.numeros ? participante.numeros.join(', ') : 'No especificados'}</p>
-                  <p>💰 Total: ${rifa.precio * (participante.numeros ? participante.numeros.length : 0)}</p>
+                  <p>{t('publicRifaView.participants.numbers')} {participante.numeros ? participante.numeros.join(', ') : t('publicRifaView.participants.notSpecified')}</p>
+                  <p>{t('publicRifaView.participants.total')} ${rifa.precio * (participante.numeros ? participante.numeros.length : 0)}</p>
                 </div>
               ))}
             </div>
@@ -598,19 +600,19 @@ const PublicRifaView = ({ rifas }) => {
       {/* Sección de Formas de Pago */}
       {rifa.formasPago && rifa.formasPago.transferencia && (
         <div className="pagos-public">
-          <h3>💳 Formas de Pago</h3>
+          <h3>{t('publicRifaView.payment.title')}</h3>
           <div className="pagos-info">
-            <h4>💸 Transferencia Bancaria</h4>
+            <h4>{t('publicRifaView.payment.bankTransfer')}</h4>
             <div className="pago-details-public">
-              <p><strong>Banco:</strong> {rifa.formasPago.banco}</p>
-              <p><strong>CLABE:</strong> {rifa.formasPago.clabe}</p>
-              <p><strong>Número de cuenta:</strong> {rifa.formasPago.numeroCuenta}</p>
-              <p><strong>Titular:</strong> {rifa.formasPago.nombreTitular}</p>
+              <p><strong>{t('publicRifaView.payment.bank')}</strong> {rifa.formasPago.banco}</p>
+              <p><strong>{t('publicRifaView.payment.clabe')}</strong> {rifa.formasPago.clabe}</p>
+              <p><strong>{t('publicRifaView.payment.accountNumber')}</strong> {rifa.formasPago.numeroCuenta}</p>
+              <p><strong>{t('publicRifaView.payment.holder')}</strong> {rifa.formasPago.nombreTitular}</p>
               {rifa.formasPago.telefono && (
-                <p><strong>Teléfono:</strong> {rifa.formasPago.telefono}</p>
+                <p><strong>{t('publicRifaView.payment.phone')}</strong> {rifa.formasPago.telefono}</p>
               )}
               {rifa.formasPago.whatsapp && (
-                <p><strong>WhatsApp:</strong> {rifa.formasPago.whatsapp}</p>
+                <p><strong>{t('publicRifaView.payment.whatsapp')}</strong> {rifa.formasPago.whatsapp}</p>
               )}
             </div>
           </div>

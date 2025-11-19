@@ -1,73 +1,60 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const TermsAndConditions = ({ onAccept, onDecline }) => {
+  const { t } = useTranslation();
   const [hasRead, setHasRead] = useState(false);
 
   return (
     <div className="terms-modal">
       <div className="terms-content">
-        <h2>📋 Términos y Condiciones</h2>
+        <h2>{t('termsAndConditions.title')}</h2>
         
         <div className="terms-text">
-          <h3>🎯 Propósito de la Plataforma</h3>
-          <p>
-            <strong>SorteoHub</strong> es una plataforma tecnológica que facilita la creación y gestión de rifas 
-            <strong> SIN FINES DE LUCRO</strong>. Nuestro objetivo es conectar organizadores con participantes 
-            de manera transparente y segura.
-          </p>
+          <h3>{t('termsAndConditions.purpose.title')}</h3>
+          <p dangerouslySetInnerHTML={{ __html: t('termsAndConditions.purpose.text') }} />
 
-          <h3>💰 Modelo de Negocio</h3>
-          <p>
-            • <strong>Las rifas son SIN FINES DE LUCRO</strong> - Los organizadores no pueden obtener ganancias<br/>
-            • <strong>Comisión de plataforma:</strong> 5% del total recaudado (cubre costos operativos)<br/>
-            • <strong>Transparencia total:</strong> Todos los montos son visibles públicamente
-          </p>
+          <h3>{t('termsAndConditions.businessModel.title')}</h3>
+          <p dangerouslySetInnerHTML={{ __html: `${t('termsAndConditions.businessModel.noProfit')}${t('termsAndConditions.businessModel.commission')}${t('termsAndConditions.businessModel.transparency')}` }} />
 
-          <h3>🎲 Sorteos en Vivo</h3>
-          <p>
-            <strong>OBLIGATORIO:</strong> Todos los sorteos deben realizarse en vivo para garantizar transparencia:
-          </p>
+          <h3>{t('termsAndConditions.liveDraws.title')}</h3>
+          <p dangerouslySetInnerHTML={{ __html: t('termsAndConditions.liveDraws.mandatory') }} />
           <ul>
-            <li>📱 <strong>Transmisión en vivo:</strong> Facebook Live, Instagram Live, YouTube Live o Zoom</li>
-            <li>📅 <strong>Fecha y hora:</strong> Deben especificarse al crear la rifa</li>
-            <li>🎯 <strong>Método de sorteo:</strong> Ruleta digital, bolas numeradas, o aplicación de sorteo</li>
-            <li>📹 <strong>Grabación:</strong> El sorteo debe quedar grabado como evidencia</li>
-            <li>👥 <strong>Testigos:</strong> Mínimo 2 testigos independientes presentes</li>
+            <li dangerouslySetInnerHTML={{ __html: t('termsAndConditions.liveDraws.liveStream') }} />
+            <li dangerouslySetInnerHTML={{ __html: t('termsAndConditions.liveDraws.dateTime') }} />
+            <li dangerouslySetInnerHTML={{ __html: t('termsAndConditions.liveDraws.method') }} />
+            <li dangerouslySetInnerHTML={{ __html: t('termsAndConditions.liveDraws.recording') }} />
+            <li dangerouslySetInnerHTML={{ __html: t('termsAndConditions.liveDraws.witnesses') }} />
           </ul>
 
-          <h3>⚖️ Responsabilidades del Organizador</h3>
+          <h3>{t('termsAndConditions.organizerResponsibilities.title')}</h3>
           <ul>
-            <li>✅ Garantizar que la rifa es sin fines de lucro</li>
-            <li>✅ Realizar el sorteo en vivo según lo programado</li>
-            <li>✅ Entregar premios a los ganadores en tiempo y forma</li>
-            <li>✅ Mantener transparencia en todo el proceso</li>
-            <li>✅ Cumplir con las leyes locales aplicables</li>
+            <li>{t('termsAndConditions.organizerResponsibilities.noProfit')}</li>
+            <li>{t('termsAndConditions.organizerResponsibilities.liveDraw')}</li>
+            <li>{t('termsAndConditions.organizerResponsibilities.deliverPrizes')}</li>
+            <li>{t('termsAndConditions.organizerResponsibilities.transparency')}</li>
+            <li>{t('termsAndConditions.organizerResponsibilities.compliance')}</li>
           </ul>
 
-          <h3>🛡️ Protección de Participantes</h3>
+          <h3>{t('termsAndConditions.participantProtection.title')}</h3>
           <ul>
-            <li>🔒 <strong>Datos seguros:</strong> Información personal protegida</li>
-            <li>💳 <strong>Pagos seguros:</strong> Transferencias bancarias verificables</li>
-            <li>📞 <strong>Soporte:</strong> Atención al cliente disponible</li>
-            <li>⚖️ <strong>Resolución de disputas:</strong> Proceso claro de reclamos</li>
+            <li dangerouslySetInnerHTML={{ __html: t('termsAndConditions.participantProtection.secureData') }} />
+            <li dangerouslySetInnerHTML={{ __html: t('termsAndConditions.participantProtection.securePayments') }} />
+            <li dangerouslySetInnerHTML={{ __html: t('termsAndConditions.participantProtection.support') }} />
+            <li dangerouslySetInnerHTML={{ __html: t('termsAndConditions.participantProtection.disputes') }} />
           </ul>
 
-          <h3>🚫 Prohibiciones</h3>
+          <h3>{t('termsAndConditions.prohibitions.title')}</h3>
           <ul>
-            <li>❌ Rifas con fines de lucro</li>
-            <li>❌ Sorteos no transmitidos en vivo</li>
-            <li>❌ Manipulación de resultados</li>
-            <li>❌ Uso de datos personales para otros fines</li>
-            <li>❌ Rifas que violen leyes locales</li>
+            <li>{t('termsAndConditions.prohibitions.profitRaffles')}</li>
+            <li>{t('termsAndConditions.prohibitions.noLiveDraws')}</li>
+            <li>{t('termsAndConditions.prohibitions.manipulation')}</li>
+            <li>{t('termsAndConditions.prohibitions.dataMisuse')}</li>
+            <li>{t('termsAndConditions.prohibitions.illegalRaffles')}</li>
           </ul>
 
-          <h3>📞 Contacto y Soporte</h3>
-          <p>
-            Para dudas, reclamos o soporte técnico:<br/>
-            📧 Email: soporte@rifasdigital.com<br/>
-            📱 WhatsApp: +52 55 1234 5678<br/>
-            🌐 Web: www.rifasdigital.com
-          </p>
+          <h3>{t('termsAndConditions.contact.title')}</h3>
+          <p dangerouslySetInnerHTML={{ __html: t('termsAndConditions.contact.text') }} />
         </div>
 
         <div className="terms-checkbox">
@@ -77,7 +64,7 @@ const TermsAndConditions = ({ onAccept, onDecline }) => {
               checked={hasRead}
               onChange={(e) => setHasRead(e.target.checked)}
             />
-            He leído y acepto los términos y condiciones
+            {t('termsAndConditions.checkbox')}
           </label>
         </div>
 
@@ -86,14 +73,14 @@ const TermsAndConditions = ({ onAccept, onDecline }) => {
             className="btn-secondary"
             onClick={onDecline}
           >
-            Cancelar
+            {t('termsAndConditions.actions.cancel')}
           </button>
           <button 
             className="btn-primary"
             onClick={onAccept}
             disabled={!hasRead}
           >
-            Aceptar y Continuar
+            {t('termsAndConditions.actions.accept')}
           </button>
         </div>
       </div>

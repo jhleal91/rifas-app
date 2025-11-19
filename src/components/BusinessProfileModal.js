@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { showSuccess, showError, showWarning } from './NotificationToast';
-
-const API_BASE = 'http://localhost:5001/api';
+import { API_BASE } from '../config/api';
 
 const BusinessProfileModal = ({ isOpen, onClose, advertiserId }) => {
+  const { t } = useTranslation();
   const [businessProfile, setBusinessProfile] = useState({
     nombre_comercial: '',
     pagina_url: '',
@@ -52,13 +53,13 @@ const BusinessProfileModal = ({ isOpen, onClose, advertiserId }) => {
     const token = localStorage.getItem('advertiserToken');
     
     if (!token) {
-      showWarning('Sesión expirada. Por favor, inicia sesión nuevamente.', 'Sesión expirada');
+      showWarning(t('businessProfile.alerts.sessionExpired.message'), t('businessProfile.alerts.sessionExpired.title'));
       onClose();
       return;
     }
 
     if (!businessProfile.nombre_comercial) {
-      showWarning('El nombre comercial es requerido', 'Campo requerido');
+      showWarning(t('businessProfile.alerts.requiredField.message'), t('businessProfile.alerts.requiredField.title'));
       return;
     }
 
@@ -75,16 +76,16 @@ const BusinessProfileModal = ({ isOpen, onClose, advertiserId }) => {
 
       const data = await res.json();
       if (res.ok) {
-        showSuccess('Perfil de negocio actualizado exitosamente', '¡Éxito!');
+        showSuccess(t('businessProfile.alerts.success.message'), t('businessProfile.alerts.success.title'));
         onClose();
         // Recargar la página para actualizar el menú si es necesario
         window.location.reload();
       } else {
-        showError(data.error || 'Error actualizando perfil', 'Error');
+        showError(data.error || t('businessProfile.alerts.error.updating'), t('businessProfile.alerts.error.title'));
       }
     } catch (error) {
       console.error('Error guardando perfil:', error);
-      showError('Error guardando perfil. Por favor, intenta nuevamente.', 'Error');
+      showError(t('businessProfile.alerts.error.message'), t('businessProfile.alerts.error.title'));
     } finally {
       setLoading(false);
     }
@@ -96,56 +97,56 @@ const BusinessProfileModal = ({ isOpen, onClose, advertiserId }) => {
     <div className="business-profile-modal-overlay" onClick={onClose}>
       <div className="business-profile-modal" onClick={(e) => e.stopPropagation()}>
         <div className="business-profile-modal-header">
-          <h2>🏪 Perfil de Mi Negocio</h2>
-          <button className="business-profile-modal-close" onClick={onClose}>×</button>
+          <h2>{t('businessProfile.title')}</h2>
+          <button className="business-profile-modal-close" onClick={onClose}>{t('businessProfile.close')}</button>
         </div>
 
         <form onSubmit={handleSave} className="business-profile-form">
           <div className="form-group">
-            <label>Nombre Comercial * (ej: AlvarezLA, LealStore)</label>
+            <label>{t('businessProfile.fields.commercialName')}</label>
             <input
               type="text"
               value={businessProfile.nombre_comercial}
               onChange={(e) => setBusinessProfile({...businessProfile, nombre_comercial: e.target.value})}
-              placeholder="Nombre de tu negocio"
+              placeholder={t('businessProfile.fields.commercialNamePlaceholder')}
               maxLength={150}
               required
             />
-            <small>Este nombre aparecerá en "Negocios Patrocinadores"</small>
+            <small>{t('businessProfile.fields.commercialNameHelp')}</small>
           </div>
 
           <div className="form-group">
-            <label>URL de tu Sitio Web</label>
+            <label>{t('businessProfile.fields.websiteUrl')}</label>
             <input
               type="url"
               value={businessProfile.pagina_url}
               onChange={(e) => setBusinessProfile({...businessProfile, pagina_url: e.target.value})}
-              placeholder="https://tu-negocio.com"
+              placeholder={t('businessProfile.fields.websiteUrlPlaceholder')}
             />
-            <small>Los usuarios serán redirigidos aquí desde tu perfil</small>
+            <small>{t('businessProfile.fields.websiteUrlHelp')}</small>
           </div>
 
           <div className="form-group">
-            <label>Descripción del Negocio</label>
+            <label>{t('businessProfile.fields.businessDescription')}</label>
             <textarea
               value={businessProfile.descripcion_negocio}
               onChange={(e) => setBusinessProfile({...businessProfile, descripcion_negocio: e.target.value})}
-              placeholder="Describe tu negocio..."
+              placeholder={t('businessProfile.fields.businessDescriptionPlaceholder')}
               rows={4}
               maxLength={500}
             />
-            <small>Aparecerá en la sección "Negocios Patrocinadores"</small>
+            <small>{t('businessProfile.fields.businessDescriptionHelp')}</small>
           </div>
 
           <div className="form-group">
-            <label>URL del Logo del Negocio</label>
+            <label>{t('businessProfile.fields.logoUrl')}</label>
             <input
               type="url"
               value={businessProfile.logo_url}
               onChange={(e) => setBusinessProfile({...businessProfile, logo_url: e.target.value})}
-              placeholder="https://ejemplo.com/logo.jpg"
+              placeholder={t('businessProfile.fields.logoUrlPlaceholder')}
             />
-            <small>Usa una URL directa de imagen (no URLs de redirección)</small>
+            <small>{t('businessProfile.fields.logoUrlHelp')}</small>
           </div>
 
           <div className="form-group">
@@ -155,14 +156,14 @@ const BusinessProfileModal = ({ isOpen, onClose, advertiserId }) => {
                 checked={businessProfile.activo_sponsor}
                 onChange={(e) => setBusinessProfile({...businessProfile, activo_sponsor: e.target.checked})}
               />
-              <span>Aparecer en "Negocios Patrocinadores"</span>
+              <span>{t('businessProfile.fields.sponsorActive')}</span>
             </label>
-            <small>Tu negocio aparecerá en la sección destacada del portal (requiere tener al menos un anuncio activo)</small>
+            <small>{t('businessProfile.fields.sponsorActiveHelp')}</small>
           </div>
 
           <div className="form-actions">
             <button type="submit" className="btn-primary" disabled={loading}>
-              {loading ? 'Guardando...' : 'Guardar Perfil'}
+              {loading ? t('businessProfile.actions.saving') : t('businessProfile.actions.save')}
             </button>
             <button 
               type="button" 
@@ -170,7 +171,7 @@ const BusinessProfileModal = ({ isOpen, onClose, advertiserId }) => {
               className="btn-secondary"
               disabled={loading}
             >
-              Cancelar
+              {t('businessProfile.actions.cancel')}
             </button>
           </div>
         </form>

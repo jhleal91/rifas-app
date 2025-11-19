@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const API_BASE = 'http://localhost:5001/api';
+import { API_BASE } from '../config/api';
 
 const AdBanner = ({ 
   type = 'banner', // 'banner', 'sidebar', 'inline'

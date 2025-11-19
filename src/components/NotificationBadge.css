@@ -1,0 +1,88 @@
+/* Contenedor del badge */
+.notification-badge-wrapper {
+  position: relative;
+  margin-right: 12px;
+}
+
+/* Botón de la campana */
+.notification-badge-button {
+  position: relative;
+  background: white;
+  border: none;
+  padding: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-badge-button:hover {
+  background: #f3f4f6;
+  transform: scale(1.05);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.notification-badge-button:active {
+  transform: scale(0.95);
+}
+
+.notification-bell-icon {
+  color: #1e293b;
+  width: 24px;
+  height: 24px;
+}
+
+/* Badge de contador */
+.notification-badge-count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 50%;
+  min-width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+  animation: notification-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  border: 2px solid white;
+}
+
+@keyframes notification-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .notification-badge-button {
+    padding: 10px;
+  }
+
+  .notification-bell-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .notification-badge-count {
+    min-width: 20px;
+    height: 20px;
+    font-size: 10px;
+    top: -2px;
+    right: -2px;
+  }
+}

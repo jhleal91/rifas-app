@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import QRCode from 'qrcode';
 import { showSuccess, showError, showWarning, showConfirm, showDangerConfirm } from '../utils/swal';
+import { API_BASE } from '../config/api';
 
 const RifaManagement = ({ rifas, setRifas }) => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const [rifa, setRifa] = useState(null);
@@ -56,6 +59,7 @@ const RifaManagement = ({ rifas, setRifas }) => {
       // Cargar datos completos desde el backend
       cargarDatosRifa();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   // Efecto separado para generar QR cuando la rifa esté cargada
@@ -92,7 +96,7 @@ const RifaManagement = ({ rifas, setRifas }) => {
 
   const venderNumeros = () => {
     if (numerosSeleccionados.length === 0) {
-      showWarning('Selecciona números', 'Por favor, selecciona al menos un número para vender.');
+      showWarning(t('rifaManagement.alerts.selectNumbers.title'), t('rifaManagement.alerts.selectNumbers.message'));
       return;
     }
     
@@ -130,7 +134,7 @@ const RifaManagement = ({ rifas, setRifas }) => {
   // Función para venta directa (sin modal)
   const venderDirecto = async () => {
     if (!nuevoParticipante.nombre.trim()) {
-      showWarning('Nombre requerido', 'Por favor, ingresa el nombre del participante.');
+      showWarning(t('rifaManagement.alerts.nameRequired.title'), t('rifaManagement.alerts.nameRequired.message'));
       return;
     }
 
@@ -144,7 +148,7 @@ const RifaManagement = ({ rifas, setRifas }) => {
       };
 
       // Usar el nuevo endpoint de venta directa para administradores
-      const response = await fetch(`http://localhost:5001/api/participantes/${rifa.id}/vender`, {
+      const response = await fetch(`${API_BASE}/participantes/${rifa.id}/vender`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -165,15 +169,15 @@ const RifaManagement = ({ rifas, setRifas }) => {
         
         const total = parseFloat(rifa.precio) * numerosSeleccionados.length;
         await showSuccess(
-          '¡Venta directa exitosa!',
-          `Se vendieron ${numerosSeleccionados.length} números por $${total}. Los números están confirmados automáticamente.`
+          t('rifaManagement.alerts.directSaleSuccess.title'),
+          t('rifaManagement.alerts.directSaleSuccess.message', { count: numerosSeleccionados.length, total: total.toFixed(2) })
         );
       } else {
-        showError('Error al procesar la venta', result.error || 'Error desconocido');
+        showError(t('rifaManagement.alerts.saleError.title'), result.error || t('rifaManagement.alerts.saleError.unknown'));
       }
     } catch (error) {
       console.error('Error vendiendo números:', error);
-      showError('Error', 'Error al procesar la venta. Por favor, intenta nuevamente.');
+      showError(t('rifaManagement.alerts.saleError.title'), t('rifaManagement.alerts.saleError.message'));
     }
   };
 
@@ -220,7 +224,7 @@ const RifaManagement = ({ rifas, setRifas }) => {
   const cargarDatosRifa = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5001/api/rifas/${id}`, {
+      const response = await fetch(`${API_BASE}/rifas/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -295,7 +299,7 @@ const RifaManagement = ({ rifas, setRifas }) => {
   const recargarDatosRifa = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5001/api/rifas/${rifa.id}`, {
+      const response = await fetch(`${API_BASE}/rifas/${rifa.id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -342,7 +346,7 @@ const RifaManagement = ({ rifas, setRifas }) => {
     // Validar que todos los participantes tengan nombre
     const participantesSinNombre = participantesVenta.filter(p => !p.nombre.trim());
     if (participantesSinNombre.length > 0) {
-      showWarning('Nombre requerido', 'Todos los participantes deben tener un nombre.');
+      showWarning(t('rifaManagement.alerts.nameRequired.title'), t('rifaManagement.alerts.nameRequired.allRequired'));
       return;
     }
 
@@ -359,7 +363,7 @@ const RifaManagement = ({ rifas, setRifas }) => {
           estado: 'confirmado'
         };
 
-        const response = await fetch(`http://localhost:5001/api/participantes/${rifa.id}/vender`, {
+        const response = await fetch(`${API_BASE}/participantes/${rifa.id}/vender`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -382,20 +386,18 @@ const RifaManagement = ({ rifas, setRifas }) => {
         setMostrarModalVenta(false);
         
         // Recargar datos desde el backend para obtener información actualizada
-        const rifaActualizada = await recargarDatosRifa();
-        // Obtener el total recaudado del backend (ya calculado correctamente)
-        const totalRecaudado = rifaActualizada?.totalRecaudado || 0;
+        await recargarDatosRifa();
         
         await showSuccess(
-          '¡Venta directa exitosa!',
-          `Se procesaron ${ventasExitosas} participantes. Todos los números están confirmados automáticamente.`
+          t('rifaManagement.alerts.directSaleSuccess.title'),
+          t('rifaManagement.alerts.directSaleSuccess.multipleParticipants', { count: ventasExitosas })
         );
       } else {
-        showError('Error', 'No se pudo procesar ninguna venta. Por favor, intenta nuevamente.');
+        showError(t('rifaManagement.alerts.saleError.title'), t('rifaManagement.alerts.saleError.noneProcessed'));
       }
     } catch (error) {
       console.error('Error procesando venta:', error);
-      showError('Error', 'Error al procesar la venta. Por favor, intenta nuevamente.');
+      showError(t('rifaManagement.alerts.saleError.title'), t('rifaManagement.alerts.saleError.message'));
     }
   };
 
@@ -404,34 +406,6 @@ const RifaManagement = ({ rifas, setRifas }) => {
     link.download = `qr-rifa-${rifa.nombre}.png`;
     link.href = qrCode;
     link.click();
-  };
-
-  // Función para validar pago (aprobar participación)
-  const validarPago = (participanteId) => {
-    if (!rifa.participantes || !Array.isArray(rifa.participantes)) return;
-    
-    const participante = rifa.participantes.find(p => p.id === participanteId);
-    if (!participante) return;
-
-    const rifaActualizada = {
-      ...rifa,
-      participantes: rifa.participantes.map(p => 
-        p.id === participanteId 
-          ? { ...p, estado: 'confirmado', fechaConfirmacion: new Date().toISOString() }
-          : p
-      ),
-      numerosVendidos: [...rifa.numerosVendidos, ...participante.numerosSeleccionados],
-      numerosReservados: (rifa.numerosReservados || []).filter(
-        numero => !participante.numerosSeleccionados.includes(numero)
-      )
-    };
-
-    const rifasActualizadas = rifas.map(r => 
-      r.id === rifa.id ? rifaActualizada : r
-    );
-
-    setRifas(rifasActualizadas);
-    setRifa(rifaActualizada);
   };
 
   // Función para guardar formas de pago
@@ -454,7 +428,7 @@ const RifaManagement = ({ rifas, setRifas }) => {
       console.log('📤 Enviando formas de pago:', datosFormaPago);
       console.log('📤 Estado actual de formaPago:', formaPago);
       
-      const response = await fetch(`http://localhost:5001/api/rifas/${rifa.id}/formas-pago`, {
+      const response = await fetch(`${API_BASE}/rifas/${rifa.id}/formas-pago`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -464,28 +438,28 @@ const RifaManagement = ({ rifas, setRifas }) => {
       });
 
       if (response.ok) {
-        const result = await response.json();
-        await showSuccess('Formas de pago guardadas', 'Las formas de pago se guardaron exitosamente.');
+        await response.json();
+        await showSuccess(t('rifaManagement.alerts.paymentSaved.title'), t('rifaManagement.alerts.paymentSaved.message'));
         setMostrarFormaPago(false);
         await recargarDatosRifa();
       } else {
         const errorData = await response.json();
-        showError('Error al guardar', errorData.error || 'Error desconocido');
+        showError(t('rifaManagement.alerts.paymentError.title'), errorData.error || t('rifaManagement.alerts.paymentError.unknown'));
       }
     } catch (error) {
       console.error('Error guardando formas de pago:', error);
-      showError('Error', 'Error al guardar formas de pago. Por favor, intenta nuevamente.');
+      showError(t('rifaManagement.alerts.paymentError.title'), t('rifaManagement.alerts.paymentError.message'));
     }
   };
 
   // Función para confirmar venta
   const confirmarVenta = async (participanteId) => {
     const confirmed = await showConfirm(
-      'Confirmar Venta',
-      '¿Estás seguro de que quieres confirmar esta venta? Los números se marcarán como vendidos.',
+      t('rifaManagement.alerts.confirmSale.title'),
+      t('rifaManagement.alerts.confirmSale.message'),
       {
-        confirmText: 'Sí, confirmar',
-        cancelText: 'Cancelar',
+        confirmText: t('rifaManagement.alerts.confirmSale.confirm'),
+        cancelText: t('rifaManagement.alerts.confirmSale.cancel'),
         icon: 'question',
         confirmColor: '#10b981'
       }
@@ -497,7 +471,7 @@ const RifaManagement = ({ rifas, setRifas }) => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5001/api/participantes/${rifa.id}/confirmar-venta`, {
+      const response = await fetch(`${API_BASE}/participantes/${rifa.id}/confirmar-venta`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -511,13 +485,13 @@ const RifaManagement = ({ rifas, setRifas }) => {
       if (response.ok && result.message) {
         // Recargar datos desde el backend
         await recargarDatosRifa();
-        await showSuccess('¡Venta confirmada!', 'Los números han sido marcados como vendidos.');
+        await showSuccess(t('rifaManagement.alerts.saleConfirmed.title'), t('rifaManagement.alerts.saleConfirmed.message'));
       } else {
-        showError('Error al confirmar', result.error || 'Error desconocido');
+        showError(t('rifaManagement.alerts.confirmError.title'), result.error || t('rifaManagement.alerts.confirmError.unknown'));
       }
     } catch (error) {
       console.error('Error confirmando venta:', error);
-      showError('Error', 'Error al confirmar la venta. Por favor, intenta nuevamente.');
+      showError(t('rifaManagement.alerts.confirmError.title'), t('rifaManagement.alerts.confirmError.message'));
     }
   };
 
@@ -525,7 +499,7 @@ const RifaManagement = ({ rifas, setRifas }) => {
     if (!rifa) return;
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`http://localhost:5001/api/rifas/${rifa.id}/resultado`, {
+      const res = await fetch(`${API_BASE}/rifas/${rifa.id}/resultado`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -535,11 +509,11 @@ const RifaManagement = ({ rifas, setRifas }) => {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Error');
-      await showSuccess('Resultado actualizado', 'El resultado de la rifa se ha actualizado correctamente.');
+      await showSuccess(t('rifaManagement.alerts.resultUpdated.title'), t('rifaManagement.alerts.resultUpdated.message'));
       await recargarDatosRifa();
     } catch (e) {
       console.error('Error guardando resultado:', e);
-      showError('Error', 'Error guardando resultado. Por favor, intenta nuevamente.');
+      showError(t('rifaManagement.alerts.resultError.title'), t('rifaManagement.alerts.resultError.message'));
     }
   };
 
@@ -570,11 +544,11 @@ const RifaManagement = ({ rifas, setRifas }) => {
 
     // Confirmar eliminación (baja lógica)
     const confirmed = await showDangerConfirm(
-      'Eliminar Rifa',
-      `¿Estás seguro de que deseas eliminar la rifa "${rifa.nombre}"? La rifa será marcada como eliminada y no será visible públicamente, pero los datos se conservarán en el sistema.`,
+      t('rifaManagement.alerts.deleteRifa.title'),
+      t('rifaManagement.alerts.deleteRifa.message', { name: rifa.nombre }),
       {
-        confirmText: 'Eliminar',
-        cancelText: 'Cancelar'
+        confirmText: t('rifaManagement.alerts.deleteRifa.confirm'),
+        cancelText: t('rifaManagement.alerts.deleteRifa.cancel')
       }
     );
 
@@ -583,12 +557,12 @@ const RifaManagement = ({ rifas, setRifas }) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        showError('Error', 'Sesión expirada. Por favor, inicia sesión nuevamente.');
+        showError(t('rifaManagement.alerts.deleteError.title'), t('rifaManagement.alerts.deleteError.sessionExpired'));
         navigate('/');
         return;
       }
 
-      const res = await fetch(`http://localhost:5001/api/rifas/${rifa.id}`, {
+      const res = await fetch(`${API_BASE}/rifas/${rifa.id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -600,23 +574,23 @@ const RifaManagement = ({ rifas, setRifas }) => {
 
       if (!res.ok) {
         if (res.status === 403) {
-          showError('Sin permisos', 'No tienes permisos para eliminar esta rifa.');
+          showError(t('rifaManagement.alerts.deleteError.noPermissions'), t('rifaManagement.alerts.deleteError.noPermissionsMessage'));
         } else if (res.status === 404) {
-          showError('Rifa no encontrada', 'La rifa que intentas eliminar no existe.');
+          showError(t('rifaManagement.alerts.deleteError.notFound'), t('rifaManagement.alerts.deleteError.notFoundMessage'));
         } else {
-          showError('Error', data.error || 'Error al eliminar la rifa. Por favor, intenta nuevamente.');
+          showError(t('rifaManagement.alerts.deleteError.title'), data.error || t('rifaManagement.alerts.deleteError.message'));
         }
         return;
       }
 
       // Mostrar mensaje de éxito
-      await showSuccess('Rifa eliminada', 'La rifa ha sido eliminada exitosamente.');
+      await showSuccess(t('rifaManagement.alerts.deleteSuccess.title'), t('rifaManagement.alerts.deleteSuccess.message'));
 
       // Redirigir al dashboard (el contexto se actualizará automáticamente)
       navigate('/');
     } catch (error) {
       console.error('Error eliminando rifa:', error);
-      showError('Error', 'Error al eliminar la rifa. Por favor, intenta nuevamente.');
+      showError(t('rifaManagement.alerts.deleteError.title'), t('rifaManagement.alerts.deleteError.message'));
     }
   };
 
@@ -625,11 +599,11 @@ const RifaManagement = ({ rifas, setRifas }) => {
       <div className="management-container rifa-management">
         <div className="header-top">
           <Link to="/" className="btn-back-to-rifas">
-            ← Regresar al Dashboard
+            {t('rifaManagement.notFound.backToDashboard')}
           </Link>
         </div>
-        <h2>Rifa no encontrada</h2>
-        <Link to="/" className="btn-primary">Volver al inicio</Link>
+        <h2>{t('rifaManagement.notFound.title')}</h2>
+        <Link to="/" className="btn-primary">{t('rifaManagement.notFound.backToHome')}</Link>
       </div>
     );
   }
@@ -638,32 +612,32 @@ const RifaManagement = ({ rifas, setRifas }) => {
     <div className="management-container rifa-management">
       <div className="header-top">
         <Link to="/" className="btn-back-to-rifas">
-          ← Regresar al Dashboard
+          {t('rifaManagement.notFound.backToDashboard')}
         </Link>
       </div>
       <div className="management-header">
-        <h2>Gestión de Rifa: {rifa.nombre}</h2>
+        <h2>{t('rifaManagement.header.title')} {rifa.nombre}</h2>
         <div className="header-actions">
           <button onClick={recargarDatosRifa} className="btn-secondary">
-            🔄 Actualizar Datos
+            {t('rifaManagement.header.updateData')}
           </button>
           <button onClick={eliminarRifa} className="btn-danger">
-            🗑️ Eliminar Rifa
+            {t('rifaManagement.header.deleteRifa')}
           </button>
-          <Link to="/" className="btn-secondary">← Volver</Link>
+          <Link to="/" className="btn-secondary">{t('rifaManagement.header.back')}</Link>
         </div>
       </div>
 
       <div className="management-content">
         <div className="qr-section">
-          <h3>📱 Compartir Rifa</h3>
+          <h3>{t('rifaManagement.share.title')}</h3>
           <div className="qr-container">
             {qrCode && (
               <>
                 <img src={qrCode} alt="QR Code" className="qr-image" />
                 <p className="qr-url">{window.location.origin}/public/{rifa.id}</p>
                 <button onClick={descargarQR} className="btn-primary">
-                  📥 Descargar QR
+                  {t('rifaManagement.share.downloadQR')}
                 </button>
               </>
             )}
@@ -671,38 +645,38 @@ const RifaManagement = ({ rifas, setRifas }) => {
         </div>
 
         <div className="venta-section">
-          <h3>🎫 Vender Números</h3>
+          <h3>{t('rifaManagement.sell.title')}</h3>
           <div className="venta-form">
             <div className="form-group">
-              <label>Nombre del participante</label>
+              <label>{t('rifaManagement.sell.participantName')}</label>
               <input
                 type="text"
-                placeholder="Ej: Juan Pérez"
+                placeholder={t('rifaManagement.sell.participantNamePlaceholder')}
                 value={nuevoParticipante.nombre}
                 onChange={(e) => setNuevoParticipante({...nuevoParticipante, nombre: e.target.value})}
               />
             </div>
             <div className="form-group">
-              <label>Teléfono (opcional)</label>
+              <label>{t('rifaManagement.sell.phone')}</label>
               <input
                 type="tel"
-                placeholder="Ej: (555) 123-4567"
+                placeholder={t('rifaManagement.sell.phonePlaceholder')}
                 value={nuevoParticipante.telefono}
                 onChange={(e) => setNuevoParticipante({...nuevoParticipante, telefono: e.target.value})}
               />
             </div>
             <div className="form-group">
-              <label>Email (para enviar URL de la rifa)</label>
+              <label>{t('rifaManagement.sell.email')}</label>
               <input
                 type="email"
-                placeholder="Ej: juan@email.com"
+                placeholder={t('rifaManagement.sell.emailPlaceholder')}
                 value={nuevoParticipante.email}
                 onChange={(e) => setNuevoParticipante({...nuevoParticipante, email: e.target.value})}
               />
             </div>
             
             <div className="numeros-seleccion">
-              <h4>Números Seleccionados: {numerosSeleccionados.length}</h4>
+              <h4>{t('rifaManagement.sell.selectedNumbers')} {numerosSeleccionados.length}</h4>
               <div className="numeros-grid">
                 {rifa.elementos_personalizados.map(numero => {
                   // Convertir número a string para comparación
@@ -724,7 +698,7 @@ const RifaManagement = ({ rifas, setRifas }) => {
                         reservado ? 'reservado' : 'disponible'}`}
                       onClick={() => disponible && seleccionarNumero(numero)}
                       disabled={!disponible}
-                      title={vendido ? 'Vendido' : reservado ? 'Reservado' : 'Disponible'}
+                      title={vendido ? t('rifaManagement.sell.numberStates.sold') : reservado ? t('rifaManagement.sell.numberStates.reserved') : t('rifaManagement.sell.numberStates.available')}
                     >
                       {numero}
                     </button>
@@ -739,7 +713,7 @@ const RifaManagement = ({ rifas, setRifas }) => {
                 className="btn-primary"
                 disabled={numerosSeleccionados.length === 0}
               >
-                Vender Números (${rifa.precio * numerosSeleccionados.length})
+                {t('rifaManagement.sell.sellNumbers')} (${rifa.precio * numerosSeleccionados.length})
               </button>
               
               <button 
@@ -750,25 +724,25 @@ const RifaManagement = ({ rifas, setRifas }) => {
                 className="btn-secondary"
                 disabled={numerosSeleccionados.length === 0}
               >
-                Venta Múltiple
+                {t('rifaManagement.sell.multipleSale')}
               </button>
             </div>
           </div>
         </div>
 
         <div className="estadisticas-section">
-          <h3>📊 Estadísticas</h3>
+          <h3>{t('rifaManagement.stats.title')}</h3>
           <div className="stats-grid">
             <div className="stat-card">
-              <h4>Total Números</h4>
+              <h4>{t('rifaManagement.stats.totalNumbers')}</h4>
               <p>{rifa.cantidad_elementos || rifa.numerosDisponibles.length}</p>
             </div>
             <div className="stat-card">
-              <h4>Vendidos</h4>
+              <h4>{t('rifaManagement.stats.sold')}</h4>
               <p>{rifa.totalElementosVendidos || 0}</p>
             </div>
             <div className="stat-card">
-              <h4>Disponibles</h4>
+              <h4>{t('rifaManagement.stats.available')}</h4>
               <p>{rifa.estadisticas?.elementos_disponibles || 
                 rifa.elementos_personalizados.filter(n => 
                   !rifa.numerosVendidos.includes(String(n)) && 
@@ -776,15 +750,15 @@ const RifaManagement = ({ rifas, setRifas }) => {
                 ).length}</p>
             </div>
             <div className="stat-card">
-              <h4>Reservados</h4>
+              <h4>{t('rifaManagement.stats.reserved')}</h4>
               <p>{rifa.totalElementosReservados || 0}</p>
             </div>
             <div className="stat-card">
-              <h4>Participantes</h4>
+              <h4>{t('rifaManagement.stats.participants')}</h4>
               <p>{rifa.totalParticipantes || (rifa.participantes ? rifa.participantes.length : 0)}</p>
             </div>
             <div className="stat-card">
-              <h4>Recaudado</h4>
+              <h4>{t('rifaManagement.stats.collected')}</h4>
               <p>${rifa.totalRecaudado || 0}</p>
             </div>
           </div>
@@ -793,14 +767,14 @@ const RifaManagement = ({ rifas, setRifas }) => {
         {/* Resultado de la rifa */}
         <div className="formas-pago-management" style={{ marginTop: '1.5rem' }}>
           <div className="formas-pago-header">
-            <h3>🏁 Resultado</h3>
+            <h3>{t('rifaManagement.result.title')}</h3>
           </div>
           <div className="form-grid">
             <div className="form-group">
-              <label>Número ganador</label>
+              <label>{t('rifaManagement.result.winnerNumber')}</label>
               <input
                 type="text"
-                placeholder="Ej. 07"
+                placeholder={t('rifaManagement.result.winnerNumberPlaceholder')}
                 value={numeroGanador}
                 onChange={(e) => setNumeroGanador(e.target.value)}
               />
@@ -812,24 +786,24 @@ const RifaManagement = ({ rifas, setRifas }) => {
                   checked={resultadoPublicado}
                   onChange={(e) => setResultadoPublicado(e.target.checked)}
                 />
-                <span>Publicar resultado</span>
+                <span>{t('rifaManagement.result.publishResult')}</span>
               </label>
             </div>
           </div>
           <div className="form-actions">
             <button className="btn-primary" onClick={guardarResultado}>
-              💾 Guardar Resultado
+              {t('rifaManagement.result.saveResult')}
             </button>
           </div>
           {rifa.numero_ganador && (
             <div className="pago-info-card" style={{ marginTop: '1rem' }}>
               <div className="pago-info-grid">
                 <div className="pago-info-item">
-                  <span className="pago-info-label">Publicado:</span>
-                  <span className="pago-info-value">{rifa.resultado_publicado ? 'Sí' : 'No'}</span>
+                  <span className="pago-info-label">{t('rifaManagement.result.published')}</span>
+                  <span className="pago-info-value">{rifa.resultado_publicado ? t('rifaManagement.result.yes') : t('rifaManagement.result.no')}</span>
                 </div>
                 <div className="pago-info-item">
-                  <span className="pago-info-label">Número actual:</span>
+                  <span className="pago-info-label">{t('rifaManagement.result.currentNumber')}</span>
                   <span className="pago-info-value">{rifa.numero_ganador}</span>
                 </div>
               </div>
@@ -840,7 +814,7 @@ const RifaManagement = ({ rifas, setRifas }) => {
         {/* Sección de Premios */}
         {rifa.premios && rifa.premios.length > 0 && (
           <div className="premios-management">
-            <h3>🏆 Premios de la Rifa</h3>
+            <h3>{t('rifaManagement.prizes.title')}</h3>
             <div className="premios-list">
               {rifa.premios.map((premio, index) => (
                 <div key={premio.id} className="premio-management">
@@ -862,12 +836,12 @@ const RifaManagement = ({ rifas, setRifas }) => {
 
         {/* Sección de Fotos */}
         <div className="fotos-management">
-          <h3>📸 Fotos de Premios</h3>
+          <h3>{t('rifaManagement.photos.title')}</h3>
           {rifa.fotosPremios && rifa.fotosPremios.length > 0 ? (
             <div className="fotos-management-grid">
               {rifa.fotosPremios.map((foto, index) => (
                 <div key={foto.id || index} className="foto-management">
-                  <img src={foto.url || foto.url_foto} alt={foto.descripcion || 'Premio'} />
+                  <img src={foto.url || foto.url_foto} alt={foto.descripcion || t('rifaManagement.prizes.title')} />
                   {foto.descripcion && (
                     <div className="foto-description">{foto.descripcion}</div>
                   )}
@@ -876,8 +850,8 @@ const RifaManagement = ({ rifas, setRifas }) => {
             </div>
           ) : (
             <div className="no-fotos-message">
-              <p>No hay fotos del premio agregadas aún.</p>
-              <small>Las fotos aparecerán aquí una vez que las agregues al crear la rifa.</small>
+              <p>{t('rifaManagement.photos.noPhotos')}</p>
+              <small>{t('rifaManagement.photos.noPhotosHelp')}</small>
             </div>
           )}
         </div>
@@ -885,7 +859,7 @@ const RifaManagement = ({ rifas, setRifas }) => {
         {/* Sección de Reglas */}
         {rifa.reglas && (
           <div className="reglas-management">
-            <h3>📋 Reglas de la Rifa</h3>
+            <h3>{t('rifaManagement.rules.title')}</h3>
             <div className="reglas-content">
               <p>{rifa.reglas}</p>
             </div>
@@ -895,12 +869,12 @@ const RifaManagement = ({ rifas, setRifas }) => {
         {/* Sección de Formas de Pago */}
         <div className="formas-pago-management">
           <div className="formas-pago-header">
-            <h3>💳 Formas de Pago</h3>
+            <h3>{t('rifaManagement.payment.title')}</h3>
             <button 
               onClick={() => setMostrarFormaPago(!mostrarFormaPago)}
               className="btn-secondary"
             >
-              {mostrarFormaPago ? '❌ Cancelar' : '✏️ Editar Formas de Pago'}
+              {mostrarFormaPago ? t('rifaManagement.payment.cancel') : t('rifaManagement.payment.edit')}
             </button>
           </div>
 
@@ -913,68 +887,68 @@ const RifaManagement = ({ rifas, setRifas }) => {
             if (mostrarFormaPago) {
               return (
                 <div className="forma-pago-edit">
-                  <h4>🏦 Datos para Transferencia Bancaria</h4>
+                  <h4>{t('rifaManagement.payment.bankData')}</h4>
                   <div className="form-grid">
                     <div className="form-group">
-                      <label>Banco *</label>
+                      <label>{t('rifaManagement.payment.bank')}</label>
                       <input
                         type="text"
-                        placeholder="Ej: Bancomer, Santander, etc."
+                        placeholder={t('rifaManagement.payment.bankPlaceholder')}
                         value={formaPago.banco}
                         onChange={(e) => setFormaPago({...formaPago, banco: e.target.value})}
                       />
                     </div>
                     <div className="form-group">
-                      <label>CLABE (18 dígitos) *</label>
+                      <label>{t('rifaManagement.payment.clabe')}</label>
                       <input
                         type="text"
-                        placeholder="Ej: 012345678901234567"
+                        placeholder={t('rifaManagement.payment.clabePlaceholder')}
                         maxLength="18"
                         value={formaPago.clabe}
                         onChange={(e) => setFormaPago({...formaPago, clabe: e.target.value.replace(/[^0-9]/g, '')})}
                       />
                     </div>
                     <div className="form-group">
-                      <label>Número de Cuenta *</label>
+                      <label>{t('rifaManagement.payment.accountNumber')}</label>
                       <input
                         type="text"
-                        placeholder="Ej: 1234567890"
+                        placeholder={t('rifaManagement.payment.accountNumberPlaceholder')}
                         value={formaPago.numero_cuenta}
                         onChange={(e) => setFormaPago({...formaPago, numero_cuenta: e.target.value})}
                       />
                     </div>
                     <div className="form-group">
-                      <label>Nombre del Titular *</label>
+                      <label>{t('rifaManagement.payment.holderName')}</label>
                       <input
                         type="text"
-                        placeholder="Ej: Juan Pérez García"
+                        placeholder={t('rifaManagement.payment.holderNamePlaceholder')}
                         value={formaPago.nombre_titular}
                         onChange={(e) => setFormaPago({...formaPago, nombre_titular: e.target.value})}
                       />
                     </div>
                     <div className="form-group">
-                      <label>Teléfono (opcional)</label>
+                      <label>{t('rifaManagement.payment.phone')}</label>
                       <input
                         type="tel"
-                        placeholder="Ej: (555) 123-4567"
+                        placeholder={t('rifaManagement.payment.phonePlaceholder')}
                         value={formaPago.telefono}
                         onChange={(e) => setFormaPago({...formaPago, telefono: e.target.value})}
                       />
                     </div>
                     <div className="form-group">
-                      <label>WhatsApp (opcional)</label>
+                      <label>{t('rifaManagement.payment.whatsapp')}</label>
                       <input
                         type="tel"
-                        placeholder="Ej: +52 555 123 4567"
+                        placeholder={t('rifaManagement.payment.whatsappPlaceholder')}
                         value={formaPago.whatsapp}
                         onChange={(e) => setFormaPago({...formaPago, whatsapp: e.target.value})}
                       />
-                      <small>Este número aparecerá para que los participantes envíen su comprobante</small>
+                      <small>{t('rifaManagement.payment.whatsappHelp')}</small>
                     </div>
                     <div className="form-group full-width">
-                      <label>Otros Detalles (opcional)</label>
+                      <label>{t('rifaManagement.payment.otherDetails')}</label>
                       <textarea
-                        placeholder="Información adicional sobre el pago..."
+                        placeholder={t('rifaManagement.payment.otherDetailsPlaceholder')}
                         value={formaPago.otros_detalles}
                         onChange={(e) => setFormaPago({...formaPago, otros_detalles: e.target.value})}
                         rows="3"
@@ -987,13 +961,13 @@ const RifaManagement = ({ rifas, setRifas }) => {
                       className="btn-primary"
                       disabled={!formaPago.banco || !formaPago.clabe || !formaPago.numero_cuenta || !formaPago.nombre_titular}
                     >
-                      💾 Guardar Formas de Pago
+                      {t('rifaManagement.payment.save')}
                     </button>
                     <button 
                       onClick={() => setMostrarFormaPago(false)}
                       className="btn-secondary"
                     >
-                      Cancelar
+                      {t('rifaManagement.payment.cancelButton')}
                     </button>
                   </div>
                 </div>
@@ -1002,33 +976,33 @@ const RifaManagement = ({ rifas, setRifas }) => {
               return (
                 <div className="forma-pago-display">
                   <div className="pago-info-card">
-                    <h4>🏦 Datos para Transferencia Bancaria</h4>
+                    <h4>{t('rifaManagement.payment.bankData')}</h4>
                     <div className="pago-info-grid">
                       <div className="pago-info-item">
-                        <span className="pago-info-label">Banco:</span>
-                        <span className="pago-info-value">{formaPagoExistente.banco || 'No especificado'}</span>
+                        <span className="pago-info-label">{t('publicRifaView.payment.bank')}</span>
+                        <span className="pago-info-value">{formaPagoExistente.banco || t('rifaManagement.payment.notSpecified')}</span>
                       </div>
                       <div className="pago-info-item">
-                        <span className="pago-info-label">CLABE:</span>
-                        <span className="pago-info-value">{formaPagoExistente.clabe || 'No especificado'}</span>
+                        <span className="pago-info-label">{t('publicRifaView.payment.clabe')}</span>
+                        <span className="pago-info-value">{formaPagoExistente.clabe || t('rifaManagement.payment.notSpecified')}</span>
                       </div>
                       <div className="pago-info-item">
-                        <span className="pago-info-label">Número de Cuenta:</span>
-                        <span className="pago-info-value">{formaPagoExistente.numero_cuenta || 'No especificado'}</span>
+                        <span className="pago-info-label">{t('publicRifaView.payment.accountNumber')}</span>
+                        <span className="pago-info-value">{formaPagoExistente.numero_cuenta || t('rifaManagement.payment.notSpecified')}</span>
                       </div>
                       <div className="pago-info-item">
-                        <span className="pago-info-label">Titular:</span>
-                        <span className="pago-info-value">{formaPagoExistente.nombre_titular || 'No especificado'}</span>
+                        <span className="pago-info-label">{t('publicRifaView.payment.holder')}</span>
+                        <span className="pago-info-value">{formaPagoExistente.nombre_titular || t('rifaManagement.payment.notSpecified')}</span>
                       </div>
                       {formaPagoExistente.telefono && (
                         <div className="pago-info-item">
-                          <span className="pago-info-label">Teléfono:</span>
+                          <span className="pago-info-label">{t('publicRifaView.payment.phone')}</span>
                           <span className="pago-info-value">{formaPagoExistente.telefono}</span>
                         </div>
                       )}
                       {formaPagoExistente.whatsapp && (
                         <div className="pago-info-item">
-                          <span className="pago-info-label">WhatsApp:</span>
+                          <span className="pago-info-label">{t('publicRifaView.payment.whatsapp')}</span>
                           <span className="pago-info-value">{formaPagoExistente.whatsapp}</span>
                         </div>
                       )}
@@ -1039,8 +1013,8 @@ const RifaManagement = ({ rifas, setRifas }) => {
             } else {
               return (
                 <div className="forma-pago-empty">
-                  <p>⚠️ No hay formas de pago configuradas. Los participantes no podrán ver los datos bancarios.</p>
-                  <p>Haz clic en "Editar Formas de Pago" para agregar la información de transferencia.</p>
+                  <p>{t('rifaManagement.payment.notConfigured')}</p>
+                  <p>{t('rifaManagement.payment.notConfiguredHelp')}</p>
                 </div>
               );
             }
@@ -1050,14 +1024,14 @@ const RifaManagement = ({ rifas, setRifas }) => {
         <div className="participantes-section">
           <div className="participantes-header">
             <div className="participantes-title">
-              <h3>👥 Participantes</h3>
+              <h3>{t('rifaManagement.participants.title')}</h3>
               {rifa.participantes && rifa.participantes.length > 0 && (
                 <div className="participantes-stats">
                   <span className="stat-pendientes">
-                    ⏳ {rifa.participantes.filter(p => !p.estado || p.estado === 'pendiente').length} pendientes
+                    ⏳ {rifa.participantes.filter(p => !p.estado || p.estado === 'pendiente').length} {t('rifaManagement.participants.pending')}
                   </span>
                   <span className="stat-confirmados">
-                    ✅ {rifa.participantes.filter(p => p.estado === 'confirmado').length} confirmados
+                    ✅ {rifa.participantes.filter(p => p.estado === 'confirmado').length} {t('rifaManagement.participants.confirmed')}
                   </span>
                 </div>
               )}
@@ -1068,19 +1042,19 @@ const RifaManagement = ({ rifas, setRifas }) => {
                   to={`/participantes/${rifa.id}`}
                   className="btn-secondary"
                 >
-                  Ver Todos los Participantes
+                  {t('rifaManagement.participants.viewAll')}
                 </Link>
               </div>
             )}
           </div>
           
           {(!rifa.participantes || rifa.participantes.length === 0) ? (
-            <p>No hay participantes aún</p>
+            <p>{t('rifaManagement.participants.none')}</p>
           ) : (() => {
             const participantesPendientes = rifa.participantes.filter(p => !p.estado || p.estado === 'pendiente');
             return participantesPendientes.length === 0 ? (
               <p className="no-participantes-message">
-                No hay participantes pendientes
+                {t('rifaManagement.participants.noPending')}
               </p>
             ) : (
               <div className="participantes-list">
@@ -1089,15 +1063,15 @@ const RifaManagement = ({ rifas, setRifas }) => {
                   <div className="participante-header">
                     <h4>{participante.nombre}</h4>
                     <span className={`estado-participante ${participante.estado || 'pendiente'}`}>
-                      {participante.estado === 'confirmado' ? '✅ Confirmado' : '⏳ Pendiente'}
+                      {participante.estado === 'confirmado' ? t('rifaManagement.participants.status.confirmed') : t('rifaManagement.participants.status.pending')}
                     </span>
                   </div>
                   
                   <div className="participante-info">
-                    {participante.telefono && <p>📞 {participante.telefono}</p>}
-                    <p>🎫 Números: {participante.numeros_seleccionados ? participante.numeros_seleccionados.join(', ') : 'No especificados'}</p>
-                    <p>💰 Total: ${participante.total_pagado || '0'}</p>
-                    <p>📅 Fecha: {new Date(participante.fecha_participacion).toLocaleDateString()}</p>
+                    {participante.telefono && <p>{t('rifaManagement.participants.phone')} {participante.telefono}</p>}
+                    <p>{t('rifaManagement.participants.numbers')} {participante.numeros_seleccionados ? participante.numeros_seleccionados.join(', ') : t('rifaManagement.participants.notSpecified')}</p>
+                    <p>{t('rifaManagement.participants.total')} ${participante.total_pagado || '0'}</p>
+                    <p>{t('rifaManagement.participants.date')} {new Date(participante.fecha_participacion).toLocaleDateString()}</p>
                   </div>
 
                   {(!participante.estado || participante.estado === 'pendiente') && (
@@ -1105,16 +1079,16 @@ const RifaManagement = ({ rifas, setRifas }) => {
                       <button 
                         className="btn-validar"
                         onClick={() => confirmarVenta(participante.id)}
-                        title="Confirmar venta y marcar como vendido"
+                        title={t('rifaManagement.participants.actions.confirmSaleTitle')}
                       >
-                        ✅ Confirmar Venta
+                        {t('rifaManagement.participants.actions.confirmSale')}
                       </button>
                       <button 
                         className="btn-rechazar"
                         onClick={() => rechazarPago(participante.id)}
-                        title="Rechazar y liberar números"
+                        title={t('rifaManagement.participants.actions.rejectTitle')}
                       >
-                        ❌ Rechazar
+                        {t('rifaManagement.participants.actions.reject')}
                       </button>
                     </div>
                   )}
@@ -1131,19 +1105,19 @@ const RifaManagement = ({ rifas, setRifas }) => {
         <div className="modal-overlay">
           <div className="modal-content venta-modal">
             <div className="modal-header">
-              <h2>🎯 Procesar Venta</h2>
+              <h2>{t('rifaManagement.saleModal.title')}</h2>
               <button 
                 className="modal-close"
                 onClick={() => setMostrarModalVenta(false)}
               >
-                ✕
+                {t('rifaManagement.saleModal.close')}
               </button>
             </div>
 
             <div className="modal-body">
               {/* Tipo de Venta */}
               <div className="form-group">
-                <label>Tipo de Venta:</label>
+                <label>{t('rifaManagement.saleModal.saleType')}</label>
                 <div className="tipo-venta-options">
                   <label className="radio-option">
                     <input
@@ -1153,7 +1127,7 @@ const RifaManagement = ({ rifas, setRifas }) => {
                       checked={tipoVenta === 'individual'}
                       onChange={(e) => cambiarTipoVenta(e.target.value)}
                     />
-                    <span>Individual (1 persona, {numerosSeleccionados.length} números)</span>
+                    <span>{t('rifaManagement.saleModal.individual', { count: numerosSeleccionados.length })}</span>
                   </label>
                   <label className="radio-option">
                     <input
@@ -1163,7 +1137,7 @@ const RifaManagement = ({ rifas, setRifas }) => {
                       checked={tipoVenta === 'multiple'}
                       onChange={(e) => cambiarTipoVenta(e.target.value)}
                     />
-                    <span>Múltiple ({numerosSeleccionados.length} personas, 1 número cada uno)</span>
+                    <span>{t('rifaManagement.saleModal.multiple', { count: numerosSeleccionados.length })}</span>
                   </label>
                 </div>
               </div>
@@ -1177,7 +1151,7 @@ const RifaManagement = ({ rifas, setRifas }) => {
                       checked={mismoNombre}
                       onChange={(e) => setMismoNombre(e.target.checked)}
                     />
-                    <span>Usar el mismo nombre para todos</span>
+                    <span>{t('rifaManagement.saleModal.sameName')}</span>
                   </label>
                 </div>
               )}
@@ -1185,10 +1159,10 @@ const RifaManagement = ({ rifas, setRifas }) => {
               {/* Campo de nombre global para venta múltiple con mismo nombre */}
               {tipoVenta === 'multiple' && mismoNombre && (
                 <div className="form-group">
-                  <label>Nombre para todos los participantes:</label>
+                  <label>{t('rifaManagement.saleModal.nameForAll')}</label>
                   <input
                     type="text"
-                    placeholder="Ej: Familia García"
+                    placeholder={t('rifaManagement.saleModal.nameForAllPlaceholder')}
                     onChange={(e) => aplicarMismoNombre(e.target.value)}
                   />
                 </div>
@@ -1196,13 +1170,13 @@ const RifaManagement = ({ rifas, setRifas }) => {
 
               {/* Lista de participantes */}
               <div className="participantes-venta">
-                <h3>Participantes ({participantesVenta.length})</h3>
+                <h3>{t('rifaManagement.saleModal.participantsList', { count: participantesVenta.length })}</h3>
                 {participantesVenta.map((participante, index) => (
                   <div key={participante.id} className="participante-venta">
                     <div className="participante-header">
                       <span className="participante-numero">#{index + 1}</span>
                       <span className="participante-numeros">
-                        Números: {participante.numeros.join(', ')}
+                        {t('rifaManagement.saleModal.participantNumber')} {participante.numeros.join(', ')}
                       </span>
                       <span className="participante-precio">
                         ${parseFloat(rifa.precio) * participante.numeros.length}
@@ -1213,13 +1187,13 @@ const RifaManagement = ({ rifas, setRifas }) => {
                       <div className="participante-form">
                         <input
                           type="text"
-                          placeholder="Nombre del participante"
+                          placeholder={t('rifaManagement.saleModal.participantName')}
                           value={participante.nombre}
                           onChange={(e) => actualizarParticipante(index, 'nombre', e.target.value)}
                         />
                         <input
                           type="text"
-                          placeholder="Teléfono (opcional)"
+                          placeholder={t('rifaManagement.saleModal.participantPhone')}
                           value={participante.telefono}
                           onChange={(e) => actualizarParticipante(index, 'telefono', e.target.value)}
                         />
@@ -1231,18 +1205,18 @@ const RifaManagement = ({ rifas, setRifas }) => {
 
               {/* Resumen de la venta */}
               <div className="resumen-venta">
-                <h3>Resumen de Venta</h3>
+                <h3>{t('rifaManagement.saleModal.summary.title')}</h3>
                 <div className="resumen-stats">
                   <div className="stat">
-                    <span>Total Participantes:</span>
+                    <span>{t('rifaManagement.saleModal.summary.totalParticipants')}</span>
                     <span>{participantesVenta.length}</span>
                   </div>
                   <div className="stat">
-                    <span>Total Números:</span>
+                    <span>{t('rifaManagement.saleModal.summary.totalNumbers')}</span>
                     <span>{numerosSeleccionados.length}</span>
                   </div>
                   <div className="stat total">
-                    <span>Total a Cobrar:</span>
+                    <span>{t('rifaManagement.saleModal.summary.totalToCharge')}</span>
                     <span>${parseFloat(rifa.precio) * numerosSeleccionados.length}</span>
                   </div>
                 </div>
@@ -1254,13 +1228,13 @@ const RifaManagement = ({ rifas, setRifas }) => {
                 className="btn-secondary"
                 onClick={() => setMostrarModalVenta(false)}
               >
-                Cancelar
+                {t('rifaManagement.saleModal.cancel')}
               </button>
               <button 
                 className="btn-primary"
                 onClick={procesarVenta}
               >
-                Procesar Venta (${parseFloat(rifa.precio) * numerosSeleccionados.length})
+                {t('rifaManagement.saleModal.processSale')} (${parseFloat(rifa.precio) * numerosSeleccionados.length})
               </button>
             </div>
           </div>

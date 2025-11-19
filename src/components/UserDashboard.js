@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import { useRifas } from '../contexts/RifasContext';
 import AdCarousel from './AdCarousel';
 import AffiliateLinks from './AffiliateLinks';
 
 const UserDashboard = () => {
+  const { t } = useTranslation();
   const { myRifas, loading, error, loadMyRifas } = useRifas();
   const location = useLocation();
   const [filtro, setFiltro] = useState('todas'); // 'todas', 'activas', 'finalizadas', 'privadas'
   const [busqueda, setBusqueda] = useState(''); // Filtro de búsqueda por texto
   const [currentRifaIndex, setCurrentRifaIndex] = useState(0); // Índice actual del carrusel
-  const [touchStartY, setTouchStartY] = useState(0);
-  const [touchEndY, setTouchEndY] = useState(0);
   
   // Debug: verificar que rifas llegue correctamente
   console.log('UserDashboard - myRifas del contexto:', myRifas);
@@ -113,7 +113,7 @@ const UserDashboard = () => {
       <div className="dashboard-container dashboard">
         <div className="loading-state">
           <div className="loading-spinner"></div>
-          <p>Cargando tus rifas...</p>
+          <p>{t('dashboard.loading')}</p>
         </div>
       </div>
     );
@@ -124,7 +124,7 @@ const UserDashboard = () => {
     return (
       <div className="dashboard-container dashboard">
         <div className="error-state">
-          <h2>❌ Error</h2>
+          <h2>❌ {t('dashboard.error')}</h2>
           <p>{error}</p>
         </div>
       </div>
@@ -134,8 +134,8 @@ const UserDashboard = () => {
   return (
     <div className="dashboard-container dashboard">
       <div className="dashboard-header">
-        <h1>👤 Mi Dashboard</h1>
-        <p>Gestiona tus rifas creadas</p>
+        <h1>👤 {t('dashboard.title')}</h1>
+        <p>{t('dashboard.subtitle')}</p>
       </div>
 
       {/* Carrusel de anuncios - Mismo estilo que el portal */}
@@ -151,28 +151,28 @@ const UserDashboard = () => {
           <div className="stat-icon">🎯</div>
           <div className="stat-info">
             <span className="stat-number">{estadisticas.total}</span>
-            <span className="stat-label">Total Rifas</span>
+            <span className="stat-label">{t('dashboard.stats.totalRifas')}</span>
           </div>
         </div>
         <div className="stat-card">
           <div className="stat-icon">🟢</div>
           <div className="stat-info">
             <span className="stat-number">{estadisticas.activas}</span>
-            <span className="stat-label">Activas</span>
+            <span className="stat-label">{t('dashboard.stats.activas')}</span>
           </div>
         </div>
         <div className="stat-card">
           <div className="stat-icon">🔴</div>
           <div className="stat-info">
             <span className="stat-number">{estadisticas.finalizadas}</span>
-            <span className="stat-label">Finalizadas</span>
+            <span className="stat-label">{t('dashboard.stats.finalizadas')}</span>
           </div>
         </div>
         <div className="stat-card">
           <div className="stat-icon">💰</div>
           <div className="stat-info">
             <span className="stat-number">${estadisticas.totalRecaudado}</span>
-            <span className="stat-label">Total Recaudado</span>
+            <span className="stat-label">{t('dashboard.stats.totalRecaudado')}</span>
           </div>
         </div>
       </div>
@@ -183,7 +183,7 @@ const UserDashboard = () => {
           <div className="search-input-wrapper">
             <input
               type="text"
-              placeholder="🔍 Buscar rifas por nombre, descripción o tipo..."
+              placeholder={`🔍 ${t('dashboard.search.placeholder')}`}
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
               className="search-input"
@@ -192,7 +192,7 @@ const UserDashboard = () => {
               <button 
                 className="clear-search-btn"
                 onClick={() => setBusqueda('')}
-                title="Limpiar búsqueda"
+                title={t('dashboard.search.clear')}
               >
                 ✕
               </button>
@@ -206,23 +206,23 @@ const UserDashboard = () => {
             className={`filtro-dashboard-btn ${filtro === 'todas' ? 'activo' : ''}`}
             onClick={() => setFiltro('todas')}
           >
-            Todas ({estadisticas.total})
+            {t('dashboard.filters.all')} ({estadisticas.total})
           </button>
           <button 
             className={`filtro-dashboard-btn ${filtro === 'activas' ? 'activo' : ''}`}
             onClick={() => setFiltro('activas')}
           >
-            Activas ({estadisticas.activas})
+            {t('dashboard.filters.active')} ({estadisticas.activas})
           </button>
           <button 
             className={`filtro-dashboard-btn ${filtro === 'finalizadas' ? 'activo' : ''}`}
             onClick={() => setFiltro('finalizadas')}
           >
-            Finalizadas ({estadisticas.finalizadas})
+            {t('dashboard.filters.finished')} ({estadisticas.finalizadas})
           </button>
           <Link to="/gestionar" className="btn-create-rifa">
             <span className="btn-icon">+</span>
-            <span>Crear Rifa</span>
+            <span>{t('dashboard.actions.createRaffle')}</span>
           </Link>
         </div>
       </div>
@@ -233,9 +233,9 @@ const UserDashboard = () => {
           <div className="no-rifas-card">
             <div className="no-rifas-content">
               <div className="no-rifas-icon">🎯</div>
-              <h3>No tienes rifas creadas</h3>
-              <p>¡Crea tu primera rifa y comienza a recaudar!</p>
-              <Link to="/gestionar" className="btn-primary">Crear Rifa</Link>
+              <h3>{t('dashboard.empty.title')}</h3>
+              <p>{t('dashboard.empty.message')}</p>
+              <Link to="/gestionar" className="btn-primary">{t('dashboard.empty.createButton')}</Link>
             </div>
             {/* Sugerencias de afiliados cuando no hay rifas */}
             <div style={{ marginTop: '30px' }}>
@@ -257,7 +257,7 @@ const UserDashboard = () => {
                       <img src={primeraFoto} alt={rifa.nombre} />
                       <div className="rifa-card-image-overlay">
                         <span className={`rifa-card-status-badge ${rifa.activa ? 'active' : 'finished'}`}>
-                          {rifa.activa ? '🟢 Activa' : '🔴 Finalizada'}
+                          {rifa.activa ? `🟢 ${t('dashboard.card.status.active')}` : `🔴 ${t('dashboard.card.status.finished')}`}
                         </span>
                       </div>
                     </div>
@@ -278,17 +278,17 @@ const UserDashboard = () => {
                       <span className="rifa-info-item">
                         <span className="rifa-info-icon">🎯</span>
                         <span className="rifa-info-text">
-                          {rifa.tipo === 'numeros' ? 'Números' :
-                           rifa.tipo === 'abecedario' ? 'Abecedario' :
-                           rifa.tipo === 'baraja' ? 'Baraja' :
-                           rifa.tipo === 'colores' ? 'Colores' :
-                           rifa.tipo === 'equipos' ? 'Equipos' : rifa.tipo}
+                          {rifa.tipo === 'numeros' ? t('dashboard.card.type.numbers') :
+                           rifa.tipo === 'abecedario' ? t('dashboard.card.type.alphabet') :
+                           rifa.tipo === 'baraja' ? t('dashboard.card.type.deck') :
+                           rifa.tipo === 'colores' ? t('dashboard.card.type.colors') :
+                           rifa.tipo === 'equipos' ? t('dashboard.card.type.teams') : rifa.tipo}
                         </span>
                       </span>
                       <span className="rifa-info-divider">•</span>
                       <span className="rifa-info-item">
                         <span className="rifa-info-icon">👥</span>
-                        <span className="rifa-info-text">{rifa.total_participantes || 0} participantes</span>
+                        <span className="rifa-info-text">{rifa.total_participantes || 0} {t('dashboard.card.participants')}</span>
                       </span>
                       <span className="rifa-info-divider">•</span>
                       <span className="rifa-info-item">
@@ -305,7 +305,7 @@ const UserDashboard = () => {
                     {/* Progreso compacto */}
                     <div className="rifa-card-progress-compact">
                       <div className="rifa-progress-top">
-                        <span className="rifa-progress-label">Progreso</span>
+                        <span className="rifa-progress-label">{t('dashboard.card.progress')}</span>
                         <span className="rifa-progress-stats">{rifa.elementos_vendidos || 0} / {rifa.cantidad_elementos}</span>
                       </div>
                       <div className="rifa-progress-bar-compact">
@@ -320,7 +320,7 @@ const UserDashboard = () => {
                     {/* Botones compactos */}
                     <div className="rifa-card-actions-compact">
                       <Link to={`/gestionar/${rifa.id}`} className="rifa-card-btn-compact rifa-card-btn-primary-compact">
-                        ⚙️ Gestionar
+                        ⚙️ {t('dashboard.actions.manage')}
                       </Link>
                     </div>
                   </div>
@@ -342,16 +342,16 @@ const UserDashboard = () => {
       <div className="rifas-scroll-container mobile-only">
         {rifasFiltradas.length === 0 ? (
           <div className="no-rifas">
-            <h3>No tienes rifas creadas</h3>
-            <p>¡Crea tu primera rifa y comienza a recaudar!</p>
-            <Link to="/gestionar" className="btn-primary">Crear Rifa</Link>
+            <h3>{t('dashboard.empty.title')}</h3>
+            <p>{t('dashboard.empty.message')}</p>
+            <Link to="/gestionar" className="btn-primary">{t('dashboard.empty.createButton')}</Link>
           </div>
         ) : (
           <div className="scroll-wrapper">
             {/* Indicadores de navegación */}
             <div className="scroll-indicators">
               <span className="scroll-counter">
-                {currentRifaIndex + 1} de {rifasFiltradas.length}
+                {currentRifaIndex + 1} {t('dashboard.scroll.counter')} {rifasFiltradas.length}
               </span>
               <div className="scroll-dots">
                 {rifasFiltradas.map((_, index) => (
@@ -379,9 +379,9 @@ const UserDashboard = () => {
                     <h3 className="aurela-card-title">{rifa.nombre}</h3>
                     <div className="aurela-card-badges">
                       <span className={`aurela-status-badge ${rifa.activa ? 'active' : 'finished'}`}>
-                        {rifa.activa ? '🟢 Activa' : '🔴 Finalizada'}
+                        {rifa.activa ? `🟢 ${t('dashboard.card.status.active')}` : `🔴 ${t('dashboard.card.status.finished')}`}
                       </span>
-                      {rifa.es_privada && <span className="aurela-privacy-badge">🔒 Privada</span>}
+                      {rifa.es_privada && <span className="aurela-privacy-badge">🔒 {t('dashboard.card.status.private')}</span>}
                     </div>
                     <div className="aurela-card-price">
                       <span className="aurela-price-symbol">$</span>
@@ -395,13 +395,13 @@ const UserDashboard = () => {
                       <div className="aurela-info-item-compact">
                         <div className="aurela-info-icon-compact">🎯</div>
                         <div className="aurela-info-content-compact">
-                          <span className="aurela-info-label-compact">TIPO</span>
+                          <span className="aurela-info-label-compact">{t('dashboard.card.typeLabel')}</span>
                           <span className="aurela-info-value-compact">
-                            {rifa.tipo === 'numeros' ? 'Números' :
-                             rifa.tipo === 'abecedario' ? 'Abecedario' :
-                             rifa.tipo === 'baraja' ? 'Baraja' :
-                             rifa.tipo === 'colores' ? 'Colores' :
-                             rifa.tipo === 'equipos' ? 'Equipos' : rifa.tipo}
+                            {rifa.tipo === 'numeros' ? t('dashboard.card.type.numbers') :
+                             rifa.tipo === 'abecedario' ? t('dashboard.card.type.alphabet') :
+                             rifa.tipo === 'baraja' ? t('dashboard.card.type.deck') :
+                             rifa.tipo === 'colores' ? t('dashboard.card.type.colors') :
+                             rifa.tipo === 'equipos' ? t('dashboard.card.type.teams') : rifa.tipo}
                           </span>
                         </div>
                       </div>
@@ -409,7 +409,7 @@ const UserDashboard = () => {
                       <div className="aurela-info-item-compact">
                         <div className="aurela-info-icon-compact">📊</div>
                         <div className="aurela-info-content-compact">
-                          <span className="aurela-info-label-compact">PROGRESO</span>
+                          <span className="aurela-info-label-compact">{t('dashboard.card.progressLabel')}</span>
                           <span className="aurela-info-value-compact">{rifa.elementos_vendidos || 0}/{rifa.cantidad_elementos}</span>
                         </div>
                       </div>
@@ -417,7 +417,7 @@ const UserDashboard = () => {
                       <div className="aurela-info-item-compact">
                         <div className="aurela-info-icon-compact">👥</div>
                         <div className="aurela-info-content-compact">
-                          <span className="aurela-info-label-compact">PARTICIPANTES</span>
+                          <span className="aurela-info-label-compact">{t('dashboard.card.participantsLabel')}</span>
                           <span className="aurela-info-value-compact">{rifa.total_participantes || 0}</span>
                         </div>
                       </div>
@@ -425,7 +425,7 @@ const UserDashboard = () => {
                       <div className="aurela-info-item-compact">
                         <div className="aurela-info-icon-compact">📅</div>
                         <div className="aurela-info-content-compact">
-                          <span className="aurela-info-label-compact">FINALIZA</span>
+                          <span className="aurela-info-label-compact">{t('dashboard.card.ends')}</span>
                           <span className="aurela-info-value-compact">{new Date(rifa.fecha_fin).toLocaleDateString('es-MX')}</span>
                         </div>
                       </div>
@@ -434,7 +434,7 @@ const UserDashboard = () => {
                     {/* Barra de progreso */}
                     <div className="aurela-progress-section">
                       <div className="aurela-progress-header">
-                        <span className="aurela-progress-label">Progreso de Venta</span>
+                        <span className="aurela-progress-label">{t('dashboard.card.progressSale')}</span>
                         <span className="aurela-progress-percentage">
                           {Math.round(((rifa.elementos_vendidos || 0) / rifa.cantidad_elementos) * 100)}%
                         </span>
@@ -461,11 +461,11 @@ const UserDashboard = () => {
                   <div className="aurela-card-actions">
                     <Link to={`/gestionar/${rifa.id}`} className="aurela-btn-primary">
                       <span className="aurela-btn-icon">⚙️</span>
-                      <span className="aurela-btn-text">Gestionar</span>
+                      <span className="aurela-btn-text">{t('dashboard.actions.manage')}</span>
                     </Link>
                     <Link to={`/public/${rifa.id}`} className="aurela-btn-secondary">
                       <span className="aurela-btn-icon">👁️</span>
-                      <span className="aurela-btn-text">Ver Público</span>
+                      <span className="aurela-btn-text">{t('dashboard.actions.viewPublic')}</span>
                     </Link>
                   </div>
                 </div>

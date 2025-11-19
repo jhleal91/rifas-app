@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { validateEmail, validateNombre, validateTelefono } from '../utils/validation';
 import Swal from 'sweetalert2';
 import StripePayment from './StripePayment';
 
-const API_BASE = 'http://localhost:5001/api';
+import { API_BASE } from '../config/api';
 
 // Función para calcular tiempo restante
 const calcularTiempoRestante = (fechaFin) => {
@@ -22,53 +23,9 @@ const calcularTiempoRestante = (fechaFin) => {
   return { dias, horas, minutos, terminado: false };
 };
 
-// Función para sugerir números "de la suerte" (números más vendidos o aleatorios)
-const sugerirNumerosSuerte = (numerosDisponibles, numerosVendidos, cantidad = 5) => {
-  // Si hay números vendidos, sugerir números cercanos a los más vendidos
-  if (numerosVendidos && numerosVendidos.length > 0) {
-    const numerosVendidosNum = numerosVendidos.map(n => parseInt(n)).filter(n => !isNaN(n));
-    if (numerosVendidosNum.length > 0) {
-      const promedio = Math.round(numerosVendidosNum.reduce((a, b) => a + b, 0) / numerosVendidosNum.length);
-      const sugeridos = numerosDisponibles
-        .map(n => parseInt(n))
-        .filter(n => !isNaN(n))
-        .filter(n => !numerosVendidos.includes(String(n)))
-        .sort((a, b) => Math.abs(a - promedio) - Math.abs(b - promedio))
-        .slice(0, cantidad)
-        .map(n => String(n));
-      
-      if (sugeridos.length > 0) return sugeridos;
-    }
-  }
-  
-  // Si no hay números vendidos, sugerir números aleatorios "de la suerte"
-  const numerosDisponiblesNum = numerosDisponibles
-    .map(n => parseInt(n))
-    .filter(n => !isNaN(n))
-    .sort((a, b) => a - b);
-  
-  const sugeridos = [];
-  const numerosSuerte = [7, 13, 21, 33, 77, 88, 99, 100, 111, 222, 333, 444, 555, 666, 777, 888, 999];
-  
-  // Buscar números "de la suerte" disponibles
-  for (const suerte of numerosSuerte) {
-    if (numerosDisponiblesNum.includes(suerte) && sugeridos.length < cantidad) {
-      sugeridos.push(String(suerte));
-    }
-  }
-  
-  // Si no hay suficientes, agregar aleatorios
-  while (sugeridos.length < cantidad && numerosDisponiblesNum.length > 0) {
-    const random = numerosDisponiblesNum[Math.floor(Math.random() * numerosDisponiblesNum.length)];
-    if (!sugeridos.includes(String(random))) {
-      sugeridos.push(String(random));
-    }
-  }
-  
-  return sugeridos.slice(0, cantidad);
-};
 
 const ParticipateRaffle = ({ rifas, setRifas }) => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const location = useLocation();
   const [rifa, setRifa] = useState(null);
@@ -94,10 +51,10 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
   const [filtro, setFiltro] = useState('disponibles');
   const [stripeDisponible, setStripeDisponible] = useState(false);
   const [tiempoRestante, setTiempoRestante] = useState(null);
-  const [numerosSugeridos, setNumerosSugeridos] = useState([]);
 
   useEffect(() => {
     cargarRifaCompleta();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, rifas]);
 
   // Actualizar tiempo restante cada minuto
@@ -115,17 +72,6 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
     return () => clearInterval(interval);
   }, [rifa]);
 
-  // Calcular números sugeridos cuando cambia la rifa
-  useEffect(() => {
-    if (rifa && numerosDisponibles.length > 0) {
-      const sugeridos = sugerirNumerosSuerte(
-        numerosDisponibles,
-        rifa.numerosVendidos || [],
-        5
-      );
-      setNumerosSugeridos(sugeridos);
-    }
-  }, [rifa, numerosDisponibles]);
 
   const cargarRifaCompleta = async () => {
     if (!id) return;
@@ -208,9 +154,9 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
     if (participante.numerosSeleccionados.length === 0) {
       Swal.fire({
         icon: 'warning',
-        title: 'Selecciona números',
-        text: 'Por favor, selecciona al menos un número para continuar',
-        confirmButtonText: 'Entendido',
+        title: t('participateRaffle.alerts.selectNumbers.title'),
+        text: t('participateRaffle.alerts.selectNumbers.text'),
+        confirmButtonText: t('participateRaffle.alerts.selectNumbers.confirm'),
         confirmButtonColor: '#635BFF'
       });
       return;
@@ -219,7 +165,10 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const continuarAPago = () => {
+  const [participanteId, setParticipanteId] = useState(null);
+  const [registrandoParticipante, setRegistrandoParticipante] = useState(false);
+
+  const continuarAPago = async () => {
     const nombreValidation = validateNombre(participante.nombre, 2);
     const emailValidation = validateEmail(participante.email);
     const telefonoValidation = validateTelefono(participante.telefono, true);
@@ -233,23 +182,21 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
     if (!nombreValidation.valid || !emailValidation.valid || !telefonoValidation.valid) {
       Swal.fire({
         icon: 'warning',
-        title: 'Completa todos los campos',
-        text: 'Por favor, completa correctamente todos los campos requeridos',
-        confirmButtonText: 'Entendido',
+        title: t('participateRaffle.alerts.completeFields.title'),
+        text: t('participateRaffle.alerts.completeFields.text'),
+        confirmButtonText: t('participateRaffle.alerts.completeFields.confirm'),
         confirmButtonColor: '#635BFF'
       });
       return;
     }
 
-    setPaso(3);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handlePagoExitoso = async (paymentIntent) => {
+    // Registrar participante ANTES de crear el Payment Intent
+    // Esto permite que el webhook tenga el participante_id para marcar números como vendidos
     try {
+      setRegistrandoParticipante(true);
       Swal.fire({
-        title: 'Procesando...',
-        text: 'Registrando tu participación',
+        title: t('participateRaffle.alerts.processing.title'),
+        text: 'Registrando tu participación...',
         allowOutsideClick: false,
         didOpen: () => {
           Swal.showLoading();
@@ -266,8 +213,7 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
           telefono: participante.telefono.trim(),
           email: participante.email.trim(),
           numerosSeleccionados: participante.numerosSeleccionados.map(num => String(num)),
-          quiereRegistro: true,
-          stripe_payment_intent_id: paymentIntent.id
+          quiereRegistro: true
         })
       });
 
@@ -276,16 +222,61 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
         throw new Error(errorData.error || 'Error al registrar participación');
       }
 
+      const data = await response.json();
+      const nuevoParticipanteId = data.participante?.id || data.id;
+      
+      if (!nuevoParticipanteId) {
+        throw new Error('No se recibió el ID del participante');
+      }
+
+      setParticipanteId(nuevoParticipanteId);
+      Swal.close();
+      setPaso(3);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (error) {
+      console.error('Error registrando participante:', error);
+      Swal.fire({
+        icon: 'error',
+        title: t('participateRaffle.alerts.error.title'),
+        text: error.message || 'Error al registrar tu participación. Por favor, intenta nuevamente.',
+        confirmButtonText: t('participateRaffle.alerts.error.confirm'),
+        confirmButtonColor: '#ef4444'
+      });
+    } finally {
+      setRegistrandoParticipante(false);
+    }
+  };
+
+  const handlePagoExitoso = async (paymentIntent) => {
+    try {
+      // El participante ya está registrado y el webhook procesará automáticamente
+      // Solo necesitamos recargar la rifa y mostrar éxito
+      Swal.fire({
+        title: t('participateRaffle.alerts.processing.title'),
+        text: 'Verificando pago...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      // Esperar un momento para que el webhook procese
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Recargar la rifa para ver los números actualizados
       await cargarRifaCompleta();
       
       await Swal.fire({
         icon: 'success',
-        title: '¡Participación exitosa!',
+        title: t('participateRaffle.alerts.success.title'),
         html: `
-          <p>Los números <strong>${participante.numerosSeleccionados.join(', ')}</strong> han sido reservados.</p>
-          <p>Tu pago ha sido procesado correctamente.</p>
+          <p>${t('participateRaffle.alerts.success.numbersReserved')} <strong>${participante.numerosSeleccionados.join(', ')}</strong> ${t('participateRaffle.alerts.success.haveBeenReserved')}</p>
+          <p>${t('participateRaffle.alerts.success.paymentProcessed')}</p>
+          <p style="font-size: 0.9rem; color: #64748b; margin-top: 1rem;">
+            Recibirás un email de confirmación en breve.
+          </p>
         `,
-        confirmButtonText: 'Entendido',
+        confirmButtonText: t('participateRaffle.alerts.success.confirm'),
         confirmButtonColor: '#10b981'
       });
       
@@ -301,14 +292,15 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
         telefono: '',
         email: ''
       });
+      setParticipanteId(null);
       setPaso(1);
     } catch (error) {
       console.error('Error al confirmar participación:', error);
       Swal.fire({
         icon: 'error',
-        title: 'Error al registrar participación',
-        text: error.message,
-        confirmButtonText: 'Entendido',
+        title: t('participateRaffle.alerts.error.title'),
+        text: error.message || 'Hubo un error al procesar tu pago. El webhook lo procesará automáticamente.',
+        confirmButtonText: t('participateRaffle.alerts.error.confirm'),
         confirmButtonColor: '#ef4444'
       });
     }
@@ -319,7 +311,7 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
       <div className="participate-container">
         <div className="loading-state">
           <div className="spinner-large"></div>
-          <p>Cargando rifa...</p>
+          <p>{t('participateRaffle.loading')}</p>
         </div>
       </div>
     );
@@ -329,9 +321,9 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
     return (
       <div className="participate-container">
         <div className="error-state">
-          <h2>Rifa no encontrada</h2>
-          <p>La rifa que buscas no existe o ha sido eliminada.</p>
-          <Link to="/portal" className="btn-primary">Ver Rifas</Link>
+          <h2>{t('participateRaffle.notFound.title')}</h2>
+          <p>{t('participateRaffle.notFound.message')}</p>
+          <Link to="/portal" className="btn-primary">{t('participateRaffle.notFound.viewRifas')}</Link>
         </div>
       </div>
     );
@@ -341,18 +333,15 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
     return (
       <div className="participate-container">
         <div className="error-state">
-          <h2>Rifa Finalizada</h2>
-          <p>Esta rifa ya ha finalizado y no acepta más participantes.</p>
-          <Link to="/portal" className="btn-primary">Ver Otras Rifas</Link>
+          <h2>{t('participateRaffle.finished.title')}</h2>
+          <p>{t('participateRaffle.finished.message')}</p>
+          <Link to="/portal" className="btn-primary">{t('participateRaffle.finished.viewOthers')}</Link>
         </div>
       </div>
     );
   }
 
   const totalPagar = rifa.precio * participante.numerosSeleccionados.length;
-  const primeraFoto = rifa.fotosPremios && rifa.fotosPremios.length > 0 
-    ? rifa.fotosPremios[0].url 
-    : null;
 
   // Calcular porcentaje vendido
   const totalNumeros = numerosDisponibles.length;
@@ -370,12 +359,12 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
       }).catch(err => console.log('Error compartiendo:', err));
     } else {
       // Fallback: copiar al portapapeles
-      navigator.clipboard.writeText(url).then(() => {
+        navigator.clipboard.writeText(url).then(() => {
         Swal.fire({
           icon: 'success',
-          title: '¡Link copiado!',
-          text: 'El enlace de la rifa se ha copiado al portapapeles',
-          confirmButtonText: 'Entendido',
+          title: t('participateRaffle.alerts.share.title'),
+          text: t('participateRaffle.alerts.share.text'),
+          confirmButtonText: t('participateRaffle.alerts.share.confirm'),
           confirmButtonColor: '#635BFF',
           timer: 2000
         });
@@ -425,15 +414,15 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
         <div className="header-top">
           <Link to="/portal" className="back-link">
             <span className="back-icon">←</span>
-            <span>Volver a Rifas</span>
+            <span>{t('participateRaffle.header.backToRifas')}</span>
           </Link>
           <button 
             className="share-button"
             onClick={compartirRifa}
-            title="Compartir rifa"
+            title={t('participateRaffle.header.shareTitle')}
           >
             <span className="share-icon">🔗</span>
-            <span>Compartir</span>
+            <span>{t('participateRaffle.header.share')}</span>
           </button>
         </div>
         <h1 className="rifa-title-modern">{rifa.nombre}</h1>
@@ -443,7 +432,7 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
           {rifa.fecha_fin && tiempoRestante && !tiempoRestante.terminado && (
             <span className="meta-item time-remaining">
               ⏰ {tiempoRestante.dias > 0 ? `${tiempoRestante.dias}d ` : ''}
-              {tiempoRestante.horas}h {tiempoRestante.minutos}m restantes
+              {tiempoRestante.horas}h {tiempoRestante.minutos}m {t('participateRaffle.header.remaining')}
             </span>
           )}
         </div>
@@ -451,7 +440,7 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
         {/* Barra de progreso visual */}
         <div className="rifa-progress-section">
           <div className="progress-header">
-            <span className="progress-label">Progreso de Venta</span>
+            <span className="progress-label">{t('participateRaffle.progress.label')}</span>
             <span className="progress-percentage">{porcentajeVendido}%</span>
           </div>
           <div className="progress-bar-container">
@@ -461,9 +450,9 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
             ></div>
           </div>
           <div className="progress-stats">
-            <span>{numerosVendidos} vendidos</span>
+            <span>{numerosVendidos} {t('participateRaffle.progress.sold')}</span>
             <span>•</span>
-            <span>{totalNumeros - numerosVendidos} disponibles</span>
+            <span>{totalNumeros - numerosVendidos} {t('participateRaffle.progress.available')}</span>
           </div>
         </div>
       </div>
@@ -472,15 +461,15 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
       <div className="steps-indicator">
         <div className={`step ${paso >= 1 ? 'active' : ''} ${paso > 1 ? 'completed' : ''}`}>
           <div className="step-number">1</div>
-          <div className="step-label">Selecciona Números</div>
+          <div className="step-label">{t('participateRaffle.steps.selectNumbers')}</div>
         </div>
         <div className={`step ${paso >= 2 ? 'active' : ''} ${paso > 2 ? 'completed' : ''}`}>
           <div className="step-number">2</div>
-          <div className="step-label">Tus Datos</div>
+          <div className="step-label">{t('participateRaffle.steps.yourData')}</div>
         </div>
         <div className={`step ${paso >= 3 ? 'active' : ''}`}>
           <div className="step-number">3</div>
-          <div className="step-label">Pago Seguro</div>
+          <div className="step-label">{t('participateRaffle.steps.securePayment')}</div>
         </div>
       </div>
 
@@ -489,50 +478,18 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
         <div className="step-content">
           <div className="selection-section">
             <div className="selection-header">
-              <h2>🎯 Selecciona tus números</h2>
+              <h2>{t('participateRaffle.step1.title')}</h2>
               <div className="selection-summary">
                 <span className="selected-count">
-                  {participante.numerosSeleccionados.length} {participante.numerosSeleccionados.length === 1 ? 'número seleccionado' : 'números seleccionados'}
+                  {participante.numerosSeleccionados.length} {participante.numerosSeleccionados.length === 1 ? t('participateRaffle.step1.selected') : t('participateRaffle.step1.selectedPlural')}
                 </span>
                 {participante.numerosSeleccionados.length > 0 && (
                   <span className="total-amount">
-                    Total: ${totalPagar.toFixed(2)} MXN
+                    {t('participateRaffle.step1.total')} ${totalPagar.toFixed(2)} MXN
                   </span>
                 )}
               </div>
             </div>
-
-            {/* Números Sugeridos */}
-            {numerosSugeridos.length > 0 && (
-              <div className="sugeridos-section">
-                <div className="sugeridos-header">
-                  <span className="sugeridos-icon">🍀</span>
-                  <h3>Números de la Suerte Sugeridos</h3>
-                </div>
-                <div className="sugeridos-grid">
-                  {numerosSugeridos.map(numero => {
-                    const vendido = (rifa.numerosVendidos || []).includes(numero);
-                    const reservado = (rifa.numerosReservados || []).includes(numero);
-                    const disponible = !vendido && !reservado;
-                    const seleccionado = participante.numerosSeleccionados.includes(numero);
-                    
-                    if (!disponible && !seleccionado) return null;
-                    
-                    return (
-                      <button
-                        key={numero}
-                        className={`sugerido-btn ${seleccionado ? 'seleccionado' : ''}`}
-                        onClick={() => seleccionarNumero(numero)}
-                        disabled={!disponible && !seleccionado}
-                      >
-                        {numero}
-                        {seleccionado && <span className="check-icon">✓</span>}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
 
             {/* Filtros */}
             <div className="filtros-modern">
@@ -540,25 +497,25 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
                 className={`filtro-btn-modern ${filtro === 'disponibles' ? 'active' : ''}`}
                 onClick={() => setFiltro('disponibles')}
               >
-                Disponibles ({numerosDisponiblesCount})
+                {t('participateRaffle.step1.filters.available')} ({numerosDisponiblesCount})
               </button>
               <button
                 className={`filtro-btn-modern ${filtro === 'todos' ? 'active' : ''}`}
                 onClick={() => setFiltro('todos')}
               >
-                Todos ({numerosDisponibles.length})
+                {t('participateRaffle.step1.filters.all')} ({numerosDisponibles.length})
               </button>
               <button
                 className={`filtro-btn-modern ${filtro === 'vendidos' ? 'active' : ''}`}
                 onClick={() => setFiltro('vendidos')}
               >
-                Vendidos ({numerosVendidosCount})
+                {t('participateRaffle.step1.filters.sold')} ({numerosVendidosCount})
               </button>
               <button
                 className={`filtro-btn-modern ${filtro === 'reservados' ? 'active' : ''}`}
                 onClick={() => setFiltro('reservados')}
               >
-                Reservados ({numerosReservadosCount})
+                {t('participateRaffle.step1.filters.reserved')} ({numerosReservadosCount})
               </button>
             </div>
 
@@ -584,10 +541,10 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
                     onClick={() => seleccionarNumero(numero)}
                     disabled={!puedeInteractuar && !seleccionado}
                     title={
-                      seleccionado ? 'Seleccionado - Click para remover' :
-                      vendido ? 'Vendido' : 
-                      reservado ? 'Reservado' : 
-                      'Disponible'
+                      seleccionado ? t('participateRaffle.step1.numberStates.selected') :
+                      vendido ? t('participateRaffle.step1.numberStates.sold') : 
+                      reservado ? t('participateRaffle.step1.numberStates.reserved') : 
+                      t('participateRaffle.step1.numberStates.available')
                     }
                   >
                     {numero}
@@ -602,11 +559,11 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
               <div className="participacion-preview">
                 <div className="preview-header">
                   <span className="preview-icon">👁️</span>
-                  <h3>Vista Previa de tu Participación</h3>
+                  <h3>{t('participateRaffle.step1.preview.title')}</h3>
                 </div>
                 <div className="preview-content">
                   <div className="preview-item">
-                    <span className="preview-label">Números seleccionados:</span>
+                    <span className="preview-label">{t('participateRaffle.step1.preview.selectedNumbers')}</span>
                     <div className="preview-numbers-list">
                       {participante.numerosSeleccionados.sort((a, b) => a - b).map(num => (
                         <span key={num} className="preview-number-badge">{num}</span>
@@ -614,15 +571,15 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
                     </div>
                   </div>
                   <div className="preview-item">
-                    <span className="preview-label">Cantidad:</span>
-                    <span className="preview-value">{participante.numerosSeleccionados.length} {participante.numerosSeleccionados.length === 1 ? 'número' : 'números'}</span>
+                    <span className="preview-label">{t('participateRaffle.step1.preview.quantity')}</span>
+                    <span className="preview-value">{participante.numerosSeleccionados.length} {participante.numerosSeleccionados.length === 1 ? t('participateRaffle.step1.preview.number') : t('participateRaffle.step1.preview.numbers')}</span>
                   </div>
                   <div className="preview-item">
-                    <span className="preview-label">Precio por número:</span>
+                    <span className="preview-label">{t('participateRaffle.step1.preview.pricePerNumber')}</span>
                     <span className="preview-value">${rifa.precio} MXN</span>
                   </div>
                   <div className="preview-item total-preview">
-                    <span className="preview-label">Total a pagar:</span>
+                    <span className="preview-label">{t('participateRaffle.step1.preview.totalToPay')}</span>
                     <span className="preview-total-amount">${totalPagar.toFixed(2)} MXN</span>
                   </div>
                 </div>
@@ -636,7 +593,7 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
                   className="btn-continue-modern"
                   onClick={continuarADatos}
                 >
-                  Continuar con mis datos →
+                  {t('participateRaffle.step1.continue')}
                 </button>
               </div>
             )}
@@ -649,17 +606,17 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
         <div className="step-content">
           <div className="data-section">
             <div className="section-header">
-              <h2>👤 Completa tus datos</h2>
-              <p className="section-subtitle">Necesitamos esta información para procesar tu participación</p>
+              <h2>{t('participateRaffle.step2.title')}</h2>
+              <p className="section-subtitle">{t('participateRaffle.step2.subtitle')}</p>
             </div>
 
             <div className="form-modern">
               <div className="form-group-modern">
-                <label htmlFor="nombre">Nombre completo *</label>
+                <label htmlFor="nombre">{t('participateRaffle.step2.name.label')}</label>
                 <input
                   id="nombre"
                   type="text"
-                  placeholder="Ej: Juan Pérez"
+                  placeholder={t('participateRaffle.step2.name.placeholder')}
                   value={participante.nombre}
                   maxLength={100}
                   onChange={(e) => {
@@ -690,23 +647,23 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
                   <span className="error-text">{participanteErrors.nombre}</span>
                 )}
                 {!participanteErrors.nombre && participante.nombre && (
-                  <span className="success-text">✓ Nombre válido</span>
+                  <span className="success-text">{t('participateRaffle.step2.name.valid')}</span>
                 )}
               </div>
               
               <div className="form-group-modern">
-                <label htmlFor="telefono">Teléfono *</label>
+                <label htmlFor="telefono">{t('participateRaffle.step2.phone.label')}</label>
                 <input
                   id="telefono"
                   type="tel"
-                  placeholder="Ej: +52 55 1234 5678 o 5512345678"
+                  placeholder={t('participateRaffle.step2.phone.placeholder')}
                   value={participante.telefono}
                   maxLength={20}
                   onChange={(e) => {
                     let value = e.target.value;
                     
                     // Permitir solo números, espacios, guiones, paréntesis, puntos y el símbolo +
-                    value = value.replace(/[^\d\s\-\(\)\.\+]/g, '');
+                    value = value.replace(/[^\d\s\-().+]/g, '');
                     
                     // Limitar a 20 caracteres
                     if (value.length > 20) {
@@ -734,16 +691,16 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
                   <span className="error-text">{participanteErrors.telefono}</span>
                 )}
                 {!participanteErrors.telefono && participante.telefono && (
-                  <span className="success-text">✓ Formato válido</span>
+                  <span className="success-text">{t('participateRaffle.step2.phone.valid')}</span>
                 )}
               </div>
               
               <div className="form-group-modern">
-                <label htmlFor="email">Email *</label>
+                <label htmlFor="email">{t('participateRaffle.step2.email.label')}</label>
                 <input
                   id="email"
                   type="email"
-                  placeholder="Ej: tu@email.com"
+                  placeholder={t('participateRaffle.step2.email.placeholder')}
                   value={participante.email}
                   maxLength={254}
                   onChange={(e) => {
@@ -774,22 +731,22 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
                   <span className="error-text">{participanteErrors.email}</span>
                 )}
                 {!participanteErrors.email && participante.email && (
-                  <span className="success-text">✓ Email válido</span>
+                  <span className="success-text">{t('participateRaffle.step2.email.valid')}</span>
                 )}
               </div>
 
               <div className="data-summary">
                 <div className="summary-card">
                   <div className="summary-row">
-                    <span>Números seleccionados:</span>
+                    <span>{t('participateRaffle.step2.summary.selectedNumbers')}</span>
                     <strong>{participante.numerosSeleccionados.sort((a, b) => a - b).join(', ')}</strong>
                   </div>
                   <div className="summary-row">
-                    <span>Precio por número:</span>
+                    <span>{t('participateRaffle.step2.summary.pricePerNumber')}</span>
                     <strong>${rifa.precio} MXN</strong>
                   </div>
                   <div className="summary-row total-row">
-                    <span>Total a pagar:</span>
+                    <span>{t('participateRaffle.step2.summary.totalToPay')}</span>
                     <strong className="total-amount-large">${totalPagar.toFixed(2)} MXN</strong>
                   </div>
                 </div>
@@ -800,7 +757,7 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
                   className="btn-back-modern"
                   onClick={() => setPaso(1)}
                 >
-                  ← Volver
+                  {t('participateRaffle.step2.back')}
                 </button>
                 <button 
                   className="btn-continue-modern"
@@ -814,7 +771,7 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
                     participanteErrors.email
                   }
                 >
-                  Continuar al Pago →
+                  {t('participateRaffle.step2.continue')}
                 </button>
               </div>
             </div>
@@ -827,8 +784,8 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
         <div className="step-content">
           <div className="payment-section">
             <div className="section-header">
-              <h2>💳 Pago Seguro</h2>
-              <p className="section-subtitle">Procesado de forma segura por Stripe</p>
+              <h2>{t('participateRaffle.step3.title')}</h2>
+              <p className="section-subtitle">{t('participateRaffle.step3.subtitle')}</p>
             </div>
 
             {/*<div className="payment-summary-card">
@@ -843,13 +800,21 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
             </div>
             */}
             <div className="stripe-container-modern">
-              <StripePayment
-                rifaId={rifa.id}
-                amount={totalPagar}
-                numerosSeleccionados={participante.numerosSeleccionados}
-                onSuccess={handlePagoExitoso}
-                onCancel={() => setPaso(2)}
-              />
+              {participanteId ? (
+                <StripePayment
+                  rifaId={rifa.id}
+                  amount={totalPagar}
+                  numerosSeleccionados={participante.numerosSeleccionados}
+                  participanteId={participanteId}
+                  onSuccess={handlePagoExitoso}
+                  onCancel={() => setPaso(2)}
+                />
+              ) : (
+                <div className="stripe-payment-loading">
+                  <div className="spinner"></div>
+                  <p>Preparando pago...</p>
+                </div>
+              )}
             </div>
 
             <button 
@@ -857,7 +822,7 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
               onClick={() => setPaso(2)}
               style={{ marginTop: '2rem' }}
             >
-              ← Volver a Datos
+              {t('participateRaffle.step3.back')}
             </button>
           </div>
         </div>
@@ -866,13 +831,13 @@ const ParticipateRaffle = ({ rifas, setRifas }) => {
       {paso === 3 && !stripeDisponible && (
         <div className="step-content">
           <div className="error-state">
-            <h2>⚠️ Pago no disponible</h2>
-            <p>El creador de esta rifa no ha configurado los datos de pago.</p>
+            <h2>{t('participateRaffle.step3.notAvailable.title')}</h2>
+            <p>{t('participateRaffle.step3.notAvailable.message')}</p>
             <button 
               className="btn-back-modern"
               onClick={() => setPaso(2)}
             >
-              ← Volver
+              {t('participateRaffle.step3.notAvailable.back')}
             </button>
           </div>
         </div>
