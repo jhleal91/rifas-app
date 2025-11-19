@@ -131,12 +131,86 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
+.filtros-avanzados-compact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+  width: 100%;
+}
+
 .filtro-item-compact {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   min-width: 150px;
   flex: 1;
+}
+
+/* Barra de búsqueda en filtros avanzados */
+.search-item-compact {
+  flex: 2;
+  min-width: 250px;
+}
+
+.search-wrapper-compact {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.search-icon-compact {
+  position: absolute;
+  left: 0.75rem;
+  font-size: 1rem;
+  color: #64748b;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.search-input-compact {
+  width: 100%;
+  padding: 0.625rem 2.5rem 0.625rem 2.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #1e293b;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.search-input-compact:focus {
+  border-color: #1e22aa;
+  box-shadow: 0 0 0 3px rgba(30, 34, 170, 0.1);
+}
+
+.search-input-compact::placeholder {
+  color: #94a3b8;
+}
+
+.clear-search-btn-compact {
+  position: absolute;
+  right: 0.5rem;
+  background: #f1f5f9;
+  border: none;
+  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #64748b;
+  font-size: 0.75rem;
+  transition: all 0.2s ease;
+  z-index: 1;
+}
+
+.clear-search-btn-compact:hover {
+  background: #e2e8f0;
+  color: #475569;
 }
 
 .filtro-label-compact {
@@ -1101,6 +1175,332 @@
   .pagination-btn {
     width: 100%;
     max-width: 200px;
+  }
+}
+
+/* Portal Sections - Agrupación por urgencia */
+.portal-section {
+  margin-bottom: 3rem;
+}
+
+.portal-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.portal-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.section-icon {
+  font-size: 1.75rem;
+}
+
+.section-count {
+  background: #f1f5f9;
+  color: #64748b;
+  padding: 0.375rem 0.875rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* Badges en Cards */
+.rifa-card-badges {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.rifa-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.rifa-badge-new {
+  background: rgba(16, 185, 129, 0.95);
+  color: white;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.rifa-badge-popular {
+  background: rgba(239, 68, 68, 0.95);
+  color: white;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.rifa-badge-verified {
+  background: rgba(59, 130, 246, 0.95);
+  color: white;
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* Countdown Timer en Cards */
+.rifa-card-countdown {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.rifa-card-compact-image-placeholder .rifa-card-countdown {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+}
+
+/* Mejoras en Cards - Diseño más limpio */
+.rifa-portal-card-compact-wrapper {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rifa-portal-card-compact-wrapper:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(30, 34, 170, 0.12);
+  border-color: #cbd5e1;
+}
+
+.rifa-card-compact-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.rifa-card-compact-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+  line-height: 1.4;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.rifa-card-compact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.rifa-card-compact-price {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rifa-card-compact-price-label {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.rifa-card-compact-price-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1e22aa;
+}
+
+.rifa-card-compact-location {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.rifa-card-compact-location-label {
+  font-weight: 500;
+}
+
+.rifa-card-compact-location-value {
+  color: #475569;
+}
+
+/* Información del Organizador */
+.rifa-card-organizer {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.organizer-avatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1e22aa 0%, #2563eb 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(30, 34, 170, 0.2);
+}
+
+.organizer-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.organizer-name {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #475569;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 50%;
+  background: #10b981;
+  color: white;
+  font-size: 0.625rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(16, 185, 129, 0.3);
+}
+
+.rifa-portal-card-compact-wrapper:hover .rifa-card-organizer {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+/* Filtros de Categorías - Pills horizontales */
+.categoria-filters-container {
+  margin: 1.5rem 0;
+  padding: 0;
+  width: 100%;
+}
+
+.categoria-filters-scroll {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding: 0.5rem 0;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+.categoria-filters-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.categoria-filters-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.categoria-filters-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.categoria-filters-scroll::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.categoria-filter-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 1.25rem;
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.categoria-filter-pill:hover {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+  color: #475569;
+  transform: translateY(-1px);
+}
+
+.categoria-filter-pill.active {
+  background: linear-gradient(135deg, #1e22aa 0%, #2563eb 100%);
+  color: white;
+  border-color: #1e22aa;
+  box-shadow: 0 2px 8px rgba(30, 34, 170, 0.2);
+  font-weight: 600;
+}
+
+.categoria-filter-pill.active:hover {
+  background: linear-gradient(135deg, #1a1e96 0%, #1d4ed8 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(30, 34, 170, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .categoria-filter-pill {
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+  }
+  
+  .categoria-filters-scroll {
+    gap: 0.5rem;
   }
 }
 

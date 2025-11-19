@@ -5,7 +5,7 @@ import { showConfirm, showDangerConfirm } from '../utils/swal';
 import StripeCreditPayment from './StripeCreditPayment';
 import BusinessProfileModal from './BusinessProfileModal';
 
-const API_BASE = 'http://localhost:5001/api';
+import { API_BASE } from '../config/api';
 
 const AdvertiserDashboard = ({ onLogout }) => {
   const { t } = useTranslation();

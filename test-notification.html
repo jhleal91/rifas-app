@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Notificación - SorteoHub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+        }
+        .result.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+        .result.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+        .info {
+            background: #eff6ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3b82f6;
+        }
+        code {
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔔 Test de Notificaciones - SorteoHub</h1>
+        
+        <div class="info">
+            <strong>Instrucciones:</strong><br>
+            1. Asegúrate de estar logueado en la aplicación principal<br>
+            2. Copia tu token de autenticación desde <code>localStorage.getItem('token')</code> en la consola<br>
+            3. Pega el token abajo y haz clic en "Enviar Notificación de Prueba"
+        </div>
+
+        <div>
+            <label for="token">Token de Autenticación:</label><br>
+            <input 
+                type="text" 
+                id="token" 
+                placeholder="Pega tu token aquí" 
+                style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px;"
+            >
+        </div>
+
+        <div>
+            <button onclick="sendTestNotification()" id="sendBtn">Enviar Notificación de Prueba</button>
+            <button onclick="getTokenFromStorage()">Obtener Token Automáticamente</button>
+        </div>
+
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5001/api';
+
+        function getTokenFromStorage() {
+            // Intentar obtener el token desde localStorage
+            const token = localStorage.getItem('token');
+            if (token) {
+                document.getElementById('token').value = token;
+                showResult('Token obtenido desde localStorage', 'success');
+            } else {
+                showResult('No se encontró token en localStorage. Por favor, inicia sesión en la aplicación principal primero.', 'error');
+            }
+        }
+
+        async function sendTestNotification() {
+            const token = document.getElementById('token').value.trim();
+            const sendBtn = document.getElementById('sendBtn');
+            const resultDiv = document.getElementById('result');
+
+            if (!token) {
+                showResult('Por favor, ingresa un token de autenticación', 'error');
+                return;
+            }
+
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Enviando...';
+            resultDiv.style.display = 'none';
+
+            try {
+                const response = await fetch(`${API_BASE}/notifications/test`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showResult(
+                        `✅ Notificación enviada exitosamente!<br><br>` +
+                        `ID: ${data.notification.id}<br>` +
+                        `Título: ${data.notification.titulo}<br>` +
+                        `Mensaje: ${data.notification.mensaje}<br><br>` +
+                        `Ahora deberías ver la notificación en tiempo real en la aplicación principal.`,
+                        'success'
+                    );
+                } else {
+                    showResult(
+                        `❌ Error: ${data.error || 'Error desconocido'}<br>` +
+                        `Mensaje: ${data.message || 'Sin detalles'}`,
+                        'error'
+                    );
+                }
+            } catch (error) {
+                showResult(
+                    `❌ Error de conexión: ${error.message}<br><br>` +
+                    `Asegúrate de que el backend esté corriendo en http://localhost:5001`,
+                    'error'
+                );
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Enviar Notificación de Prueba';
+            }
+        }
+
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = message;
+            resultDiv.className = `result ${type}`;
+            resultDiv.style.display = 'block';
+        }
+
+        // Intentar obtener token automáticamente al cargar
+        window.addEventListener('load', () => {
+            getTokenFromStorage();
+        });
+    </script>
+</body>
+</html>
+

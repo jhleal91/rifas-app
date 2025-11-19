@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { validateEmail, validateNombre, validateTelefono } from '../../utils/validation';
 import { showSuccess, showError } from '../../utils/swal';
+import { API_BASE } from '../../config/api';
 
 const ParticipantRegisterModal = ({ isOpen, onClose }) => {
   const [participantData, setParticipantData] = useState({
@@ -34,7 +35,7 @@ const ParticipantRegisterModal = ({ isOpen, onClose }) => {
     
     try {
       // Crear usuario participante en el backend
-      const response = await fetch('http://localhost:5001/api/participantes/registro', {
+      const response = await fetch(`${API_BASE}/participantes/registro`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

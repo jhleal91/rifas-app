@@ -3,10 +3,11 @@ import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import AdvertiserDashboard from './AdvertiserDashboard';
 import SEO from './SEO';
+import ScrollToTop from './ScrollToTop';
 import { validateEmail, validatePassword, validateNombre, validateTelefono } from '../utils/validation';
 import './AdvertiserPortal.css';
 
-const API_BASE = 'http://localhost:5001/api';
+import { API_BASE } from '../config/api';
 
 const AdvertiserPortal = () => {
   const { t } = useTranslation();
@@ -220,6 +221,27 @@ const AdvertiserPortal = () => {
             <br /><br />
             {t('advertiser.hero.description3')}
           </p>
+          <div className="advertiser-hero-cta">
+            <button 
+              className="btn-hero-cta"
+              onClick={() => {
+                const authSection = document.getElementById('advertiser-auth-section');
+                if (authSection) {
+                  authSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  // Enfocar el primer input después de un breve delay
+                  setTimeout(() => {
+                    const firstInput = authSection.querySelector('input[type="email"], input[type="text"]');
+                    if (firstInput) {
+                      firstInput.focus();
+                    }
+                  }, 500);
+                }
+              }}
+            >
+              <span className="btn-icon">🚀</span>
+              <span>{t('advertiser.hero.ctaButton')}</span>
+            </button>
+          </div>
         </div>
       </section>
 
@@ -305,7 +327,7 @@ const AdvertiserPortal = () => {
       </section>
 
       {/* Sección de Login/Register */}
-      <section className="advertiser-auth-section">
+      <section id="advertiser-auth-section" className="advertiser-auth-section">
         <div className="advertiser-auth-container">
           <div className="advertiser-auth-header">
             <h2>{t('advertiser.auth.title')}</h2>
@@ -568,6 +590,9 @@ const AdvertiserPortal = () => {
           </div>
         </div>
       </section> */}
+
+      {/* Botón Scroll to Top */}
+      <ScrollToTop />
     </div>
   );
 };

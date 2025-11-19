@@ -20,6 +20,14 @@
     "date": "Date:",
     "status": "Status:"
   },
+  "countdown": {
+    "ending": "Ending in",
+    "expired": "Expired",
+    "days": "d",
+    "hours": "h",
+    "minutes": "m",
+    "seconds": "s"
+  },
   "nav": {
     "home": "Home",
     "dashboard": "Dashboard",
@@ -59,7 +67,17 @@
     "createAccount": "Create Account for Raffles",
     "iAmAdvertiser": "I'm an Advertiser",
     "alreadyHaveAccount": "Already have an account to create raffles?",
-    "login": "Log In"
+    "login": "Log In",
+    "heroCard": {
+      "activeRaffle": "Active Raffle",
+      "loading": "Loading active raffles...",
+      "loadingRaffles": "Loading raffles...",
+      "comingSoon": "Coming Soon",
+      "available": "Available",
+      "daysRemaining": "Days remaining",
+      "pricePerTicket": "Price per ticket:",
+      "viewRaffle": "View Raffle →"
+    }
   },
   "auth": {
     "email": "Email",
@@ -135,7 +153,8 @@
       "description1": "An",
       "description1Bold": "advertiser",
       "description2": "is a business or brand that wants to reach thousands of raffle participants and organizers with offers, coupons and relevant products.",
-      "description3": "With SorteoHub, your ads are strategically displayed in the Raffle Portal, where thousands of active users are looking for opportunities and prizes."
+      "description3": "With SorteoHub, your ads are strategically displayed in the Raffle Portal, where thousands of active users are looking for opportunities and prizes.",
+      "ctaButton": "Get Started"
     },
     "benefits": {
       "preciseTargeting": {
@@ -609,7 +628,37 @@
       "location": "Location:",
       "noImage": "No image",
       "viewPrizes": "View Prizes",
-      "hidePrizes": "Hide Prizes"
+      "hidePrizes": "Hide Prizes",
+      "verified": "Verified organizer",
+      "organizer": "Organizer",
+      "badges": {
+        "new": "New",
+        "popular": "Popular",
+        "verified": "Verified"
+      }
+    },
+    "sections": {
+      "endingSoon": "Ending soon",
+      "thisWeek": "This week",
+      "thisMonth": "This month",
+      "upcoming": "Upcoming",
+      "allRaffles": "All raffles"
+    },
+    "categories": {
+      "all": "All",
+      "properties": "Properties",
+      "vehicles": "Vehicles",
+      "technology": "Technology",
+      "experiences": "Experiences",
+      "sports": "Sports",
+      "jewellery": "Jewellery",
+      "travel": "Travel",
+      "fashion": "Fashion",
+      "food": "Food",
+      "health": "Health",
+      "kids": "Kids",
+      "cash": "Cash",
+      "other": "Other"
     },
     "pagination": {
       "previous": "← Previous",
@@ -745,6 +794,1383 @@
     "copyright": "All rights reserved",
     "productOf": "SorteoHub is a product of AureLA Solutions",
     "paymentInfo": "Payments processed securely by"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "unread": "unread",
+    "noNotifications": "You have no notifications",
+    "loading": "Loading notifications...",
+    "markAllRead": "Mark all as read",
+    "refresh": "Refresh",
+    "delete": "Delete",
+    "viewAll": "View all notifications",
+    "justNow": "Just now",
+    "minutesAgo": "{{count}} minute(s) ago",
+    "hoursAgo": "{{count}} hour(s) ago",
+    "daysAgo": "{{count}} day(s) ago"
+  },
+  "wizard": {
+    "title": "Create New Raffle",
+    "subtitle": "Complete the steps to create your raffle in minutes",
+    "step1": {
+      "title": "Information",
+      "label": "Basic Information",
+      "stepDescription": "Complete the main data of your raffle",
+      "raffleName": "Raffle Name",
+      "raffleNamePlaceholder": "Ex: iPhone 15 Pro Max Raffle",
+      "raffleNameHelp": "A clear and attractive name will increase participation",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe your raffle, prizes, how the draw works...",
+      "descriptionHelp": "A good description helps participants better understand your raffle",
+      "raffleType": "Raffle Type",
+      "types": {
+        "numbers": "🎲 Custom Numbers",
+        "deck": "🃏 Deck (Lottery)",
+        "alphabet": "🔤 Alphabet",
+        "animals": "🐲 Zodiac Animals",
+        "colors": "🎨 Colors",
+        "teams": "⚽ Sports Teams",
+        "emojis": "😀 Emojis"
+      },
+      "pricePerElement": "Price per {{element}}",
+      "pricePlaceholder": "0.00",
+      "priceHelp": "Price each participant will pay per {{element}}",
+      "visibility": "Raffle Visibility",
+      "public": "Public",
+      "publicDesc": "Visible to all users",
+      "private": "Private",
+      "privateDesc": "Only visible to you",
+      "endDate": "End Date",
+      "endDateHelp": "The raffle will automatically close on this date",
+      "location": "Location",
+      "locationDesc": "Define the geographical scope of your raffle",
+      "country": "Country",
+      "selectCountry": "Select a country",
+      "state": "State/Province",
+      "selectState": "Select a state",
+      "loadingStates": "Loading states...",
+      "city": "City",
+      "cityPlaceholder": "Ex: Mexico City",
+      "scope": "Raffle Scope",
+      "scopeLocal": "🏘️ Local (same city)",
+      "scopeNational": "🇲🇽 National (same country)",
+      "scopeInternational": "🌍 International (any country)",
+      "scopeLocalHelp": "The raffle is only for participants from your city",
+      "scopeNationalHelp": "The raffle accepts participants from the entire country",
+      "scopeInternationalHelp": "The raffle accepts participants from any country",
+      "handlesShipping": "Handle prize shipping",
+      "handlesShippingDesc": "Check this option if you can ship prizes to other locations",
+      "category": "Category",
+      "categoryPlaceholder": "Select a category (optional)",
+      "categoryHelp": "Helps participants find your raffle more easily",
+      "categories": {
+        "properties": "🏠 Properties",
+        "vehicles": "🚗 Vehicles",
+        "technology": "💻 Technology",
+        "experiences": "🎯 Experiences",
+        "sports": "⚽ Sports",
+        "jewellery": "💎 Jewellery",
+        "travel": "✈️ Travel",
+        "fashion": "👗 Fashion",
+        "food": "🍔 Food",
+        "health": "💊 Health",
+        "kids": "🧸 Kids",
+        "cash": "💰 Cash",
+        "other": "📦 Other"
+      }
+    },
+    "step2": {
+      "title": "Elements",
+      "label": "Configure Elements",
+      "description": "Customize your raffle elements",
+      "quantity": "Quantity of {{elements}}",
+      "quantityPlaceholder": "{{default}} ({{description}})",
+      "help": {
+        "deck": "For traditional deck use 54 cards (complete deck)",
+        "alphabet": "Maximum 26 letters (A-Z)",
+        "animals": "Maximum 12 Chinese zodiac animals",
+        "colors": "Define how many colors you want to raffle (no limit)",
+        "teams": "Maximum 20 sports teams",
+        "emojis": "Maximum 100 fun emojis",
+        "default": "Define how many elements you want to raffle"
+      },
+      "customElements": "Custom Elements",
+      "editElements": "💡 You can edit, add or delete {{elements}}. Changes will automatically reflect in the quantity.",
+      "deleteElement": "Delete element",
+      "availableColors": "🎨 Available Colors",
+      "colorHelp": "💡 Click on any color to add it to your raffle"
+    },
+    "step3": {
+      "title": "Prizes",
+      "label": "Prizes and Rules",
+      "description": "Define the prizes and rules of your raffle",
+      "prizes": "🏆 Prizes",
+      "addPrize": "Add Prize",
+      "noPrizes": "No prizes added. The first prize will be created automatically.",
+      "position": "Prize Position",
+      "positionPlaceholder": "Ex: 1 (1st place), 2 (2nd place), etc.",
+      "positionHelp": "The first prize will always be 1st place",
+      "positionHelpOther": "Set the prize order (1 = 1st place, 2 = 2nd place, etc.)",
+      "prizeName": "Prize Name",
+      "prizeNamePlaceholder": "Ex: PlayStation 5, iPhone 15, etc.",
+      "prizeNameRequired": "The first prize is mandatory for the raffle",
+      "prizeDescription": "Prize Description",
+      "prizeDescriptionPlaceholder": "Additional prize description (optional)",
+      "prizePhotos": "Prize Photos",
+      "prizePhotosDesc": "Add images of this specific prize",
+      "noPhotos": "No photos added for this prize",
+      "uploadImage": "Upload Image",
+      "imageUrlPlaceholder": "Image URL (ex: https://example.com/image.jpg)",
+      "imageUrlHelp": "Press Enter to add the URL",
+      "uploading": "Uploading...",
+      "deletePhoto": "Delete photo",
+      "deletePrize": "Delete prize",
+      "firstPrizeLocked": "The first prize is mandatory and cannot be deleted",
+      "rules": "Raffle Rules (optional)",
+      "rulesPlaceholder": "Describe the rules, conditions and terms of the raffle...",
+      "place": {
+        "1st": "1st place",
+        "2nd": "2nd place",
+        "3rd": "3rd place",
+        "nth": "{{n}}th place"
+      }
+    },
+    "step4": {
+      "title": "Finish",
+      "label": "Live Draw and Terms",
+      "description": "Configure the draw and accept the terms",
+      "liveDraw": "📺 Live Draw Specifications",
+      "liveDrawRequired": "MANDATORY: All draws must be conducted live to ensure transparency.",
+      "drawDate": "📅 Draw Date and Time",
+      "platform": "📱 Streaming Platform",
+      "selectPlatform": "Select a platform",
+      "platforms": {
+        "facebook": "Facebook Live",
+        "instagram": "Instagram Live",
+        "youtube": "YouTube Live",
+        "zoom": "Zoom",
+        "other": "Other platform"
+      },
+      "specifyPlatform": "📝 Specify Platform",
+      "platformNamePlaceholder": "Platform name",
+      "streamLink": "🔗 Streaming Link",
+      "streamLinkPlaceholder": "https://...",
+      "drawMethod": "🎯 Draw Method",
+      "selectMethod": "Select a method",
+      "methods": {
+        "roulette": "Digital Roulette",
+        "balls": "Numbered Balls",
+        "app": "Draw Application",
+        "other": "Other method"
+      },
+      "witnesses": "👥 Witnesses (Minimum 2)",
+      "witnessesPlaceholder": "Name and contact of independent witnesses...",
+      "paymentData": "💳 Payment Receiving Data",
+      "paymentDataDesc": "Enter your bank details where you want to receive raffle money. All payments will go through SorteoHub and we will transfer the amount minus your plan's commission.",
+      "bankData": "🏦 My Bank Details (Where I Will Receive Money)",
+      "clabe": "CLABE (18 digits)",
+      "clabePlaceholder": "CLABE (18 digits)",
+      "clabeHelp": "Interbank CLABE where you will receive transfers",
+      "accountNumber": "Account number",
+      "accountNumberPlaceholder": "Account number",
+      "bankName": "Bank name",
+      "bankNamePlaceholder": "Ex: BBVA, Banorte, Santander",
+      "accountHolder": "Account holder name",
+      "accountHolderPlaceholder": "Full name of the account holder",
+      "phone": "Contact phone",
+      "phonePlaceholder": "Contact phone",
+      "whatsapp": "WhatsApp (for notifications)",
+      "whatsappPlaceholder": "WhatsApp",
+      "paymentInfo": "ℹ️ Important: Participants will be able to pay with card (Stripe) or bank transfer. Money will arrive in your bank account after SorteoHub processes the payment and retains your plan's commission.",
+      "terms": "📋 Terms and Conditions",
+      "termsConfirm": "✅ I confirm that:",
+      "termsList": {
+        "nonProfit": "This raffle is NON-PROFIT",
+        "liveDraw": "I will conduct the draw live according to specifications",
+        "deliverPrizes": "I will deliver prizes to winners",
+        "transparency": "I will maintain transparency throughout the process",
+        "commission": "I will pay the platform commission (5%)"
+      },
+      "acceptTerms": "I have read and accept the terms and conditions",
+      "readTerms": "📖 Read Full Terms"
+    },
+    "actions": {
+      "back": "Back",
+      "next": "Next",
+      "create": "Create Raffle",
+      "mustAcceptTerms": "⚠️ You must accept the terms and conditions to continue"
+    },
+    "success": {
+      "title": "Raffle Created Successfully!",
+      "message": "Your raffle has been created and is ready to share.",
+      "manage": "Manage Raffle",
+      "goHome": "Go Home",
+      "redirecting": "Redirecting automatically in 3 seconds..."
+    },
+    "required": "Required",
+    "optional": "Optional"
+  },
+  "dashboard": {
+    "title": "My Dashboard",
+    "subtitle": "Manage your created raffles",
+    "loading": "Loading your raffles...",
+    "error": "Error",
+    "stats": {
+      "totalRifas": "Total Raffles",
+      "activas": "Active",
+      "finalizadas": "Finished",
+      "totalRecaudado": "Total Collected"
+    },
+    "search": {
+      "placeholder": "Search raffles by name, description or type...",
+      "clear": "Clear search"
+    },
+    "filters": {
+      "all": "All",
+      "active": "Active",
+      "finished": "Finished"
+    },
+    "actions": {
+      "createRaffle": "Create Raffle",
+      "manage": "Manage",
+      "viewPublic": "View Public"
+    },
+    "empty": {
+      "title": "You have no raffles created",
+      "message": "Create your first raffle and start collecting!",
+      "createButton": "Create Raffle"
+    },
+    "card": {
+      "status": {
+        "active": "Active",
+        "finished": "Finished",
+        "private": "Private"
+      },
+      "type": {
+        "numbers": "Numbers",
+        "alphabet": "Alphabet",
+        "deck": "Deck",
+        "colors": "Colors",
+        "teams": "Teams"
+      },
+      "participants": "participants",
+      "progress": "Progress",
+      "progressSale": "Sales Progress",
+      "ends": "ENDS",
+      "typeLabel": "TYPE",
+      "participantsLabel": "PARTICIPANTS",
+      "progressLabel": "PROGRESS"
+    },
+    "scroll": {
+      "counter": "of"
+    }
+  },
+  "publicRifaView": {
+    "backToRifas": "← Back to Raffles",
+    "notFound": {
+      "title": "Raffle not found",
+      "message": "The raffle you are looking for does not exist or has been deleted.",
+      "viewAll": "View All Raffles"
+    },
+    "raffleTypes": {
+      "numeros": "Numbers",
+      "loteria": "Lottery",
+      "baraja": "Deck",
+      "animales": "Zodiac Animals",
+      "colores": "Colors",
+      "equipos": "Sports Teams",
+      "abecedario": "Alphabet",
+      "emojis": "Emojis",
+      "paises": "Countries of the World"
+    },
+    "carousel": {
+      "previousImage": "Previous image",
+      "nextImage": "Next image",
+      "goToImage": "Go to image",
+      "image": "Image",
+      "prize": "Prize"
+    },
+    "info": {
+      "price": "Price:",
+      "progress": "Progress:",
+      "type": "Type:",
+      "ends": "Ends:",
+      "noImage": "No image"
+    },
+    "selection": {
+      "title": "🎯 Select Your Numbers",
+      "selected": "selected",
+      "selectedPlural": "selected",
+      "number": "number",
+      "numbers": "numbers",
+      "total": "Total:",
+      "clear": "Clear",
+      "participateNow": "Participate Now →",
+      "yourSelection": "Your Selection",
+      "totalToPay": "Total to pay:",
+      "participateWith": "🎫 Participate with",
+      "participateInRaffle": "🎫 Participate in this Raffle",
+      "selectNumbersAbove": "Select your numbers above or continue to choose them in the next step"
+    },
+    "filters": {
+      "available": "Available",
+      "all": "All",
+      "sold": "Sold",
+      "reserved": "Reserved"
+    },
+    "numberStates": {
+      "available": "Available - Click to select",
+      "sold": "Sold to:",
+      "reserved": "Temporarily reserved",
+      "selected": "Selected - Click to deselect"
+    },
+    "prizes": {
+      "title": "🏆 Prizes",
+      "prize": "Prize",
+      "general": "General",
+      "photos": "photo",
+      "photosPlural": "photos"
+    },
+    "rules": {
+      "title": "📋 Raffle Rules"
+    },
+    "participants": {
+      "title": "👥 Participants",
+      "none": "No participants yet",
+      "numbers": "🎫 Numbers:",
+      "notSpecified": "Not specified",
+      "total": "💰 Total:"
+    },
+    "payment": {
+      "title": "💳 Payment Methods",
+      "bankTransfer": "💸 Bank Transfer",
+      "bank": "Bank:",
+      "clabe": "CLABE:",
+      "accountNumber": "Account number:",
+      "holder": "Holder:",
+      "phone": "Phone:",
+      "whatsapp": "WhatsApp:"
+    }
+  },
+  "participateRaffle": {
+    "loading": "Loading raffle...",
+    "notFound": {
+      "title": "Raffle not found",
+      "message": "The raffle you are looking for does not exist or has been deleted.",
+      "viewRifas": "View Raffles"
+    },
+    "finished": {
+      "title": "Raffle Finished",
+      "message": "This raffle has already ended and no longer accepts participants.",
+      "viewOthers": "View Other Raffles"
+    },
+    "header": {
+      "backToRifas": "Back to Raffles",
+      "share": "Share",
+      "shareTitle": "Share raffle",
+      "numbers": "numbers",
+      "remaining": "remaining"
+    },
+    "progress": {
+      "label": "Sales Progress",
+      "sold": "sold",
+      "available": "available"
+    },
+    "steps": {
+      "selectNumbers": "Select Numbers",
+      "yourData": "Your Data",
+      "securePayment": "Secure Payment"
+    },
+    "step1": {
+      "title": "🎯 Select your numbers",
+      "selected": "number selected",
+      "selectedPlural": "numbers selected",
+      "total": "Total:",
+      "luckyNumbers": "Suggested Lucky Numbers",
+      "filters": {
+        "available": "Available",
+        "all": "All",
+        "sold": "Sold",
+        "reserved": "Reserved"
+      },
+      "numberStates": {
+        "selected": "Selected - Click to remove",
+        "sold": "Sold",
+        "reserved": "Reserved",
+        "available": "Available"
+      },
+      "preview": {
+        "title": "Your Participation Preview",
+        "selectedNumbers": "Selected numbers:",
+        "quantity": "Quantity:",
+        "number": "number",
+        "numbers": "numbers",
+        "pricePerNumber": "Price per number:",
+        "totalToPay": "Total to pay:"
+      },
+      "continue": "Continue with my data →"
+    },
+    "step2": {
+      "title": "👤 Complete your data",
+      "subtitle": "We need this information to process your participation",
+      "name": {
+        "label": "Full name *",
+        "placeholder": "Ex: John Doe",
+        "valid": "✓ Valid name"
+      },
+      "phone": {
+        "label": "Phone *",
+        "placeholder": "Ex: +1 555 123 4567 or 5551234567",
+        "valid": "✓ Valid format"
+      },
+      "email": {
+        "label": "Email *",
+        "placeholder": "Ex: your@email.com",
+        "valid": "✓ Valid email"
+      },
+      "summary": {
+        "selectedNumbers": "Selected numbers:",
+        "pricePerNumber": "Price per number:",
+        "totalToPay": "Total to pay:"
+      },
+      "back": "← Back",
+      "continue": "Continue to Payment →"
+    },
+    "step3": {
+      "title": "💳 Secure Payment",
+      "subtitle": "Securely processed by Stripe",
+      "numbers": "Numbers:",
+      "total": "Total:",
+      "back": "← Back to Data",
+      "notAvailable": {
+        "title": "⚠️ Payment not available",
+        "message": "The creator of this raffle has not configured payment data.",
+        "back": "← Back"
+      }
+    },
+    "alerts": {
+      "selectNumbers": {
+        "title": "Select numbers",
+        "text": "Please select at least one number to continue",
+        "confirm": "Got it"
+      },
+      "completeFields": {
+        "title": "Complete all fields",
+        "text": "Please complete all required fields correctly",
+        "confirm": "Got it"
+      },
+      "processing": {
+        "title": "Processing...",
+        "text": "Registering your participation"
+      },
+      "success": {
+        "title": "Successful participation!",
+        "numbersReserved": "The numbers",
+        "haveBeenReserved": "have been reserved.",
+        "paymentProcessed": "Your payment has been processed correctly.",
+        "confirm": "Got it"
+      },
+      "error": {
+        "title": "Error registering participation",
+        "confirm": "Got it"
+      },
+      "share": {
+        "title": "Link copied!",
+        "text": "The raffle link has been copied to clipboard",
+        "confirm": "Got it"
+      }
+    }
+  },
+  "rifaManagement": {
+    "notFound": {
+      "title": "Raffle not found",
+      "backToDashboard": "← Back to Dashboard",
+      "backToHome": "Back to home"
+    },
+    "header": {
+      "title": "Raffle Management:",
+      "updateData": "🔄 Update Data",
+      "deleteRifa": "🗑️ Delete Raffle",
+      "back": "← Back"
+    },
+    "share": {
+      "title": "📱 Share Raffle",
+      "downloadQR": "📥 Download QR"
+    },
+    "sell": {
+      "title": "🎫 Sell Numbers",
+      "participantName": "Participant name",
+      "participantNamePlaceholder": "Ex: John Doe",
+      "phone": "Phone (optional)",
+      "phonePlaceholder": "Ex: (555) 123-4567",
+      "email": "Email (to send raffle URL)",
+      "emailPlaceholder": "Ex: john@email.com",
+      "selectedNumbers": "Selected Numbers:",
+      "sellNumbers": "Sell Numbers",
+      "multipleSale": "Multiple Sale",
+      "numberStates": {
+        "sold": "Sold",
+        "reserved": "Reserved",
+        "available": "Available"
+      }
+    },
+    "stats": {
+      "title": "📊 Statistics",
+      "totalNumbers": "Total Numbers",
+      "sold": "Sold",
+      "available": "Available",
+      "reserved": "Reserved",
+      "participants": "Participants",
+      "collected": "Collected"
+    },
+    "result": {
+      "title": "🏁 Result",
+      "winnerNumber": "Winner number",
+      "winnerNumberPlaceholder": "Ex. 07",
+      "publishResult": "Publish result",
+      "saveResult": "💾 Save Result",
+      "published": "Published:",
+      "yes": "Yes",
+      "no": "No",
+      "currentNumber": "Current number:"
+    },
+    "prizes": {
+      "title": "🏆 Raffle Prizes"
+    },
+    "photos": {
+      "title": "📸 Prize Photos",
+      "noPhotos": "No prize photos added yet.",
+      "noPhotosHelp": "Photos will appear here once you add them when creating the raffle."
+    },
+    "rules": {
+      "title": "📋 Raffle Rules"
+    },
+    "payment": {
+      "title": "💳 Payment Methods",
+      "edit": "✏️ Edit Payment Methods",
+      "cancel": "❌ Cancel",
+      "bankData": "🏦 Bank Transfer Data",
+      "bank": "Bank *",
+      "bankPlaceholder": "Ex: Bank of America, Chase, etc.",
+      "clabe": "CLABE (18 digits) *",
+      "clabePlaceholder": "Ex: 012345678901234567",
+      "accountNumber": "Account Number *",
+      "accountNumberPlaceholder": "Ex: 1234567890",
+      "holderName": "Account Holder Name *",
+      "holderNamePlaceholder": "Ex: John Doe Smith",
+      "phone": "Phone (optional)",
+      "phonePlaceholder": "Ex: (555) 123-4567",
+      "whatsapp": "WhatsApp (optional)",
+      "whatsappPlaceholder": "Ex: +1 555 123 4567",
+      "whatsappHelp": "This number will appear for participants to send their receipt",
+      "otherDetails": "Other Details (optional)",
+      "otherDetailsPlaceholder": "Additional payment information...",
+      "save": "💾 Save Payment Methods",
+      "cancelButton": "Cancel",
+      "notSpecified": "Not specified",
+      "notConfigured": "⚠️ No payment methods configured. Participants will not be able to see bank details.",
+      "notConfiguredHelp": "Click on \"Edit Payment Methods\" to add transfer information."
+    },
+    "participants": {
+      "title": "👥 Participants",
+      "pending": "pending",
+      "confirmed": "confirmed",
+      "viewAll": "View All Participants",
+      "none": "No participants yet",
+      "noPending": "No pending participants",
+      "phone": "📞",
+      "numbers": "🎫 Numbers:",
+      "notSpecified": "Not specified",
+      "total": "💰 Total:",
+      "date": "📅 Date:",
+      "status": {
+        "confirmed": "✅ Confirmed",
+        "pending": "⏳ Pending"
+      },
+      "actions": {
+        "confirmSale": "✅ Confirm Sale",
+        "confirmSaleTitle": "Confirm sale and mark as sold",
+        "reject": "❌ Reject",
+        "rejectTitle": "Reject and release numbers"
+      }
+    },
+    "saleModal": {
+      "title": "🎯 Process Sale",
+      "close": "✕",
+      "saleType": "Sale Type:",
+      "individual": "Individual (1 person, {{count}} numbers)",
+      "multiple": "Multiple ({{count}} people, 1 number each)",
+      "sameName": "Use the same name for all",
+      "nameForAll": "Name for all participants:",
+      "nameForAllPlaceholder": "Ex: Smith Family",
+      "participantsList": "Participants ({{count}})",
+      "participantNumber": "Numbers:",
+      "participantName": "Participant name",
+      "participantPhone": "Phone (optional)",
+      "summary": {
+        "title": "Sale Summary",
+        "totalParticipants": "Total Participants:",
+        "totalNumbers": "Total Numbers:",
+        "totalToCharge": "Total to Charge:"
+      },
+      "cancel": "Cancel",
+      "processSale": "Process Sale"
+    },
+    "alerts": {
+      "selectNumbers": {
+        "title": "Select numbers",
+        "message": "Please select at least one number to sell."
+      },
+      "nameRequired": {
+        "title": "Name required",
+        "message": "Please enter the participant's name.",
+        "allRequired": "All participants must have a name."
+      },
+      "directSaleSuccess": {
+        "title": "Direct sale successful!",
+        "message": "{{count}} numbers sold for ${{total}}. Numbers are automatically confirmed.",
+        "multipleParticipants": "{{count}} participants processed. All numbers are automatically confirmed."
+      },
+      "saleError": {
+        "title": "Error processing sale",
+        "message": "Error processing sale. Please try again.",
+        "unknown": "Unknown error",
+        "noneProcessed": "Could not process any sale. Please try again."
+      },
+      "paymentSaved": {
+        "title": "Payment methods saved",
+        "message": "Payment methods saved successfully."
+      },
+      "paymentError": {
+        "title": "Error saving",
+        "message": "Error saving payment methods. Please try again.",
+        "unknown": "Unknown error"
+      },
+      "confirmSale": {
+        "title": "Confirm Sale",
+        "message": "Are you sure you want to confirm this sale? Numbers will be marked as sold.",
+        "confirm": "Yes, confirm",
+        "cancel": "Cancel"
+      },
+      "saleConfirmed": {
+        "title": "Sale confirmed!",
+        "message": "Numbers have been marked as sold."
+      },
+      "confirmError": {
+        "title": "Error confirming",
+        "message": "Error confirming sale. Please try again.",
+        "unknown": "Unknown error"
+      },
+      "resultUpdated": {
+        "title": "Result updated",
+        "message": "Raffle result has been updated correctly."
+      },
+      "resultError": {
+        "title": "Error",
+        "message": "Error saving result. Please try again."
+      },
+      "deleteRifa": {
+        "title": "Delete Raffle",
+        "message": "Are you sure you want to delete the raffle \"{{name}}\"? The raffle will be marked as deleted and will not be publicly visible, but data will be kept in the system.",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "deleteSuccess": {
+        "title": "Raffle deleted",
+        "message": "Raffle has been deleted successfully."
+      },
+      "deleteError": {
+        "title": "Error",
+        "message": "Error deleting raffle. Please try again.",
+        "noPermissions": "No permissions",
+        "noPermissionsMessage": "You do not have permission to delete this raffle.",
+        "notFound": "Raffle not found",
+        "notFoundMessage": "The raffle you are trying to delete does not exist.",
+        "sessionExpired": "Session expired. Please log in again."
+      }
+    }
+  },
+  "activeRifas": {
+    "title": "🎯 Active Raffles",
+    "empty": {
+      "message": "No active raffles at this time.",
+      "createFirst": "Create your first raffle to get started!"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "prize": "🏆 Prize",
+    "available": "🎫 Available",
+    "daysRemaining": "⏱ Days remaining",
+    "days": "days",
+    "finished": "Finished",
+    "paymentInfo": {
+      "title": "💳 Payment Information",
+      "pricePerTicket": "Price per ticket"
+    },
+    "stats": {
+      "title": "📈 Complete Statistics",
+      "type": "Type",
+      "totalElements": "Total Elements",
+      "sold": "Sold",
+      "reserved": "Reserved",
+      "endDate": "End Date"
+    },
+    "prizes": {
+      "title": "🏆 All Prizes"
+    },
+    "actions": {
+      "hideDetail": "▼ Hide Detail",
+      "showDetail": "▶ View Detail",
+      "manage": "⚙️ Manage",
+      "viewPublic": "👁 View Public"
+    },
+    "raffleTypes": {
+      "numeros": "🎲 Numbers",
+      "baraja": "🃏 Deck",
+      "abecedario": "🔤 Alphabet",
+      "animales": "🐲 Animals",
+      "colores": "🎨 Colors",
+      "equipos": "⚽ Teams",
+      "emojis": "😀 Emojis",
+      "paises": "🌍 Countries"
+    }
+  },
+  "termsAndConditions": {
+    "title": "📋 Terms and Conditions",
+    "purpose": {
+      "title": "🎯 Platform Purpose",
+      "text": "<strong>SorteoHub</strong> is a technological platform that facilitates the creation and management of raffles <strong>WITHOUT PROFIT</strong>. Our goal is to connect organizers with participants in a transparent and secure manner."
+    },
+    "businessModel": {
+      "title": "💰 Business Model",
+      "noProfit": "• <strong>Raffles are NON-PROFIT</strong> - Organizers cannot make profits<br/>",
+      "commission": "• <strong>Platform commission:</strong> 5% of total collected (covers operational costs)<br/>",
+      "transparency": "• <strong>Total transparency:</strong> All amounts are publicly visible"
+    },
+    "liveDraws": {
+      "title": "🎲 Live Draws",
+      "mandatory": "<strong>MANDATORY:</strong> All draws must be conducted live to ensure transparency:",
+      "liveStream": "📱 <strong>Live stream:</strong> Facebook Live, Instagram Live, YouTube Live or Zoom",
+      "dateTime": "📅 <strong>Date and time:</strong> Must be specified when creating the raffle",
+      "method": "🎯 <strong>Draw method:</strong> Digital wheel, numbered balls, or draw application",
+      "recording": "📹 <strong>Recording:</strong> The draw must be recorded as evidence",
+      "witnesses": "👥 <strong>Witnesses:</strong> Minimum 2 independent witnesses present"
+    },
+    "organizerResponsibilities": {
+      "title": "⚖️ Organizer Responsibilities",
+      "noProfit": "✅ Ensure the raffle is non-profit",
+      "liveDraw": "✅ Conduct the live draw as scheduled",
+      "deliverPrizes": "✅ Deliver prizes to winners on time",
+      "transparency": "✅ Maintain transparency throughout the process",
+      "compliance": "✅ Comply with applicable local laws"
+    },
+    "participantProtection": {
+      "title": "🛡️ Participant Protection",
+      "secureData": "🔒 <strong>Secure data:</strong> Personal information protected",
+      "securePayments": "💳 <strong>Secure payments:</strong> Verifiable bank transfers",
+      "support": "📞 <strong>Support:</strong> Customer service available",
+      "disputes": "⚖️ <strong>Dispute resolution:</strong> Clear claims process"
+    },
+    "prohibitions": {
+      "title": "🚫 Prohibitions",
+      "profitRaffles": "❌ Profit-making raffles",
+      "noLiveDraws": "❌ Draws not broadcast live",
+      "manipulation": "❌ Result manipulation",
+      "dataMisuse": "❌ Use of personal data for other purposes",
+      "illegalRaffles": "❌ Raffles that violate local laws"
+    },
+    "contact": {
+      "title": "📞 Contact and Support",
+      "text": "For questions, complaints or technical support:<br/>📧 Email: soporte@rifasdigital.com<br/>📱 WhatsApp: +52 55 1234 5678<br/>🌐 Web: www.rifasdigital.com"
+    },
+    "checkbox": "I have read and accept the terms and conditions",
+    "actions": {
+      "cancel": "Cancel",
+      "accept": "Accept and Continue"
+    }
+  },
+  "businessProfile": {
+    "title": "🏪 My Business Profile",
+    "close": "×",
+    "fields": {
+      "commercialName": "Commercial Name * (ex: AlvarezLA, LealStore)",
+      "commercialNamePlaceholder": "Your business name",
+      "commercialNameHelp": "This name will appear in \"Sponsored Businesses\"",
+      "websiteUrl": "Website URL",
+      "websiteUrlPlaceholder": "https://your-business.com",
+      "websiteUrlHelp": "Users will be redirected here from your profile",
+      "businessDescription": "Business Description",
+      "businessDescriptionPlaceholder": "Describe your business...",
+      "businessDescriptionHelp": "Will appear in the \"Sponsored Businesses\" section",
+      "logoUrl": "Business Logo URL",
+      "logoUrlPlaceholder": "https://example.com/logo.jpg",
+      "logoUrlHelp": "Use a direct image URL (not redirect URLs)",
+      "sponsorActive": "Appear in \"Sponsored Businesses\"",
+      "sponsorActiveHelp": "Your business will appear in the featured section of the portal (requires having at least one active ad)"
+    },
+    "actions": {
+      "save": "Save Profile",
+      "saving": "Saving...",
+      "cancel": "Cancel"
+    },
+    "alerts": {
+      "sessionExpired": {
+        "title": "Session expired",
+        "message": "Session expired. Please log in again."
+      },
+      "requiredField": {
+        "title": "Required field",
+        "message": "Commercial name is required"
+      },
+      "success": {
+        "title": "Success!",
+        "message": "Business profile updated successfully"
+      },
+      "error": {
+        "title": "Error",
+        "message": "Error saving profile. Please try again.",
+        "updating": "Error updating profile"
+      }
+    }
+  },
+  "participantesPage": {
+    "loading": "Loading participants...",
+    "notFound": {
+      "title": "Raffle not found",
+      "backToDashboard": "Back to Dashboard"
+    },
+    "breadcrumb": {
+      "dashboard": "Dashboard",
+      "manageRaffle": "Manage Raffle",
+      "participants": "Participants"
+    },
+    "header": {
+      "title": "👥 Participants -",
+      "description": "Manage all participants of this raffle"
+    },
+    "stats": {
+      "totalParticipants": "Total Participants",
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "totalCollected": "Total Collected"
+    },
+    "filters": {
+      "searchByName": "Search by name:",
+      "searchPlaceholder": "Participant name...",
+      "state": "State:",
+      "all": "All",
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "sortBy": "Sort by:",
+      "dateRecent": "Date (most recent)",
+      "nameAZ": "Name (A-Z)",
+      "totalHighLow": "Total (high to low)"
+    },
+    "table": {
+      "participant": "Participant",
+      "numbers": "Numbers",
+      "total": "Total",
+      "date": "Date",
+      "state": "State",
+      "actions": "Actions",
+      "notSpecified": "Not specified",
+      "noDataFiltered": "No participants found with the applied filters",
+      "noData": "No registered participants",
+      "noActions": "-"
+    },
+    "status": {
+      "confirmed": "✅ Confirmed",
+      "pending": "⏳ Pending"
+    },
+    "actions": {
+      "confirmSale": "Confirm sale",
+      "rejectPayment": "Reject payment"
+    },
+    "alerts": {
+      "confirmSuccess": {
+        "title": "Sale confirmed",
+        "message": "Sale confirmed successfully."
+      },
+      "confirmError": {
+        "title": "Error",
+        "message": "Error confirming sale. Please try again."
+      },
+      "rejectConfirm": {
+        "title": "Reject Payment",
+        "message": "Are you sure you want to reject this payment? Numbers will be released.",
+        "confirm": "Yes, reject",
+        "cancel": "Cancel"
+      },
+      "rejectSuccess": {
+        "title": "Payment rejected",
+        "message": "Payment was rejected and numbers were released."
+      },
+      "rejectError": {
+        "title": "Error",
+        "message": "Error rejecting payment. Please try again."
+      }
+    }
+  },
+  "legalPages": {
+    "lastUpdated": "Last updated:",
+    "backToHome": "← Back to Home",
+    "privacyPolicy": {
+      "title": "🔒 Privacy Policy",
+      "seo": {
+        "title": "Privacy Policy - SorteoHub",
+        "description": "Privacy policy and data protection of SorteoHub",
+        "keywords": "privacy policy, data protection, privacy, SorteoHub"
+      },
+      "sections": {
+        "introduction": {
+          "title": "1. Introduction",
+          "p1": "At SorteoHub (\"we\", \"our\", \"the Platform\"), we are committed to protecting your privacy and the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and protect your information when you use our services.",
+          "p2": "By using SorteoHub, you agree to the practices described in this policy. If you do not agree with this policy, please do not use our services."
+        },
+        "informationCollected": {
+          "title": "2. Information We Collect",
+          "provided": {
+            "title": "2.1. Information You Provide to Us",
+            "text": "We collect information that you provide directly to us, including:",
+            "account": "Account Information: Name, email address, phone number, password (encrypted)",
+            "profile": "Profile Information: Profile photo, biography, preferences",
+            "raffles": "Raffle Information: Details of created raffles, prizes, dates, rules",
+            "participation": "Participation Information: Selected numbers, payment information, contact data",
+            "advertisers": "Advertiser Information: Business data, business information, payment methods",
+            "communications": "Communications: Messages, inquiries, comments"
+          },
+          "automatic": {
+            "title": "2.2. Automatically Collected Information",
+            "text": "When you use our Platform, we automatically collect:",
+            "device": "Device Information: Device type, operating system, unique identifiers",
+            "navigation": "Navigation Information: Pages visited, time on each page, links clicked",
+            "location": "Location Information: IP address, approximate geographic location",
+            "cookies": "Cookies and Similar Technologies: To improve your experience and analyze usage",
+            "logs": "Logs: Access dates and times, platform activity"
+          },
+          "thirdParty": {
+            "title": "2.3. Third-Party Information",
+            "text": "We may receive information about you from third parties, such as social authentication services (Google, Facebook) if you choose to connect through these services."
+          }
+        },
+        "howWeUse": {
+          "title": "3. How We Use Your Information",
+          "text": "We use the collected information to:",
+          "services": "Provide Services: Create and manage your account, process raffles, facilitate participation",
+          "communication": "Communication: Send notifications, updates, responses to inquiries",
+          "improvement": "Service Improvement: Analyze usage, identify issues, develop new features",
+          "security": "Security: Detect and prevent fraud, abuse, illegal activities",
+          "personalization": "Personalization: Personalize your experience, show relevant content",
+          "marketing": "Marketing: Send promotions, offers (with your consent)",
+          "legal": "Legal Compliance: Comply with legal obligations, respond to government requests"
+        },
+        "sharing": {
+          "title": "4. Sharing Information",
+          "text": "We may share your information under the following circumstances:",
+          "public": {
+            "title": "4.1. Public Information",
+            "text": "Some information is public by default:",
+            "username": "Username and public profile",
+            "raffles": "Created raffles (public raffle information)",
+            "results": "Results of completed raffles",
+            "reviews": "Public ratings and reviews"
+          },
+          "users": {
+            "title": "4.2. With Other Users",
+            "text": "When you participate in a raffle, the raffle creator can see your name and selected numbers. This information is necessary to manage the raffle."
+          },
+          "providers": {
+            "title": "4.3. Service Providers",
+            "text": "We share information with service providers who help us operate the Platform, such as:",
+            "hosting": "Hosting and storage providers",
+            "email": "Email and notification services",
+            "analytics": "Analytics and monitoring providers",
+            "payments": "Payment processing providers",
+            "note": "These providers are contractually obligated to protect your information and may only use it for specified purposes."
+          },
+          "legal": {
+            "title": "4.4. Legal Requirements",
+            "text": "We may disclose information if required by law, court order, or legal process, or to protect our rights, property, or safety, or that of our users."
+          },
+          "business": {
+            "title": "4.5. Business Transfers",
+            "text": "In case of merger, acquisition, or sale of assets, your information may be transferred as part of that transaction."
+          }
+        },
+        "cookies": {
+          "title": "5. Cookies and Tracking Technologies",
+          "text": "We use cookies and similar technologies to:",
+          "session": "Keep your session active",
+          "preferences": "Remember your preferences",
+          "analytics": "Analyze site traffic",
+          "personalization": "Personalize content and ads",
+          "note": "You can control cookies through your browser settings. However, disabling cookies may affect Platform functionality."
+        },
+        "security": {
+          "title": "6. Information Security",
+          "text": "We implement technical and organizational security measures to protect your information:",
+          "https": "Data encryption in transit (HTTPS)",
+          "passwords": "Password encryption (hashing with bcrypt)",
+          "access": "Restricted access to personal information",
+          "monitoring": "Continuous security monitoring",
+          "backups": "Regular backups",
+          "updates": "Security updates",
+          "note": "However, no method of transmission over the Internet or electronic storage is 100% secure. Although we strive to protect your information, we cannot guarantee absolute security."
+        },
+        "retention": {
+          "title": "7. Data Retention",
+          "text": "We retain your information for as long as necessary to:",
+          "services": "Provide our services",
+          "legal": "Comply with legal obligations",
+          "disputes": "Resolve disputes",
+          "agreements": "Enforce our agreements",
+          "note": "When you delete your account, we will delete or anonymize your personal information, except when retention is required by law or for legitimate business purposes."
+        },
+        "rights": {
+          "title": "8. Your Rights",
+          "text": "You have the following rights regarding your information:",
+          "access": {
+            "title": "8.1. Access",
+            "text": "You can access and review your personal information through your account or by requesting a copy."
+          },
+          "correction": {
+            "title": "8.2. Correction",
+            "text": "You can update or correct your personal information at any time through your account."
+          },
+          "deletion": {
+            "title": "8.3. Deletion",
+            "text": "You can request deletion of your personal information. However, we may retain certain information as required by law."
+          },
+          "portability": {
+            "title": "8.4. Portability",
+            "text": "You can request a copy of your information in a structured and commonly used format."
+          },
+          "opposition": {
+            "title": "8.5. Opposition",
+            "text": "You can object to the processing of your information for certain purposes, such as direct marketing."
+          },
+          "withdrawal": {
+            "title": "8.6. Withdrawal of Consent",
+            "text": "You can withdraw your consent for information processing at any time, subject to legal limitations."
+          }
+        },
+        "minors": {
+          "title": "9. Minors' Privacy",
+          "p1": "Our services are directed to people over 18 years of age. We do not intentionally collect personal information from minors. If we discover that we have collected information from a minor, we will take steps to delete that information immediately.",
+          "p2": "If you are a parent or guardian and believe your minor child has provided us with personal information, please contact us."
+        },
+        "transfers": {
+          "title": "10. International Transfers",
+          "text": "Your information may be transferred and processed in countries other than yours. By using our services, you consent to the transfer of your information to these countries. We ensure that appropriate safeguards are implemented to protect your information."
+        },
+        "thirdPartyLinks": {
+          "title": "11. Links to Third-Party Sites",
+          "text": "Our Platform may contain links to third-party websites. We are not responsible for the privacy practices of these sites. We recommend reviewing the privacy policies of any site you visit."
+        },
+        "changes": {
+          "title": "12. Changes to This Policy",
+          "p1": "We may update this Privacy Policy occasionally. We will notify you of significant changes by posting the new policy on this page and updating the \"Last updated\" date.",
+          "p2": "We recommend reviewing this policy periodically to stay informed about how we protect your information."
+        },
+        "cookieConsent": {
+          "title": "13. Cookie Consent",
+          "text": "By using our Platform, you consent to the use of cookies as described in this policy. You can withdraw your consent at any time by adjusting your browser settings."
+        },
+        "contact": {
+          "title": "14. Contact",
+          "text": "If you have questions, concerns, or requests related to this Privacy Policy or the handling of your personal information, you can contact us:",
+          "email": "Email:",
+          "phone": "Phone:",
+          "address": "Address:",
+          "note": "We are committed to responding to your inquiries within a reasonable time."
+        },
+        "acceptance": {
+          "title": "15. Acceptance",
+          "text": "By using SorteoHub, you acknowledge that you have read and understood this Privacy Policy and consent to the processing of your information as described herein."
+        }
+      },
+      "footer": {
+        "terms": "← Terms and Conditions",
+        "home": "Back to Home →"
+      }
+    },
+    "termsAndConditions": {
+      "title": "📋 Terms and Conditions of Use",
+      "seo": {
+        "title": "Terms and Conditions - SorteoHub",
+        "description": "Terms and conditions of use of the SorteoHub platform",
+        "keywords": "terms and conditions, legal, SorteoHub"
+      },
+      "sections": {
+        "acceptance": {
+          "title": "1. Acceptance of Terms",
+          "p1": "By accessing and using SorteoHub (\"the Platform\", \"we\", \"our\"), you agree to comply with these Terms and Conditions of Use. If you do not agree with any part of these terms, you must not use our services.",
+          "p2": "These terms constitute a legally binding agreement between you and SorteoHub. We reserve the right to modify these terms at any time, and your continued use of the Platform after such modifications constitutes your acceptance of the modified terms."
+        },
+        "description": {
+          "title": "2. Service Description",
+          "p1": "SorteoHub is a digital platform that allows users to create, manage, and participate in online raffles. The Platform provides tools to:",
+          "create": "Create and manage digital raffles",
+          "manage": "Manage participants and numbers",
+          "draws": "Conduct draws and publish results",
+          "payments": "Manage payments and transactions",
+          "ads": "Publish ads and promotions",
+          "p2": "SorteoHub acts solely as a technological intermediary and is not responsible for the legality of raffles created by users, nor for the prizes offered."
+        },
+        "registration": {
+          "title": "3. Registration and User Accounts",
+          "requirements": {
+            "title": "3.1. Registration Requirements",
+            "text": "To use certain Platform features, you must create an account. By registering, you agree to:",
+            "accurate": "Provide accurate, current, and complete information",
+            "maintain": "Maintain and update your account information",
+            "confidentiality": "Maintain the confidentiality of your password",
+            "notify": "Notify us immediately of any unauthorized use",
+            "responsible": "Be responsible for all activities under your account"
+          },
+          "eligibility": {
+            "title": "3.2. Eligibility",
+            "text": "You must be at least 18 years old to create an account and use our services. By registering, you declare and warrant that you meet this age requirement."
+          }
+        },
+        "usage": {
+          "title": "4. Platform Use",
+          "allowed": {
+            "title": "4.1. Permitted Use",
+            "text": "You may use the Platform to:",
+            "legal": "Create legal and legitimate raffles",
+            "participate": "Participate in raffles created by other users",
+            "manage": "Manage your raffles and participants",
+            "content": "Publish raffle-related content"
+          },
+          "prohibited": {
+            "title": "4.2. Prohibited Use",
+            "text": "It is strictly prohibited to:",
+            "illegal": "Use the Platform for illegal or fraudulent activities",
+            "violate": "Create raffles that violate local, state, or federal laws",
+            "manipulate": "Manipulate raffle or draw results",
+            "false": "Use false or misleading information",
+            "interfere": "Interfere with Platform operation",
+            "access": "Attempt to access other users' accounts",
+            "viruses": "Transmit viruses, malware, or malicious code",
+            "reverse": "Reverse engineer or copy the code",
+            "spam": "Spam or unsolicited communication",
+            "intellectual": "Violate intellectual property rights"
+          }
+        },
+        "raffles": {
+          "title": "5. Raffles and Responsibilities",
+          "creator": {
+            "title": "5.1. Raffle Creator Responsibility",
+            "text": "As a raffle creator, you are fully responsible for:",
+            "laws": "Complying with all applicable laws and regulations",
+            "permits": "Obtaining necessary permits to conduct the raffle",
+            "deliver": "Delivering promised prizes to winners",
+            "transparent": "Managing payments and transactions transparently",
+            "fair": "Conducting the draw fairly and randomly",
+            "publish": "Publishing results transparently",
+            "respond": "Responding to participant inquiries"
+          },
+          "intermediary": {
+            "title": "5.2. SorteoHub as Intermediary",
+            "text": "SorteoHub is NOT responsible for:",
+            "legality": "The legality of raffles created by users",
+            "delivery": "Prize delivery by creators",
+            "disputes": "Disputes between creators and participants",
+            "payments": "Unpaid payments or refunds",
+            "fraud": "User fraud or illegal activities"
+          },
+          "participants": {
+            "title": "5.3. Participants",
+            "text": "By participating in a raffle, you:",
+            "voluntary": "Acknowledge that participation is voluntary",
+            "random": "Accept that results are random and final",
+            "guarantee": "Understand that there is no guarantee of winning",
+            "contact": "Are responsible for providing valid contact information",
+            "terms": "Must comply with the specific terms of each raffle"
+          }
+        },
+        "payments": {
+          "title": "6. Payments and Transactions",
+          "processing": {
+            "title": "6.1. Payment Processing",
+            "text": "Payments are processed directly between the raffle creator and participants. SorteoHub may charge commissions for platform use according to contracted plans."
+          },
+          "refunds": {
+            "title": "6.2. Refunds",
+            "text": "Refund policies are determined by each raffle creator. SorteoHub does not guarantee refunds and is not responsible for processing refunds. Any refund request must be directed directly to the raffle creator."
+          },
+          "commissions": {
+            "title": "6.3. Commissions",
+            "text": "SorteoHub may charge commissions for platform use. Commissions are detailed in subscription plans and are automatically deducted as appropriate."
+          }
+        },
+        "intellectual": {
+          "title": "7. Intellectual Property",
+          "p1": "All Platform content, including but not limited to text, graphics, logos, icons, images, audio clips, digital downloads, and data compilations, is the property of SorteoHub or its content providers and is protected by copyright laws.",
+          "p2": "You may not reproduce, distribute, modify, create derivative works, publicly display, publicly perform, republish, download, store, or transmit any Platform material without our prior written permission."
+        },
+        "privacy": {
+          "title": "8. Privacy",
+          "text": "Your use of the Platform is also governed by our Privacy Policy. Please review our Privacy Policy to understand our information collection and use practices.",
+          "link": "View Privacy Policy →"
+        },
+        "liability": {
+          "title": "9. Limitation of Liability",
+          "text": "TO THE MAXIMUM EXTENT PERMITTED BY LAW, SORTEOHUB AND ITS AFFILIATES SHALL NOT BE LIABLE FOR DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES RESULTING FROM:",
+          "use": "The use or inability to use the Platform",
+          "raffles": "Raffles created by other users",
+          "delivery": "Non-delivery of prizes by creators",
+          "data": "Loss of data or information",
+          "interruptions": "Service interruptions",
+          "errors": "Errors or omissions in content"
+        },
+        "indemnification": {
+          "title": "10. Indemnification",
+          "text": "You agree to indemnify, defend, and hold harmless SorteoHub, its affiliates, directors, officers, employees, and agents from any claim, liability, damage, loss, and expense (including attorney fees) arising from or related to:",
+          "use": "Your use of the Platform",
+          "violation": "Violation of these Terms and Conditions",
+          "law": "Violation of any law or third-party rights",
+          "raffles": "Raffles you create or participate in"
+        },
+        "termination": {
+          "title": "11. Termination",
+          "p1": "We reserve the right to terminate or suspend your account and access to the Platform immediately, without prior notice, for any reason, including but not limited to:",
+          "violation": "Violation of these Terms and Conditions",
+          "fraud": "Fraudulent or illegal activity",
+          "unauthorized": "Unauthorized use of the Platform",
+          "request": "User request",
+          "p2": "Upon termination, your right to use the Platform will cease immediately."
+        },
+        "law": {
+          "title": "12. Applicable Law and Jurisdiction",
+          "text": "These Terms and Conditions are governed by the laws of Mexico. Any dispute related to these terms or the Platform will be subject to the exclusive jurisdiction of the courts of Mexico."
+        },
+        "modifications": {
+          "title": "13. Modifications",
+          "p1": "We reserve the right to modify these Terms and Conditions at any time. Modifications will take effect immediately after their publication on the Platform. Your continued use of the Platform after such modifications constitutes your acceptance of the modified terms.",
+          "p2": "We recommend reviewing this page periodically to stay informed of any changes."
+        },
+        "contact": {
+          "title": "14. Contact",
+          "text": "If you have questions about these Terms and Conditions, you can contact us through:",
+          "email": "Email:",
+          "phone": "Phone:",
+          "address": "Address:"
+        },
+        "finalAcceptance": {
+          "title": "15. Acceptance",
+          "text": "By using SorteoHub, you acknowledge that you have read, understood, and agree to be legally bound by these Terms and Conditions."
+        }
+      },
+      "footer": {
+        "home": "← Back to Home",
+        "privacy": "Privacy Policy →"
+      }
+    },
+    "cookiePolicy": {
+      "title": "🍪 Cookie Policy",
+      "seo": {
+        "title": "Cookie Policy - SorteoHub",
+        "description": "Cookie policy of the SorteoHub platform",
+        "keywords": "cookies, cookie policy, privacy, SorteoHub"
+      },
+      "sections": {
+        "whatAre": {
+          "title": "1. What are Cookies?",
+          "text": "Cookies are small text files that are stored on your device (computer, tablet, or mobile) when you visit our website. These cookies allow us to recognize your device and remember information about your visit, such as your preferences and actions."
+        },
+        "types": {
+          "title": "2. Types of Cookies We Use",
+          "essential": {
+            "title": "2.1. Essential Cookies",
+            "text": "These cookies are necessary for the website to function and cannot be disabled. They include session, authentication, and security cookies.",
+            "session": "Session Cookies: Keep your session active while browsing",
+            "auth": "Authentication Cookies: Remember that you have logged in",
+            "security": "Security Cookies: Protect against CSRF attacks"
+          },
+          "functionality": {
+            "title": "2.2. Functionality Cookies",
+            "text": "These cookies allow the website to remember choices you make (such as your preferred language or region) and provide enhanced and more personal features."
+          },
+          "analytics": {
+            "title": "2.3. Analytics Cookies",
+            "text": "These cookies help us understand how visitors interact with our website by collecting and reporting information anonymously."
+          }
+        },
+        "thirdParty": {
+          "title": "3. Third-Party Cookies",
+          "text": "Some cookies are placed by third-party services that appear on our pages. We do not control the use of these cookies and recommend that you consult the cookie policies of these third parties."
+        },
+        "management": {
+          "title": "4. Cookie Management",
+          "p1": "You can control and/or delete cookies as you wish. You can delete all cookies already on your device and can configure most browsers to prevent them from being placed.",
+          "p2": "However, if you do this, you may have to manually adjust some preferences each time you visit a site and some services and features may not work."
+        },
+        "moreInfo": {
+          "title": "5. More Information",
+          "text": "For more information on how to manage cookies in different browsers, you can visit:",
+          "chrome": "Google Chrome",
+          "firefox": "Mozilla Firefox",
+          "safari": "Safari",
+          "edge": "Microsoft Edge"
+        },
+        "contact": {
+          "title": "6. Contact",
+          "text": "If you have questions about our cookie policy, you can contact us at:",
+          "email": "Email:"
+        }
+      }
+    },
+    "legalNotice": {
+      "title": "⚖️ Legal Notice",
+      "seo": {
+        "title": "Legal Notice - SorteoHub",
+        "description": "Legal notice of the SorteoHub platform",
+        "keywords": "legal notice, legal, SorteoHub"
+      },
+      "sections": {
+        "identifying": {
+          "title": "1. Identifying Data",
+          "text": "In compliance with the duty of information set forth in Article 10 of Law 34/2002, of July 11, on Information Society Services and Electronic Commerce, the following data are reflected:",
+          "company": "Company name:",
+          "product": "Product:",
+          "email": "Email:"
+        },
+        "object": {
+          "title": "2. Object",
+          "p1": "This legal notice regulates the use of the SorteoHub website (hereinafter, \"the Website\"), owned by AureLA Solutions.",
+          "p2": "Browsing the SorteoHub website attributes the status of user and implies full acceptance of all clauses included in this Legal Notice."
+        },
+        "conditions": {
+          "title": "3. Terms of Use",
+          "text": "Access and use of the website is subject to the established terms of use. The user agrees to make appropriate use of the content and services that SorteoHub offers through its website."
+        },
+        "intellectual": {
+          "title": "4. Intellectual Property",
+          "text": "All website content, including texts, graphics, logos, icons, images, as well as software, is the property of AureLA Solutions or its content providers, and is protected by intellectual and industrial property laws."
+        },
+        "liability": {
+          "title": "5. Limitation of Liability",
+          "text": "AureLA Solutions is not responsible for damages of any nature that may be due to the lack of availability, continuity, quality, or usefulness of the content and services offered on the website."
+        },
+        "modifications": {
+          "title": "6. Modifications",
+          "text": "AureLA Solutions reserves the right to make without prior notice the modifications it deems appropriate to its portal, being able to change, delete, or add both the content and services provided through it and the way in which they appear presented or located on its portal."
+        },
+        "links": {
+          "title": "7. Links",
+          "text": "In the event that links or hyperlinks to other Internet sites are provided on the website, AureLA Solutions will not exercise any type of control over such sites and content."
+        },
+        "contact": {
+          "title": "8. Contact",
+          "text": "For any inquiry or communication related to this legal notice, you can contact us at:",
+          "email": "Email:"
+        }
+      }
+    }
   }
 }
 

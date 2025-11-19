@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ConfirmDialog.css';
 
-let confirmCallback = null;
-
 const ConfirmDialog = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [config, setConfig] = useState({

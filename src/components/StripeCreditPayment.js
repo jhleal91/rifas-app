@@ -2,18 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { showSuccess, showError, showLoading, close } from '../utils/swal';
+import { API_BASE, STRIPE_PUBLISHABLE_KEY } from '../config/api';
 import './StripePayment.css';
-
-const API_BASE = 'http://localhost:5001/api';
-
-// Cargar Stripe con la clave pública
-const STRIPE_PUBLISHABLE_KEY = process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || 'pk_test_51STPDgABU839iIC0VajE2A6njrQXmpknFxrmaKlqx5y56qbwqj5jplIfRPkqIMPIiHDYS9EYj7CM0STnb2Zi7LNJ00ci0YVKF2';
 
 if (!STRIPE_PUBLISHABLE_KEY || STRIPE_PUBLISHABLE_KEY === 'pk_test_...') {
   console.warn('⚠️ REACT_APP_STRIPE_PUBLISHABLE_KEY no configurado. Crea un archivo .env en la raíz del proyecto con: REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_test_...');
 }
 
-const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
+const stripePromise = STRIPE_PUBLISHABLE_KEY ? loadStripe(STRIPE_PUBLISHABLE_KEY) : null;
 
 function CreditCheckoutForm({ amount, onSuccess, onCancel, clientSecret }) {
   const stripe = useStripe();

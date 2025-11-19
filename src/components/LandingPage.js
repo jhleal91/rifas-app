@@ -12,6 +12,7 @@ import FeaturesSection from './landing/FeaturesSection';
 import HowItWorksSection from './landing/HowItWorksSection';
 import CTASection from './landing/CTASection';
 import AdvertisersSection from './landing/AdvertisersSection';
+import ScrollToTop from './ScrollToTop';
 import './LandingPage.css';
 
 const LandingPage = () => {
@@ -74,6 +75,9 @@ const LandingPage = () => {
       </section>
 
       <AdvertisersSection />
+
+      {/* Botón Scroll to Top */}
+      <ScrollToTop />
 
       {/* Modales */}
       <LoginModal 

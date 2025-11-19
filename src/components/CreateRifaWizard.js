@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import TermsAndConditions from './TermsAndConditions';
 import { catalogosService, uploadService } from '../services/api';
 import { showError } from '../utils/swal';
@@ -59,13 +60,12 @@ const coloresMap = {
   'gris perla': '#E2E2E2', 'gris humo': '#848884', 'gris hierro': '#4B4B4B',
   
   // Colores especiales
-  'oro': '#FFD700', 'plata': '#C0C0C0', 'bronce': '#CD7F32',
+  'oro': '#FFD700', 'plata': '#C0C0C0',
   'turquesa': '#40E0D0', 'esmeralda': '#50C878', 'rubí': '#E0115F',
   'zafiro': '#0F52BA', 'ámbar': '#FFBF00', 'perla': '#F8F6F0',
   'marfil': '#FFFFF0', 'crema': '#FFFDD0', 'beige': '#F5F5DC',
   'coral': '#FF7F50', 'salmón': '#FA8072', 'melocotón': '#FFDAB9',
-  'menta': '#98FB98', 'lima': '#32CD32', 'cian': '#00FFFF',
-  'magenta': '#FF00FF', 'fucsia': '#FF1493'
+  'menta': '#98FB98', 'lima': '#32CD32', 'cian': '#00FFFF'
 };
 
 // Función para obtener el color hexadecimal por nombre
@@ -93,6 +93,7 @@ const obtenerColoresDisponibles = (coloresEnUso) => {
 };
 
 const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTipo, agregarRifa, agregarPremio, actualizarPremio, eliminarPremio, manejarFotosPremios, eliminarFoto, actualizarFormaPago }) => {
+  const { t } = useTranslation();
   const [pasoActual, setPasoActual] = useState(1);
   const [mostrarTerminos, setMostrarTerminos] = useState(false);
   const [terminosAceptados, setTerminosAceptados] = useState(false);
@@ -103,7 +104,7 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
   // Estados para catálogos de ubicación
   const [paises, setPaises] = useState([]);
   const [estados, setEstados] = useState([]);
-  const [cargandoPaises, setCargandoPaises] = useState(false);
+  const [, setCargandoPaises] = useState(false);
   const [cargandoEstados, setCargandoEstados] = useState(false);
   
   const totalPasos = 4;
@@ -161,6 +162,7 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
         premios: [primerPremio]
       });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pasoActual]);
 
   const siguientePaso = () => {
@@ -220,47 +222,47 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
             <div className="step-header-modern">
               <div className="step-icon-modern">📝</div>
               <div>
-                <h2 className="step-title-modern">Información Básica</h2>
-                <p className="step-description">Completa los datos principales de tu rifa</p>
+                <h2 className="step-title-modern">{t('wizard.step1.label')}</h2>
+                <p className="step-description">{t('wizard.step1.stepDescription')}</p>
               </div>
             </div>
             <div className="form-section-modern">
               <div className="form-group-modern">
                 <label htmlFor="nombre-rifa">
-                  <span className="label-text">Nombre de la Rifa *</span>
-                  <span className="label-required">Requerido</span>
+                  <span className="label-text">{t('wizard.step1.raffleName')} *</span>
+                  <span className="label-required">{t('wizard.required')}</span>
                 </label>
                 <input
                   id="nombre-rifa"
                   type="text"
-                  placeholder="Ej: Rifa del iPhone 15 Pro Max"
+                  placeholder={t('wizard.step1.raffleNamePlaceholder')}
                   value={nuevaRifa.nombre}
                   onChange={(e) => setNuevaRifa({...nuevaRifa, nombre: e.target.value})}
                   className="input-modern"
                 />
-                <small className="input-help">Un nombre claro y atractivo aumentará las participaciones</small>
+                <small className="input-help">{t('wizard.step1.raffleNameHelp')}</small>
               </div>
               
               <div className="form-group-modern">
                 <label htmlFor="descripcion-rifa">
-                  <span className="label-text">Descripción</span>
-                  <span className="label-optional">Opcional</span>
+                  <span className="label-text">{t('wizard.step1.description')}</span>
+                  <span className="label-optional">{t('wizard.optional')}</span>
                 </label>
                 <textarea
                   id="descripcion-rifa"
-                  placeholder="Describe tu rifa, los premios, cómo funciona el sorteo..."
+                  placeholder={t('wizard.step1.descriptionPlaceholder')}
                   value={nuevaRifa.descripcion}
                   onChange={(e) => setNuevaRifa({...nuevaRifa, descripcion: e.target.value})}
                   className="textarea-modern"
                   rows="4"
                 />
-                <small className="input-help">Una buena descripción ayuda a los participantes a entender mejor tu rifa</small>
+                <small className="input-help">{t('wizard.step1.descriptionHelp')}</small>
               </div>
             </div>
             <div className="form-section-modern">
               <div className="form-group-modern">
                 <label htmlFor="tipo-rifa">
-                  <span className="label-text">Tipo de Rifa *</span>
+                  <span className="label-text">{t('wizard.step1.raffleType')} *</span>
                 </label>
                 <select
                   id="tipo-rifa"
@@ -268,13 +270,13 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
                   onChange={(e) => manejarCambioTipo(e.target.value)}
                   className="select-modern"
                 >
-                  <option value="numeros">🎲 Números Personalizados</option>
-                  <option value="baraja">🃏 Baraja (Lotería)</option>
-                  <option value="abecedario">🔤 Abecedario</option>
-                  <option value="animales">🐲 Animales del Zodiaco</option>
-                  <option value="colores">🎨 Colores</option>
-                  <option value="equipos">⚽ Equipos Deportivos</option>
-                  <option value="emojis">😀 Emojis</option>
+                  <option value="numeros">{t('wizard.step1.types.numbers')}</option>
+                  <option value="baraja">{t('wizard.step1.types.deck')}</option>
+                  <option value="abecedario">{t('wizard.step1.types.alphabet')}</option>
+                  <option value="animales">{t('wizard.step1.types.animals')}</option>
+                  <option value="colores">{t('wizard.step1.types.colors')}</option>
+                  <option value="equipos">{t('wizard.step1.types.teams')}</option>
+                  <option value="emojis">{t('wizard.step1.types.emojis')}</option>
                 </select>
                 <div className="tipo-info-card">
                   <span className="info-icon">ℹ️</span>
@@ -284,14 +286,14 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
               
               <div className="form-group-modern">
                 <label htmlFor="precio-rifa">
-                  <span className="label-text">Precio por {tiposRifas[nuevaRifa.tipo]?.elementos || 'elemento'} *</span>
+                  <span className="label-text">{t('wizard.step1.pricePerElement', { element: tiposRifas[nuevaRifa.tipo]?.elementos || 'elemento' })} *</span>
                 </label>
                 <div className="input-with-currency">
                   <span className="currency-symbol">$</span>
                   <input
                     id="precio-rifa"
                     type="number"
-                    placeholder="0.00"
+                    placeholder={t('wizard.step1.pricePlaceholder')}
                     value={nuevaRifa.precio}
                     onChange={(e) => setNuevaRifa({...nuevaRifa, precio: e.target.value})}
                     className="input-modern"
@@ -300,13 +302,42 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
                   />
                   <span className="currency-code">MXN</span>
                 </div>
-                <small className="input-help">Precio que pagará cada participante por {tiposRifas[nuevaRifa.tipo]?.elementos || 'elemento'}</small>
+                <small className="input-help">{t('wizard.step1.priceHelp', { element: tiposRifas[nuevaRifa.tipo]?.elementos || 'elemento' })}</small>
               </div>
             </div>
             <div className="form-section-modern">
               <div className="form-group-modern">
+                <label htmlFor="categoria-rifa">
+                  <span className="label-text">{t('wizard.step1.category')}</span>
+                  <span className="label-optional">{t('wizard.optional')}</span>
+                </label>
+                <select
+                  id="categoria-rifa"
+                  value={nuevaRifa.categoria || ''}
+                  onChange={(e) => setNuevaRifa({...nuevaRifa, categoria: e.target.value})}
+                  className="select-modern"
+                >
+                  <option value="">{t('wizard.step1.categoryPlaceholder')}</option>
+                  <option value="propiedades">{t('wizard.step1.categories.properties')}</option>
+                  <option value="vehiculos">{t('wizard.step1.categories.vehicles')}</option>
+                  <option value="tecnologia">{t('wizard.step1.categories.technology')}</option>
+                  <option value="experiencias">{t('wizard.step1.categories.experiences')}</option>
+                  <option value="deportes">{t('wizard.step1.categories.sports')}</option>
+                  <option value="joyeria">{t('wizard.step1.categories.jewellery')}</option>
+                  <option value="viajes">{t('wizard.step1.categories.travel')}</option>
+                  <option value="moda">{t('wizard.step1.categories.fashion')}</option>
+                  <option value="alimentos">{t('wizard.step1.categories.food')}</option>
+                  <option value="salud">{t('wizard.step1.categories.health')}</option>
+                  <option value="ninos">{t('wizard.step1.categories.kids')}</option>
+                  <option value="efectivo">{t('wizard.step1.categories.cash')}</option>
+                  <option value="otros">{t('wizard.step1.categories.other')}</option>
+                </select>
+                <small className="input-help">{t('wizard.step1.categoryHelp')}</small>
+              </div>
+              
+              <div className="form-group-modern">
                 <label htmlFor="visibilidad-rifa">
-                  <span className="label-text">Visibilidad de la Rifa *</span>
+                  <span className="label-text">{t('wizard.step1.visibility')} *</span>
                 </label>
                 <div className="visibility-options-modern">
                   <label className={`radio-option-modern ${!nuevaRifa.esPrivada ? 'active' : ''}`}>
@@ -320,8 +351,8 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
                     <span className="radio-content">
                       <span className="radio-icon">🌍</span>
                       <div>
-                        <strong>Pública</strong>
-                        <small>Visible para todos los usuarios</small>
+                        <strong>{t('wizard.step1.public')}</strong>
+                        <small>{t('wizard.step1.publicDesc')}</small>
                       </div>
                     </span>
                   </label>
@@ -336,8 +367,8 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
                     <span className="radio-content">
                       <span className="radio-icon">🔒</span>
                       <div>
-                        <strong>Privada</strong>
-                        <small>Solo visible para ti</small>
+                        <strong>{t('wizard.step1.private')}</strong>
+                        <small>{t('wizard.step1.privateDesc')}</small>
                       </div>
                     </span>
                   </label>
@@ -346,8 +377,8 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
               
               <div className="form-group-modern">
                 <label htmlFor="fecha-fin">
-                  <span className="label-text">Fecha de Finalización</span>
-                  <span className="label-optional">Opcional</span>
+                  <span className="label-text">{t('wizard.step1.endDate')}</span>
+                  <span className="label-optional">{t('wizard.optional')}</span>
                 </label>
                 <input
                   id="fecha-fin"
@@ -356,7 +387,7 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
                   onChange={(e) => setNuevaRifa({...nuevaRifa, fechaFin: e.target.value})}
                   className="input-modern"
                 />
-                <small className="input-help">La rifa se cerrará automáticamente en esta fecha</small>
+                <small className="input-help">{t('wizard.step1.endDateHelp')}</small>
               </div>
             </div>
             
@@ -365,15 +396,15 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
               <div className="section-header-modern">
                 <span className="section-icon">📍</span>
                 <div>
-                  <h3 className="section-title">Ubicación</h3>
-                  <p className="section-description">Define el alcance geográfico de tu rifa</p>
+                  <h3 className="section-title">{t('wizard.step1.location')}</h3>
+                  <p className="section-description">{t('wizard.step1.locationDesc')}</p>
                 </div>
               </div>
-              
+            
               <div className="form-group-modern">
                 <label htmlFor="pais-rifa">
-                  <span className="label-text">País</span>
-                  <span className="label-optional">Opcional</span>
+                  <span className="label-text">{t('wizard.step1.country')}</span>
+                  <span className="label-optional">{t('wizard.optional')}</span>
                 </label>
                 <select
                   id="pais-rifa"
@@ -389,7 +420,7 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
                   }}
                   className="select-modern"
                 >
-                  <option value="">Selecciona un país</option>
+                  <option value="">{t('wizard.step1.selectCountry')}</option>
                   {paises.map(pais => (
                     <option key={pais.id} value={pais.codigo}>
                       {pais.nombre_es || pais.nombre}
@@ -401,8 +432,8 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
               {nuevaRifa.pais && (
                 <div className="form-group-modern">
                   <label htmlFor="estado-rifa">
-                    <span className="label-text">Estado/Provincia</span>
-                    <span className="label-optional">Opcional</span>
+                    <span className="label-text">{t('wizard.step1.state')}</span>
+                    <span className="label-optional">{t('wizard.optional')}</span>
                   </label>
                   <select
                     id="estado-rifa"
@@ -411,26 +442,26 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
                     disabled={cargandoEstados}
                     className="select-modern"
                   >
-                    <option value="">Selecciona un estado</option>
+                    <option value="">{t('wizard.step1.selectState')}</option>
                     {estados.map(estado => (
                       <option key={estado.id} value={estado.codigo}>
                         {estado.nombre_es || estado.nombre}
                       </option>
                     ))}
                   </select>
-                  {cargandoEstados && <small className="input-help">Cargando estados...</small>}
+                  {cargandoEstados && <small className="input-help">{t('wizard.step1.loadingStates')}</small>}
                 </div>
               )}
 
               <div className="form-group-modern">
                 <label htmlFor="ciudad-rifa">
-                  <span className="label-text">Ciudad</span>
-                  <span className="label-optional">Opcional</span>
+                  <span className="label-text">{t('wizard.step1.city')}</span>
+                  <span className="label-optional">{t('wizard.optional')}</span>
                 </label>
                 <input
                   id="ciudad-rifa"
                   type="text"
-                  placeholder="Ej: Ciudad de México"
+                  placeholder={t('wizard.step1.cityPlaceholder')}
                   value={nuevaRifa.ciudad || ''}
                   onChange={(e) => setNuevaRifa({...nuevaRifa, ciudad: e.target.value})}
                   className="input-modern"
@@ -439,7 +470,7 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
 
               <div className="form-group-modern">
                 <label htmlFor="alcance-rifa">
-                  <span className="label-text">Alcance de la Rifa</span>
+                  <span className="label-text">{t('wizard.step1.scope')}</span>
                 </label>
                 <select
                   id="alcance-rifa"
@@ -447,16 +478,16 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
                   onChange={(e) => setNuevaRifa({...nuevaRifa, alcance: e.target.value})}
                   className="select-modern"
                 >
-                  <option value="local">🏘️ Local (misma ciudad)</option>
-                  <option value="nacional">🇲🇽 Nacional (mismo país)</option>
-                  <option value="internacional">🌍 Internacional (cualquier país)</option>
+                  <option value="local">{t('wizard.step1.scopeLocal')}</option>
+                  <option value="nacional">{t('wizard.step1.scopeNational')}</option>
+                  <option value="internacional">{t('wizard.step1.scopeInternational')}</option>
                 </select>
                 <div className="tipo-info-card">
                   <span className="info-icon">ℹ️</span>
                   <span className="info-text">
-                    {nuevaRifa.alcance === 'local' && 'La rifa es solo para participantes de tu ciudad'}
-                    {nuevaRifa.alcance === 'nacional' && 'La rifa acepta participantes de todo el país'}
-                    {nuevaRifa.alcance === 'internacional' && 'La rifa acepta participantes de cualquier país'}
+                    {nuevaRifa.alcance === 'local' && t('wizard.step1.scopeLocalHelp')}
+                    {nuevaRifa.alcance === 'nacional' && t('wizard.step1.scopeNationalHelp')}
+                    {nuevaRifa.alcance === 'internacional' && t('wizard.step1.scopeInternationalHelp')}
                   </span>
                 </div>
               </div>
@@ -471,8 +502,8 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
                   <span className="checkbox-content-modern">
                     <span className="checkbox-icon">📦</span>
                     <div>
-                      <strong>Manejo envío de premios</strong>
-                      <small>Marca esta opción si puedes enviar premios a otros lugares</small>
+                      <strong>{t('wizard.step1.handlesShipping')}</strong>
+                      <small>{t('wizard.step1.handlesShippingDesc')}</small>
                     </div>
                     {nuevaRifa.manejaEnvio && (
                       <span className="checkbox-checkmark">✓</span>
@@ -490,15 +521,15 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
             <div className="step-header-modern">
               <div className="step-icon-modern">🎯</div>
               <div>
-                <h2 className="step-title-modern">Configurar Elementos</h2>
-                <p className="step-description">Personaliza los elementos de tu rifa</p>
+                <h2 className="step-title-modern">{t('wizard.step2.label')}</h2>
+                <p className="step-description">{t('wizard.step2.description')}</p>
               </div>
             </div>
             <div className="form-group">
-              <label>Cantidad de {tiposRifas[nuevaRifa.tipo]?.elementos || 'elementos'}:</label>
+              <label>{t('wizard.step2.quantity', { elements: tiposRifas[nuevaRifa.tipo]?.elementos || 'elementos' })}:</label>
               <input
                 type="number"
-                placeholder={`${tiposRifas[nuevaRifa.tipo]?.cantidadDefault || 100} (${tiposRifas[nuevaRifa.tipo]?.descripcion})`}
+                placeholder={t('wizard.step2.quantityPlaceholder', { default: tiposRifas[nuevaRifa.tipo]?.cantidadDefault || 100, description: tiposRifas[nuevaRifa.tipo]?.descripcion })}
                 value={nuevaRifa.cantidadNumeros}
                 onChange={(e) => setNuevaRifa({...nuevaRifa, cantidadNumeros: parseInt(e.target.value) || 1})}
                 min="1"
@@ -506,18 +537,18 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
               />
               <small className="form-help">
                 {nuevaRifa.tipo === 'baraja' 
-                  ? 'Para baraja tradicional usa 54 cartas (baraja completa)'
+                  ? t('wizard.step2.help.deck')
                   : nuevaRifa.tipo === 'abecedario'
-                  ? 'Máximo 26 letras (A-Z)'
+                  ? t('wizard.step2.help.alphabet')
                   : nuevaRifa.tipo === 'animales'
-                  ? 'Máximo 12 animales del zodiaco chino'
+                  ? t('wizard.step2.help.animals')
                   : nuevaRifa.tipo === 'colores'
-                  ? 'Define cuántos colores quieres rifar (sin límite)'
+                  ? t('wizard.step2.help.colors')
                   : nuevaRifa.tipo === 'equipos'
-                  ? 'Máximo 20 equipos deportivos'
+                  ? t('wizard.step2.help.teams')
                   : nuevaRifa.tipo === 'emojis'
-                  ? 'Máximo 100 emojis divertidos'
-                  : 'Define cuántos elementos quieres rifar'
+                  ? t('wizard.step2.help.emojis')
+                  : t('wizard.step2.help.default')
                 }
               </small>
             </div>
@@ -624,7 +655,7 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
                             cantidadNumeros: nuevosElementos.length
                           });
                         }}
-                        title="Eliminar elemento"
+                        title={t('wizard.step2.deleteElement')}
                       >
                         <span className="delete-icon">×</span>
                       </button>
@@ -632,13 +663,12 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
                   ))}
                 </div>
                 <small className="elementos-help">
-                  💡 Puedes editar, agregar o eliminar {tiposRifas[nuevaRifa.tipo]?.elementos || 'elementos'}. 
-                  Los cambios se reflejarán automáticamente en la cantidad.
+                  {t('wizard.step2.editElements', { elements: tiposRifas[nuevaRifa.tipo]?.elementos || 'elementos' })}
                 </small>
                 
                 {nuevaRifa.tipo === 'colores' && mostrarSugerenciasColores && (
                   <div className="sugerencias-colores">
-                    <h4>🎨 Colores Disponibles</h4>
+                    <h4>{t('wizard.step2.availableColors')}</h4>
                     <div className="colores-sugerencias-grid">
                       {(() => {
                         const coloresDisponibles = obtenerColoresDisponibles(nuevaRifa.elementosPersonalizados);
@@ -669,7 +699,7 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
                       })()}
                     </div>
                     <small className="sugerencias-help">
-                      💡 Haz clic en cualquier color para agregarlo a tu rifa
+                      {t('wizard.step2.colorHelp')}
                     </small>
                   </div>
                 )}
@@ -684,16 +714,16 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
             <div className="step-header-modern">
               <div className="step-icon-modern">🏆</div>
               <div>
-                <h2 className="step-title-modern">Premios y Reglas</h2>
-                <p className="step-description">Define los premios y reglas de tu rifa</p>
+                <h2 className="step-title-modern">{t('wizard.step3.label')}</h2>
+                <p className="step-description">{t('wizard.step3.description')}</p>
               </div>
             </div>
             <div className="premios-section">
               <div className="premios-header">
-                <h4>🏆 Premios</h4>
+                <h4>{t('wizard.step3.prizes')}</h4>
                 <button type="button" className="btn-secondary" onClick={agregarPremio}>
                   <span className="btn-icon">✨</span>
-                  <span>Agregar Premio</span>
+                  <span>{t('wizard.step3.addPrize')}</span>
                 </button>
               </div>
               {nuevaRifa.premios && nuevaRifa.premios.length > 0 ? (
@@ -735,12 +765,12 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
                           </div>
                         )}
                       </div>
-                    <div className="premio-info">
+                  <div className="premio-info">
                       <div className="form-group-modern">
                         <label htmlFor={`premio-posicion-${index}`}>
                           <span className="label-text">Posición del Premio</span>
                         </label>
-                        <input
+                      <input
                           id={`premio-posicion-${index}`}
                           type="number"
                           min="1"
@@ -758,15 +788,15 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
                             ? 'El primer premio siempre será el 1er lugar' 
                             : 'Establece el orden del premio (1 = 1er lugar, 2 = 2do lugar, etc.)'}
                         </small>
-                      </div>
+                    </div>
                       <div className="form-group-modern">
                         <label htmlFor={`premio-nombre-${index}`}>
                           <span className="label-text">Nombre del Premio {esPrimerPremio ? '*' : ''}</span>
                           {esPrimerPremio && <span className="label-required">Requerido</span>}
                         </label>
-                        <input
+                      <input
                           id={`premio-nombre-${index}`}
-                          type="text"
+                        type="text"
                           placeholder="Ej: PlayStation 5, iPhone 15, etc."
                           value={premio.nombre || ''}
                           onChange={(e) => actualizarPremio(index, 'nombre', e.target.value)}
@@ -786,12 +816,12 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
                           id={`premio-descripcion-${index}`}
                           placeholder="Descripción adicional del premio (opcional)"
                           value={premio.descripcion || ''}
-                          onChange={(e) => actualizarPremio(index, 'descripcion', e.target.value)}
+                        onChange={(e) => actualizarPremio(index, 'descripcion', e.target.value)}
                           className="textarea-modern"
                           rows="3"
-                        />
-                      </div>
+                      />
                     </div>
+                  </div>
 
                     {/* Sección de Fotos del Premio Individual */}
                     <div className="premio-fotos-section">
@@ -812,8 +842,8 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
                                   src={foto.url || foto.url_foto} 
                                   alt={foto.descripcion || `Premio ${index + 1} - Foto ${fotoIndex + 1}`} 
                                 />
-                                <button
-                                  type="button"
+                  <button 
+                    type="button" 
                                   className="btn-eliminar-foto-premio"
                                   onClick={() => {
                                     const nuevosPremios = [...nuevaRifa.premios];
@@ -823,12 +853,12 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
                                   title="Eliminar foto"
                                 >
                                   <span className="delete-icon">×</span>
-                                </button>
+                  </button>
                                 {foto.uploading && (
                                   <div className="foto-uploading-overlay">
                                     <div className="spinner-small"></div>
                                     <span>Subiendo...</span>
-                                  </div>
+                </div>
                                 )}
                               </div>
                             </div>
@@ -937,15 +967,15 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
                 })
               ) : (
                 <div className="no-premios-message">
-                  <p>No hay premios agregados. Se creará automáticamente el primer premio.</p>
+                  <p>{t('wizard.step3.noPrizes')}</p>
                 </div>
               )}
             </div>
             
             <div className="form-group">
-              <label>Reglas de la Rifa (opcional):</label>
+              <label>{t('wizard.step3.rules')}</label>
               <textarea
-                placeholder="Describe las reglas, condiciones y términos de la rifa..."
+                placeholder={t('wizard.step3.rulesPlaceholder')}
                 value={nuevaRifa.reglas}
                 onChange={(e) => setNuevaRifa({...nuevaRifa, reglas: e.target.value})}
                 rows="4"
@@ -960,20 +990,20 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
             <div className="step-header-modern">
               <div className="step-icon-modern">🎲</div>
               <div>
-                <h2 className="step-title-modern">Sorteo en Vivo y Términos</h2>
-                <p className="step-description">Configura el sorteo y acepta los términos</p>
+                <h2 className="step-title-modern">{t('wizard.step4.label')}</h2>
+                <p className="step-description">{t('wizard.step4.description')}</p>
               </div>
             </div>
             
             {/* Especificaciones del Sorteo en Vivo */}
             <div className="sorteo-vivo-section">
-              <h4>📺 Especificaciones del Sorteo en Vivo</h4>
+              <h4>{t('wizard.step4.liveDraw')}</h4>
               <p className="form-help">
-                <strong>OBLIGATORIO:</strong> Todos los sorteos deben realizarse en vivo para garantizar transparencia.
+                <strong>{t('wizard.step4.liveDrawRequired')}</strong>
               </p>
               
               <div className="form-group">
-                <label>📅 Fecha y Hora del Sorteo</label>
+                <label>{t('wizard.step4.drawDate')}</label>
                 <input
                   type="datetime-local"
                   value={nuevaRifa.fechaSorteo || ''}
@@ -983,27 +1013,27 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
               </div>
 
               <div className="form-group">
-                <label>📱 Plataforma de Transmisión</label>
+                <label>{t('wizard.step4.platform')}</label>
                 <select
                   value={nuevaRifa.plataformaTransmision || ''}
                   onChange={(e) => setNuevaRifa({...nuevaRifa, plataformaTransmision: e.target.value})}
                   required
                 >
-                  <option value="">Selecciona una plataforma</option>
-                  <option value="facebook">Facebook Live</option>
-                  <option value="instagram">Instagram Live</option>
-                  <option value="youtube">YouTube Live</option>
-                  <option value="zoom">Zoom</option>
-                  <option value="otra">Otra plataforma</option>
+                  <option value="">{t('wizard.step4.selectPlatform')}</option>
+                  <option value="facebook">{t('wizard.step4.platforms.facebook')}</option>
+                  <option value="instagram">{t('wizard.step4.platforms.instagram')}</option>
+                  <option value="youtube">{t('wizard.step4.platforms.youtube')}</option>
+                  <option value="zoom">{t('wizard.step4.platforms.zoom')}</option>
+                  <option value="otra">{t('wizard.step4.platforms.other')}</option>
                 </select>
               </div>
 
               {nuevaRifa.plataformaTransmision === 'otra' && (
                 <div className="form-group">
-                  <label>📝 Especificar Plataforma</label>
+                  <label>{t('wizard.step4.specifyPlatform')}</label>
                   <input
                     type="text"
-                    placeholder="Nombre de la plataforma"
+                    placeholder={t('wizard.step4.platformNamePlaceholder')}
                     value={nuevaRifa.otraPlataforma || ''}
                     onChange={(e) => setNuevaRifa({...nuevaRifa, otraPlataforma: e.target.value})}
                   />
@@ -1011,34 +1041,34 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
               )}
 
               <div className="form-group">
-                <label>🔗 Enlace de Transmisión</label>
+                <label>{t('wizard.step4.streamLink')}</label>
                 <input
                   type="url"
-                  placeholder="https://..."
+                  placeholder={t('wizard.step4.streamLinkPlaceholder')}
                   value={nuevaRifa.enlaceTransmision || ''}
                   onChange={(e) => setNuevaRifa({...nuevaRifa, enlaceTransmision: e.target.value})}
                 />
               </div>
 
               <div className="form-group">
-                <label>🎯 Método de Sorteo</label>
+                <label>{t('wizard.step4.drawMethod')}</label>
                 <select
                   value={nuevaRifa.metodoSorteo || ''}
                   onChange={(e) => setNuevaRifa({...nuevaRifa, metodoSorteo: e.target.value})}
                   required
                 >
-                  <option value="">Selecciona un método</option>
-                  <option value="ruleta">Ruleta Digital</option>
-                  <option value="bolas">Bolas Numeradas</option>
-                  <option value="app">Aplicación de Sorteo</option>
-                  <option value="otro">Otro método</option>
+                  <option value="">{t('wizard.step4.selectMethod')}</option>
+                  <option value="ruleta">{t('wizard.step4.methods.roulette')}</option>
+                  <option value="bolas">{t('wizard.step4.methods.balls')}</option>
+                  <option value="app">{t('wizard.step4.methods.app')}</option>
+                  <option value="otro">{t('wizard.step4.methods.other')}</option>
                 </select>
               </div>
 
               <div className="form-group">
-                <label>👥 Testigos (Mínimo 2)</label>
+                <label>{t('wizard.step4.witnesses')}</label>
                 <textarea
-                  placeholder="Nombre y contacto de los testigos independientes..."
+                  placeholder={t('wizard.step4.witnessesPlaceholder')}
                   value={nuevaRifa.testigos || ''}
                   onChange={(e) => setNuevaRifa({...nuevaRifa, testigos: e.target.value})}
                   rows="3"
@@ -1048,89 +1078,87 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
 
             {/* Formas de Pago - Datos donde el creador RECIBE el dinero */}
             <div className="pagos-section">
-              <h4>💳 Datos para Recibir Pagos</h4>
+              <h4>{t('wizard.step4.paymentData')}</h4>
               <p className="section-description">
-                Ingresa tus datos bancarios donde quieres recibir el dinero de las rifas. 
-                Todos los pagos pasarán por SorteoHub y te transferiremos el monto menos la comisión de tu plan.
+                {t('wizard.step4.paymentDataDesc')}
               </p>
               
               <div className="datos-bancarios-creador">
-                <h5>🏦 Mis Datos Bancarios (Donde Recibiré el Dinero)</h5>
-                <div className="form-group">
-                  <label>CLABE (18 dígitos) *</label>
-                  <input
-                    type="text"
-                    placeholder="CLABE (18 dígitos)"
+                <h5>{t('wizard.step4.bankData')}</h5>
+                  <div className="form-group">
+                  <label>{t('wizard.step4.clabe')} *</label>
+                    <input
+                      type="text"
+                      placeholder={t('wizard.step4.clabePlaceholder')}
                     value={nuevaRifa.formasPago.clabe || ''}
-                    onChange={(e) => actualizarFormaPago('clabe', e.target.value)}
+                      onChange={(e) => actualizarFormaPago('clabe', e.target.value)}
                     maxLength={18}
-                  />
-                  <small>CLABE interbancaria donde recibirás las transferencias</small>
-                </div>
-                <div className="form-group">
-                  <label>Número de cuenta</label>
-                  <input
-                    type="text"
-                    placeholder="Número de cuenta"
+                    />
+                  <small>{t('wizard.step4.clabeHelp')}</small>
+                  </div>
+                  <div className="form-group">
+                  <label>{t('wizard.step4.accountNumber')}</label>
+                    <input
+                      type="text"
+                      placeholder={t('wizard.step4.accountNumberPlaceholder')}
                     value={nuevaRifa.formasPago.numeroCuenta || ''}
-                    onChange={(e) => actualizarFormaPago('numeroCuenta', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Nombre del banco *</label>
-                  <input
-                    type="text"
-                    placeholder="Ej: BBVA, Banorte, Santander"
+                      onChange={(e) => actualizarFormaPago('numeroCuenta', e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                  <label>{t('wizard.step4.bankName')} *</label>
+                    <input
+                      type="text"
+                    placeholder={t('wizard.step4.bankNamePlaceholder')}
                     value={nuevaRifa.formasPago.banco || ''}
-                    onChange={(e) => actualizarFormaPago('banco', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Nombre del titular *</label>
-                  <input
-                    type="text"
-                    placeholder="Nombre completo del titular de la cuenta"
+                      onChange={(e) => actualizarFormaPago('banco', e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                  <label>{t('wizard.step4.accountHolder')} *</label>
+                    <input
+                      type="text"
+                    placeholder={t('wizard.step4.accountHolderPlaceholder')}
                     value={nuevaRifa.formasPago.nombreTitular || ''}
-                    onChange={(e) => actualizarFormaPago('nombreTitular', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Teléfono de contacto</label>
-                  <input
-                    type="tel"
-                    placeholder="Teléfono de contacto"
+                      onChange={(e) => actualizarFormaPago('nombreTitular', e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                  <label>{t('wizard.step4.phone')}</label>
+                    <input
+                      type="tel"
+                      placeholder={t('wizard.step4.phonePlaceholder')}
                     value={nuevaRifa.formasPago.telefono || ''}
-                    onChange={(e) => actualizarFormaPago('telefono', e.target.value)}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>WhatsApp (para notificaciones)</label>
-                  <input
-                    type="tel"
-                    placeholder="WhatsApp"
+                      onChange={(e) => actualizarFormaPago('telefono', e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                  <label>{t('wizard.step4.whatsapp')}</label>
+                    <input
+                      type="tel"
+                      placeholder={t('wizard.step4.whatsappPlaceholder')}
                     value={nuevaRifa.formasPago.whatsapp || ''}
-                    onChange={(e) => actualizarFormaPago('whatsapp', e.target.value)}
-                  />
-                </div>
+                      onChange={(e) => actualizarFormaPago('whatsapp', e.target.value)}
+                    />
+                  </div>
                 
                 <div className="info-box">
-                  <p>ℹ️ <strong>Importante:</strong> Los participantes podrán pagar con tarjeta (Stripe) o transferencia bancaria. 
-                  El dinero llegará a tu cuenta bancaria después de que SorteoHub procese el pago y retenga la comisión de tu plan.</p>
+                  <p>{t('wizard.step4.paymentInfo')}</p>
                 </div>
               </div>
             </div>
 
             {/* Términos y Condiciones */}
             <div className="terminos-section">
-              <h4>📋 Términos y Condiciones</h4>
+              <h4>{t('wizard.step4.terms')}</h4>
               <div className="terminos-resumen">
-                <p><strong>✅ Confirmo que:</strong></p>
+                <p><strong>{t('wizard.step4.termsConfirm')}</strong></p>
                 <ul>
-                  <li>Esta rifa es <strong>SIN FINES DE LUCRO</strong></li>
-                  <li>Realizaré el sorteo en vivo según las especificaciones</li>
-                  <li>Entregaré los premios a los ganadores</li>
-                  <li>Mantendré transparencia en todo el proceso</li>
-                  <li>Pagaré la comisión de plataforma (5%)</li>
+                  <li>{t('wizard.step4.termsList.nonProfit')}</li>
+                  <li>{t('wizard.step4.termsList.liveDraw')}</li>
+                  <li>{t('wizard.step4.termsList.deliverPrizes')}</li>
+                  <li>{t('wizard.step4.termsList.transparency')}</li>
+                  <li>{t('wizard.step4.termsList.commission')}</li>
                 </ul>
               </div>
               
@@ -1141,7 +1169,7 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
                     checked={terminosAceptados}
                     onChange={(e) => setTerminosAceptados(e.target.checked)}
                   />
-                  He leído y acepto los términos y condiciones
+                  {t('wizard.step4.acceptTerms')}
                 </label>
                 <button 
                   type="button"
@@ -1149,7 +1177,7 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
                   onClick={() => setMostrarTerminos(true)}
                   style={{marginTop: '0.5rem'}}
                 >
-                  📖 Leer Términos Completos
+                  {t('wizard.step4.readTerms')}
                 </button>
               </div>
             </div>
@@ -1168,10 +1196,10 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
         <div className="header-content">
           <h1 className="wizard-title-modern">
             <span className="wizard-icon-modern">✨</span>
-            Crear Nueva Rifa
+            {t('wizard.title')}
           </h1>
-          <p className="wizard-subtitle">Completa los pasos para crear tu rifa en minutos</p>
-        </div>
+          <p className="wizard-subtitle">{t('wizard.subtitle')}</p>
+          </div>
         
         {/* Indicador de Pasos Mejorado */}
         <div className="wizard-steps-indicator">
@@ -1179,25 +1207,25 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
             <div className="step-circle">
               {pasoActual > 1 ? '✓' : '1'}
             </div>
-            <span className="step-label">Información</span>
+            <span className="step-label">{t('wizard.step1.title')}</span>
           </div>
           <div className={`wizard-step ${pasoActual >= 2 ? 'active' : ''} ${pasoActual > 2 ? 'completed' : ''}`}>
             <div className="step-circle">
               {pasoActual > 2 ? '✓' : '2'}
             </div>
-            <span className="step-label">Elementos</span>
+            <span className="step-label">{t('wizard.step2.title')}</span>
           </div>
           <div className={`wizard-step ${pasoActual >= 3 ? 'active' : ''} ${pasoActual > 3 ? 'completed' : ''}`}>
             <div className="step-circle">
               {pasoActual > 3 ? '✓' : '3'}
             </div>
-            <span className="step-label">Premios</span>
+            <span className="step-label">{t('wizard.step3.title')}</span>
           </div>
           <div className={`wizard-step ${pasoActual >= 4 ? 'active' : ''}`}>
             <div className="step-circle">
               {pasoActual === 4 ? '4' : ''}
             </div>
-            <span className="step-label">Finalizar</span>
+            <span className="step-label">{t('wizard.step4.title')}</span>
           </div>
         </div>
       </div>
@@ -1205,7 +1233,7 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
       {/* Contenido del Paso */}
       <div className="wizard-content-modern">
         <div className="step-content-wrapper">
-          {renderPaso()}
+        {renderPaso()}
         </div>
       </div>
 
@@ -1218,7 +1246,7 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
           disabled={pasoActual === 1}
         >
           <span className="btn-icon">←</span>
-          <span>Anterior</span>
+          <span>{t('wizard.actions.back')}</span>
         </button>
         
         {pasoActual < totalPasos ? (
@@ -1228,7 +1256,7 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
             onClick={siguientePaso}
             disabled={!puedeContinuar()}
           >
-            <span>Siguiente</span>
+            <span>{t('wizard.actions.next')}</span>
             <span className="btn-icon">→</span>
           </button>
         ) : (
@@ -1240,11 +1268,11 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
               disabled={!puedeContinuar()}
             >
               <span className="btn-icon">🎯</span>
-              <span>Crear Rifa</span>
+              <span>{t('wizard.actions.create')}</span>
             </button>
             {!puedeContinuar() && (
               <p className="terms-warning">
-                ⚠️ Debes aceptar los términos y condiciones para continuar
+                {t('wizard.actions.mustAcceptTerms')}
               </p>
             )}
           </div>
@@ -1264,26 +1292,26 @@ const CreateRifaWizard = ({ nuevaRifa, setNuevaRifa, tiposRifas, manejarCambioTi
         <div className="modal-overlay">
           <div className="modal-content success-modal">
             <div className="success-icon">🎉</div>
-            <h2>¡Rifa Creada Exitosamente!</h2>
-            <p>Tu rifa ha sido creada y está lista para compartir.</p>
+            <h2>{t('wizard.success.title')}</h2>
+            <p>{t('wizard.success.message')}</p>
             <div className="success-actions">
               <button 
                 className="btn-primary"
                 onClick={() => window.location.href = `/gestionar/${rifaCreada}`}
               >
                 <span className="btn-icon">⚙️</span>
-                <span>Gestionar Rifa</span>
+                <span>{t('wizard.success.manage')}</span>
               </button>
               <button 
                 className="btn-secondary"
                 onClick={() => window.location.href = '/'}
               >
                 <span className="btn-icon">🏠</span>
-                <span>Volver al Inicio</span>
+                <span>{t('wizard.success.goHome')}</span>
               </button>
             </div>
             <small style={{color: '#64748b', marginTop: '1rem', display: 'block'}}>
-              Redirigiendo automáticamente en 3 segundos...
+              {t('wizard.success.redirecting')}
             </small>
           </div>
         </div>

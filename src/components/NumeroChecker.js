@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import './NumeroChecker.css';
 
-const API_BASE = 'http://localhost:5001/api';
+import { API_BASE } from '../config/api';
 
 const NumeroChecker = () => {
   const { t } = useTranslation();

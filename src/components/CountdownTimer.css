@@ -1,0 +1,144 @@
+/* Countdown Timer Styles */
+.countdown-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 600;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1;
+}
+
+.countdown-timer.countdown-small {
+  font-size: 0.75rem;
+  gap: 0.15rem;
+}
+
+.countdown-timer.countdown-medium {
+  font-size: 0.875rem;
+  gap: 0.25rem;
+}
+
+.countdown-timer.countdown-large {
+  font-size: 1rem;
+  gap: 0.35rem;
+}
+
+.countdown-label {
+  color: #64748b;
+  font-weight: 500;
+  margin-right: 0.25rem;
+}
+
+.countdown-unit {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f1f5f9;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  min-width: 2.5rem;
+  color: #1e293b;
+  transition: all 0.3s ease;
+}
+
+.countdown-timer.countdown-small .countdown-unit {
+  padding: 0.15rem 0.35rem;
+  min-width: 2rem;
+  border-radius: 4px;
+}
+
+.countdown-timer.countdown-large .countdown-unit {
+  padding: 0.35rem 0.65rem;
+  min-width: 3rem;
+  border-radius: 8px;
+}
+
+.countdown-unit-label {
+  font-size: 0.6em;
+  font-weight: 500;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 0.15rem;
+}
+
+.countdown-separator {
+  color: #cbd5e1;
+  font-weight: 700;
+  margin: 0 0.15rem;
+}
+
+/* Urgent States */
+.countdown-urgent .countdown-unit {
+  background: #fef3c7;
+  color: #92400e;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.countdown-urgent .countdown-unit-label {
+  color: #92400e;
+}
+
+.countdown-very-urgent .countdown-unit {
+  background: #fee2e2;
+  color: #991b1b;
+  animation: pulse-urgent 1s ease-in-out infinite;
+}
+
+.countdown-very-urgent .countdown-unit-label {
+  color: #991b1b;
+}
+
+.countdown-very-urgent .countdown-separator {
+  color: #991b1b;
+}
+
+/* Expired State */
+.countdown-expired {
+  color: #ef4444;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  background: #fee2e2;
+  border-radius: 6px;
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}
+
+@keyframes pulse-urgent {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.02);
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .countdown-timer.countdown-large {
+    font-size: 0.875rem;
+  }
+  
+  .countdown-timer.countdown-medium {
+    font-size: 0.75rem;
+  }
+  
+  .countdown-unit-label {
+    font-size: 0.55em;
+  }
+}
+

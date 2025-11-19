@@ -1,6 +1,6 @@
 // Configuración base de la API
-// const API_BASE_URL = 'http://localhost:5001/api';
-const API_BASE_URL = 'http://localhost:5001/api';
+// Usa variable de entorno en producción, fallback a localhost en desarrollo
+const API_BASE_URL = process.env.REACT_APP_API_BASE || 'http://localhost:5001/api';
 
 // Función para hacer peticiones HTTP
 const apiRequest = async (endpoint, options = {}) => {
@@ -104,6 +104,7 @@ export const rifasService = {
     if (filters.precio_max) queryParams.append('precio_max', filters.precio_max);
     if (filters.disponibles) queryParams.append('disponibles', filters.disponibles);
     if (filters.search) queryParams.append('search', filters.search);
+    if (filters.categoria) queryParams.append('categoria', filters.categoria);
 
     const queryString = queryParams.toString();
     const endpoint = queryString ? `/rifas?${queryString}` : '/rifas';

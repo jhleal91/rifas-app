@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { showSuccess, showError, showConfirm } from '../utils/swal';
+import { API_BASE } from '../config/api';
 
 const ParticipantesPage = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const [rifa, setRifa] = useState(null);
   const [participantes, setParticipantes] = useState([]);
@@ -34,13 +37,14 @@ const ParticipantesPage = () => {
 
   useEffect(() => {
     cargarDatosRifa();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const cargarDatosRifa = async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5001/api/rifas/${id}`, {
+      const response = await fetch(`${API_BASE}/rifas/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -64,7 +68,7 @@ const ParticipantesPage = () => {
   const confirmarVenta = async (participanteId) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5001/api/participantes/${id}/confirmar-venta`, {
+      const response = await fetch(`${API_BASE}/participantes/${id}/confirmar-venta`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -75,24 +79,24 @@ const ParticipantesPage = () => {
 
       if (response.ok) {
         await cargarDatosRifa(); // Recargar datos
-        await showSuccess('Venta confirmada', 'La venta se confirmó exitosamente.');
+        await showSuccess(t('participantesPage.alerts.confirmSuccess.title'), t('participantesPage.alerts.confirmSuccess.message'));
       } else {
         const error = await response.json();
-        showError('Error', error.message);
+        showError(t('participantesPage.alerts.confirmError.title'), error.message);
       }
     } catch (error) {
       console.error('Error:', error);
-      showError('Error', 'Error al confirmar la venta. Por favor, intenta nuevamente.');
+      showError(t('participantesPage.alerts.confirmError.title'), t('participantesPage.alerts.confirmError.message'));
     }
   };
 
   const rechazarPago = async (participanteId) => {
     const confirmed = await showConfirm(
-      'Rechazar Pago',
-      '¿Estás seguro de que quieres rechazar este pago? Los números se liberarán.',
+      t('participantesPage.alerts.rejectConfirm.title'),
+      t('participantesPage.alerts.rejectConfirm.message'),
       {
-        confirmText: 'Sí, rechazar',
-        cancelText: 'Cancelar',
+        confirmText: t('participantesPage.alerts.rejectConfirm.confirm'),
+        cancelText: t('participantesPage.alerts.rejectConfirm.cancel'),
         icon: 'warning',
         confirmColor: '#ef4444'
       }
@@ -104,7 +108,7 @@ const ParticipantesPage = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5001/api/participantes/${participanteId}/rechazar`, {
+      const response = await fetch(`${API_BASE}/participantes/${participanteId}/rechazar`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -114,14 +118,14 @@ const ParticipantesPage = () => {
 
       if (response.ok) {
         await cargarDatosRifa(); // Recargar datos
-        await showSuccess('Pago rechazado', 'El pago fue rechazado y los números fueron liberados.');
+        await showSuccess(t('participantesPage.alerts.rejectSuccess.title'), t('participantesPage.alerts.rejectSuccess.message'));
       } else {
         const error = await response.json();
-        showError('Error', error.message);
+        showError(t('participantesPage.alerts.rejectError.title'), error.message);
       }
     } catch (error) {
       console.error('Error:', error);
-      showError('Error', 'Error al rechazar el pago. Por favor, intenta nuevamente.');
+      showError(t('participantesPage.alerts.rejectError.title'), t('participantesPage.alerts.rejectError.message'));
     }
   };
 
@@ -153,7 +157,7 @@ const ParticipantesPage = () => {
       <div className="participantes-page">
         <div className="loading-container">
           <div className="loading-spinner"></div>
-          <p>Cargando participantes...</p>
+          <p>{t('participantesPage.loading')}</p>
         </div>
       </div>
     );
@@ -163,8 +167,8 @@ const ParticipantesPage = () => {
     return (
       <div className="participantes-page">
         <div className="error-container">
-          <h2>Rifa no encontrada</h2>
-          <Link to="/dashboard" className="btn-primary">Volver al Dashboard</Link>
+          <h2>{t('participantesPage.notFound.title')}</h2>
+          <Link to="/dashboard" className="btn-primary">{t('participantesPage.notFound.backToDashboard')}</Link>
         </div>
       </div>
     );
@@ -175,15 +179,15 @@ const ParticipantesPage = () => {
       <div className="page-header">
         <div className="header-content">
           <div className="breadcrumb">
-            <Link to="/dashboard">Dashboard</Link>
+            <Link to="/dashboard">{t('participantesPage.breadcrumb.dashboard')}</Link>
             <span>›</span>
-            <Link to={`/gestionar/${id}`}>Gestionar Rifa</Link>
+            <Link to={`/gestionar/${id}`}>{t('participantesPage.breadcrumb.manageRaffle')}</Link>
             <span>›</span>
-            <span>Participantes</span>
+            <span>{t('participantesPage.breadcrumb.participants')}</span>
           </div>
-          <h1>👥 Participantes - {rifa.nombre}</h1>
+          <h1>{t('participantesPage.header.title')} {rifa.nombre}</h1>
           <p className="page-description">
-            Gestiona todos los participantes de esta rifa
+            {t('participantesPage.header.description')}
           </p>
         </div>
       </div>
@@ -193,25 +197,25 @@ const ParticipantesPage = () => {
         <div className="stats-grid">
           <div className="stat-card">
             <div className="stat-number">{participantes.length}</div>
-            <div className="stat-label">Total Participantes</div>
+            <div className="stat-label">{t('participantesPage.stats.totalParticipants')}</div>
           </div>
           <div className="stat-card pending">
             <div className="stat-number">
               {participantes.filter(p => !p.estado || p.estado === 'pendiente').length}
             </div>
-            <div className="stat-label">Pendientes</div>
+            <div className="stat-label">{t('participantesPage.stats.pending')}</div>
           </div>
           <div className="stat-card confirmed">
             <div className="stat-number">
               {participantes.filter(p => p.estado === 'confirmado').length}
             </div>
-            <div className="stat-label">Confirmados</div>
+            <div className="stat-label">{t('participantesPage.stats.confirmed')}</div>
           </div>
           <div className="stat-card revenue">
             <div className="stat-number">
               ${participantes.reduce((sum, p) => sum + (parseFloat(p.total_pagado) || 0), 0).toFixed(2)}
             </div>
-            <div className="stat-label">Total Recaudado</div>
+            <div className="stat-label">{t('participantesPage.stats.totalCollected')}</div>
           </div>
         </div>
 
@@ -219,10 +223,10 @@ const ParticipantesPage = () => {
         <div className="filters-section">
           <div className="filters-row">
             <div className="filter-group">
-              <label>Buscar por nombre:</label>
+              <label>{t('participantesPage.filters.searchByName')}</label>
               <input
                 type="text"
-                placeholder="Nombre del participante..."
+                placeholder={t('participantesPage.filters.searchPlaceholder')}
                 value={filtroNombre}
                 onChange={(e) => setFiltroNombre(e.target.value)}
                 className="filter-input"
@@ -230,28 +234,28 @@ const ParticipantesPage = () => {
             </div>
             
             <div className="filter-group">
-              <label>Estado:</label>
+              <label>{t('participantesPage.filters.state')}</label>
               <select
                 value={filtroEstado}
                 onChange={(e) => setFiltroEstado(e.target.value)}
                 className="filter-select"
               >
-                <option value="todos">Todos</option>
-                <option value="pendiente">Pendientes</option>
-                <option value="confirmado">Confirmados</option>
+                <option value="todos">{t('participantesPage.filters.all')}</option>
+                <option value="pendiente">{t('participantesPage.filters.pending')}</option>
+                <option value="confirmado">{t('participantesPage.filters.confirmed')}</option>
               </select>
             </div>
 
             <div className="filter-group">
-              <label>Ordenar por:</label>
+              <label>{t('participantesPage.filters.sortBy')}</label>
               <select
                 value={ordenarPor}
                 onChange={(e) => setOrdenarPor(e.target.value)}
                 className="filter-select"
               >
-                <option value="fecha">Fecha (más reciente)</option>
-                <option value="nombre">Nombre (A-Z)</option>
-                <option value="total">Total (mayor a menor)</option>
+                <option value="fecha">{t('participantesPage.filters.dateRecent')}</option>
+                <option value="nombre">{t('participantesPage.filters.nameAZ')}</option>
+                <option value="total">{t('participantesPage.filters.totalHighLow')}</option>
               </select>
             </div>
           </div>
@@ -262,12 +266,12 @@ const ParticipantesPage = () => {
           <table className="participantes-table">
             <thead>
               <tr>
-                <th>Participante</th>
-                <th>Números</th>
-                <th>Total</th>
-                <th>Fecha</th>
-                <th>Estado</th>
-                <th>Acciones</th>
+                <th>{t('participantesPage.table.participant')}</th>
+                <th>{t('participantesPage.table.numbers')}</th>
+                <th>{t('participantesPage.table.total')}</th>
+                <th>{t('participantesPage.table.date')}</th>
+                <th>{t('participantesPage.table.state')}</th>
+                <th>{t('participantesPage.table.actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -275,8 +279,8 @@ const ParticipantesPage = () => {
                 <tr>
                   <td colSpan="6" className="no-data">
                     {filtroNombre || filtroEstado !== 'todos' 
-                      ? 'No se encontraron participantes con los filtros aplicados'
-                      : 'No hay participantes registrados'
+                      ? t('participantesPage.table.noDataFiltered')
+                      : t('participantesPage.table.noData')
                     }
                   </td>
                 </tr>
@@ -301,7 +305,7 @@ const ParticipantesPage = () => {
                       <div className="numeros-info">
                         {participante.numeros_seleccionados ? 
                           participante.numeros_seleccionados.join(', ') : 
-                          'No especificados'
+                          t('participantesPage.table.notSpecified')
                         }
                       </div>
                     </td>
@@ -317,7 +321,7 @@ const ParticipantesPage = () => {
                     </td>
                     <td>
                       <span className={`estado-badge ${participante.estado || 'pendiente'}`}>
-                        {participante.estado === 'confirmado' ? '✅ Confirmado' : '⏳ Pendiente'}
+                        {participante.estado === 'confirmado' ? t('participantesPage.status.confirmed') : t('participantesPage.status.pending')}
                       </span>
                     </td>
                     <td>
@@ -326,20 +330,20 @@ const ParticipantesPage = () => {
                           <button
                             className="btn-confirm-small"
                             onClick={() => confirmarVenta(participante.id)}
-                            title="Confirmar venta"
+                            title={t('participantesPage.actions.confirmSale')}
                           >
                             ✅
                           </button>
                           <button
                             className="btn-reject-small"
                             onClick={() => rechazarPago(participante.id)}
-                            title="Rechazar pago"
+                            title={t('participantesPage.actions.rejectPayment')}
                           >
                             ❌
                           </button>
                         </div>
                       ) : (
-                        <span className="no-actions">-</span>
+                        <span className="no-actions">{t('participantesPage.table.noActions')}</span>
                       )}
                     </td>
                   </tr>

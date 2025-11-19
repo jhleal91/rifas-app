@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { showSuccess, showError } from '../utils/swal';
 
-const API_BASE = 'http://localhost:5001/api';
+import { API_BASE } from '../config/api';
 
 const CreatorPlans = () => {
   const { t } = useTranslation();

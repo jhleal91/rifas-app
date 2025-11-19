@@ -1,12 +1,15 @@
-const { checkAndSendDrawReminders } = require('../utils/raffleUtils');
+const { checkAndSendDrawReminders, checkAndSendEndingSoonReminders } = require('../utils/raffleUtils');
 
 // Función para ejecutar las tareas programadas
 async function runScheduledTasks() {
   console.log('🕐 Ejecutando tareas programadas de email...');
   
   try {
-    // Verificar recordatorios de sorteo
+    // Verificar recordatorios de sorteo (1 hora antes)
     await checkAndSendDrawReminders();
+    
+    // Verificar recordatorios de finalización (24 horas antes)
+    await checkAndSendEndingSoonReminders();
     
     console.log('✅ Tareas programadas completadas');
   } catch (error) {

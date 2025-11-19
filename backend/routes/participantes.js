@@ -10,6 +10,7 @@ const {
   obtenerHistorialParticipaciones
 } = require('../utils/participanteUtils');
 const { checkAndNotifySoldOut } = require('../utils/raffleUtils');
+const { notifyNewParticipation, notifyPaymentConfirmed } = require('../services/notifications');
 
 const router = express.Router();
 
@@ -163,6 +164,24 @@ router.post('/:rifaId', validateRifaId, sanitizeInput, validateParticipante, asy
     } catch (emailError) {
       console.error('❌ Error enviando correo de confirmación:', emailError);
       // No fallar la operación por error de correo
+    }
+
+    // Notificar al creador de la rifa sobre la nueva participación
+    try {
+      const io = req.app.get('io');
+      await notifyNewParticipation(
+        rifaId,
+        rifa.usuario_id,
+        {
+          nombre_participante: participante.nombre,
+          numeros: participante.numeros_seleccionados,
+          total: participante.total_pagado
+        },
+        io
+      );
+    } catch (notifError) {
+      console.error('❌ Error enviando notificación de participación:', notifError);
+      // No fallar la operación por error de notificación
     }
 
     res.status(201).json({
@@ -860,6 +879,37 @@ router.post('/:rifaId/confirmar-venta', validateRifaId, authenticateToken, sanit
     } catch (emailError) {
       console.error('❌ Error enviando email de confirmación:', emailError);
       // No fallar la operación si el email falla
+    }
+
+    // Notificar al participante y creador sobre la confirmación de pago
+    try {
+      const io = req.app.get('io');
+      
+      // Obtener información del participante para notificar
+      const participanteResult = await query(
+        'SELECT * FROM participantes WHERE id = $1',
+        [participanteId]
+      );
+      
+      if (participanteResult.rows.length > 0) {
+        const participanteConfirmado = participanteResult.rows[0];
+        const total = (parseFloat(rifa.precio) * numerosSeleccionados.length).toFixed(2);
+        
+        // Notificar al creador
+        await notifyPaymentConfirmed(
+          participanteId,
+          rifaId,
+          {
+            usuario_id: null, // El participante puede no tener cuenta de usuario
+            total: total
+          },
+          rifa.usuario_id,
+          io
+        );
+      }
+    } catch (notifError) {
+      console.error('❌ Error enviando notificación de pago confirmado:', notifError);
+      // No fallar la operación por error de notificación
     }
 
     // Verificar si la rifa está agotada y enviar notificación al dueño

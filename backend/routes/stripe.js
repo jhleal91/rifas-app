@@ -15,6 +15,7 @@ const {
   saveTransaction
 } = require('../services/stripe');
 const logger = require('../config/logger');
+const { notifyPaymentConfirmed } = require('../services/notifications');
 
 // POST /api/stripe/connect/create-account
 // Creador solicita conectar su cuenta Stripe
@@ -296,8 +297,9 @@ router.get('/connect/login-link', authenticateToken, requireAdmin, async (req, r
 // Crear Payment Intent para participar en rifa
 router.post('/payment-intent', optionalAuth, async (req, res) => {
   try {
-    const { rifaId, amount, currency = 'mxn', numerosSeleccionados, paymentMethod = 'card' } = req.body;
-    const participanteId = req.user?.id || null;
+    const { rifaId, amount, currency = 'mxn', numerosSeleccionados, paymentMethod = 'card', participanteId: participanteIdFromBody } = req.body;
+    // Priorizar participanteId del body (si viene del frontend) sobre el del usuario autenticado
+    const participanteId = participanteIdFromBody || req.user?.id || null;
     
     if (!rifaId || !amount) {
       return res.status(400).json({ error: 'rifaId y amount son requeridos' });
@@ -324,19 +326,21 @@ router.post('/payment-intent', optionalAuth, async (req, res) => {
     const cantidadNumeros = numerosSeleccionados?.length || 1;
     const totalAmount = precioRifa * cantidadNumeros;
     
-    // Verificar que la rifa tenga datos bancarios del creador
-    const rifaFormasPago = await query(`
-      SELECT fp.*
-      FROM formas_pago fp
-      WHERE fp.rifa_id = $1
-      LIMIT 1
-    `, [rifaId]);
+    // Verificar que el creador tenga cuenta de Stripe Connect configurada
+    const stripeAccountResult = await query(`
+      SELECT stripe_account_id, charges_enabled, payouts_enabled
+      FROM stripe_connect_accounts
+      WHERE user_id = $1
+    `, [creadorId]);
     
-    if (rifaFormasPago.rows.length === 0 || !rifaFormasPago.rows[0].clabe) {
-      return res.status(400).json({
-        error: 'El creador de esta rifa no ha configurado sus datos bancarios para recibir pagos',
-        code: 'CREATOR_NO_BANK_DATA'
-      });
+    // Si no tiene cuenta Stripe Connect, usar la cuenta principal de SorteoHub
+    // (esto permite que rifas funcionen incluso si el creador no tiene Stripe configurado)
+    const hasStripeConnect = stripeAccountResult.rows.length > 0 && 
+                            stripeAccountResult.rows[0].charges_enabled && 
+                            stripeAccountResult.rows[0].payouts_enabled;
+    
+    if (!hasStripeConnect) {
+      logger.info('Creador sin Stripe Connect, usando cuenta principal de SorteoHub', { creadorId });
     }
     
     // Crear Payment Intent según método de pago
@@ -488,6 +492,199 @@ router.post('/credit-payment-intent', async (req, res) => {
   }
 });
 
+// POST /api/stripe/confirm-payment
+// Confirmar pago y procesar inmediatamente (llamado desde frontend)
+router.post('/confirm-payment', optionalAuth, async (req, res) => {
+  try {
+    const { paymentIntentId, participanteId, rifaId } = req.body;
+    
+    if (!paymentIntentId || !participanteId || !rifaId) {
+      return res.status(400).json({ 
+        error: 'paymentIntentId, participanteId y rifaId son requeridos' 
+      });
+    }
+    
+    logger.info('Confirmando pago desde frontend', { 
+      paymentIntentId, 
+      participanteId, 
+      rifaId 
+    });
+    
+    // Verificar que el Payment Intent existe y está succeeded
+    let paymentIntent;
+    try {
+      paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+    } catch (stripeError) {
+      logger.error('Error recuperando Payment Intent', { error: stripeError.message });
+      return res.status(400).json({ error: 'Payment Intent no encontrado' });
+    }
+    
+    if (paymentIntent.status !== 'succeeded') {
+      return res.status(400).json({ 
+        error: `El pago no está completado. Estado: ${paymentIntent.status}` 
+      });
+    }
+    
+    // Verificar que el participante existe y está pendiente
+    const participanteResult = await query(
+      'SELECT * FROM participantes WHERE id = $1 AND rifa_id = $2 AND estado = $3',
+      [participanteId, rifaId, 'pendiente']
+    );
+    
+    if (participanteResult.rows.length === 0) {
+      return res.status(404).json({ 
+        error: 'Participante no encontrado o ya procesado' 
+      });
+    }
+    
+    const participante = participanteResult.rows[0];
+    const numerosArray = participante.numeros_seleccionados || [];
+    
+    // Obtener información de la rifa
+    const rifaResult = await query(
+      'SELECT usuario_id, precio, nombre FROM rifas WHERE id = $1',
+      [rifaId]
+    );
+    
+    if (rifaResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Rifa no encontrada' });
+    }
+    
+    const rifa = rifaResult.rows[0];
+    const total = (parseFloat(rifa.precio) * numerosArray.length).toFixed(2);
+    
+    // Iniciar transacción para actualizar estado
+    const { getClient } = require('../config/database');
+    const client = await getClient();
+    await client.query('BEGIN');
+    
+    try {
+      // 1. Actualizar participante a confirmado
+      await client.query(`
+        UPDATE participantes 
+        SET estado = 'confirmado', fecha_confirmacion = CURRENT_TIMESTAMP
+        WHERE id = $1
+      `, [participanteId]);
+      
+      // 2. Obtener elementos reservados
+      const elementosReservados = await client.query(`
+        SELECT elemento FROM elementos_reservados 
+        WHERE participante_id = $1 AND rifa_id = $2 AND activo = true
+      `, [participanteId, rifaId]);
+      
+      // 3. Mover elementos de reservados a vendidos
+      for (const row of elementosReservados.rows) {
+        await client.query(`
+          INSERT INTO elementos_vendidos (rifa_id, participante_id, elemento, fecha_venta)
+          VALUES ($1, $2, $3, CURRENT_TIMESTAMP)
+          ON CONFLICT (rifa_id, elemento) DO NOTHING
+        `, [rifaId, participanteId, row.elemento]);
+      }
+      
+      // 4. Marcar elementos reservados como inactivos
+      await client.query(`
+        UPDATE elementos_reservados 
+        SET activo = false 
+        WHERE participante_id = $1 AND rifa_id = $2
+      `, [participanteId, rifaId]);
+      
+      await client.query('COMMIT');
+      
+      logger.info('Pago confirmado y procesado exitosamente desde frontend', {
+        participanteId,
+        rifaId,
+        numeros: numerosArray
+      });
+      
+      // 5. Enviar email de confirmación de pago
+      try {
+        const emailService = require('../config/email');
+        await emailService.sendPaymentValidated(
+          {
+            nombre: participante.nombre,
+            email: participante.email,
+            numerosSeleccionados: numerosArray,
+            totalPagado: total
+          },
+          {
+            id: rifaId,
+            nombre: rifa.nombre
+          }
+        );
+        logger.info('Email de pago validado enviado al participante');
+      } catch (emailError) {
+        logger.error('Error enviando email de pago validado', {
+          error: emailError.message,
+          participanteId,
+          rifaId
+        });
+      }
+      
+      // 6. Notificar al creador sobre el pago confirmado
+      const io = req.app.get('io');
+      logger.info('Intentando enviar notificación', {
+        creadorId: rifa.usuario_id,
+        participanteId,
+        rifaId,
+        ioAvailable: !!io
+      });
+      
+      try {
+        await notifyPaymentConfirmed(
+          participanteId,
+          rifaId,
+          {
+            usuario_id: null,
+            total: total
+          },
+          rifa.usuario_id,
+          io
+        );
+        logger.info('✅ Notificación de pago enviada al creador', {
+          creadorId: rifa.usuario_id
+        });
+      } catch (notifError) {
+        logger.error('❌ Error enviando notificación de pago', {
+          error: notifError.message,
+          stack: notifError.stack,
+          participanteId,
+          rifaId,
+          creadorId: rifa.usuario_id
+        });
+      }
+      
+      res.json({
+        success: true,
+        message: 'Pago confirmado y procesado exitosamente',
+        data: {
+          participanteId,
+          rifaId,
+          total,
+          numeros: numerosArray
+        }
+      });
+      
+    } catch (error) {
+      await client.query('ROLLBACK');
+      logger.error('Error procesando pago desde frontend', {
+        error: error.message,
+        participanteId,
+        rifaId
+      });
+      throw error;
+    } finally {
+      client.release();
+    }
+    
+  } catch (error) {
+    logger.error('Error confirmando pago', { error: error.message });
+    res.status(500).json({ 
+      error: 'Error procesando confirmación de pago',
+      message: error.message 
+    });
+  }
+});
+
 // POST /api/stripe/webhook
 // Webhook para eventos de Stripe
 router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
@@ -514,7 +711,9 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
   try {
     switch (event.type) {
       case 'payment_intent.succeeded':
-        await handlePaymentSuccess(event.data.object);
+        // Pasar instancia de Socket.io al handler
+        const io = req.app.get('io');
+        await handlePaymentSuccess(event.data.object, io);
         break;
         
       case 'payment_intent.payment_failed':
@@ -537,7 +736,7 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
 });
 
 // Funciones helper para webhooks
-async function handlePaymentSuccess(paymentIntent) {
+async function handlePaymentSuccess(paymentIntent, io = null) {
   try {
     const { rifa_id, participante_id, numeros, creador_id, tipo, advertiser_id } = paymentIntent.metadata;
     
@@ -616,20 +815,157 @@ async function handlePaymentSuccess(paymentIntent) {
       paymentIntent.id
     ]);
     
-    // Si hay participante_id, registrar participación
+    // Si hay participante_id, auto-registrar participación (mover de reservado a vendido)
     if (participanteId && participanteId !== 'guest' && rifaId) {
       const numerosArray = numeros ? numeros.split(',').map(n => n.trim()) : [];
       
-      // Registrar participación (similar a lo que hace el endpoint de participantes)
-      // Esto debería integrarse con tu lógica existente
-      logger.info('Registrando participación desde webhook', {
+      logger.info('Auto-registrando participación desde webhook Stripe', {
         participanteId: participante_id,
         rifaId: rifa_id,
         numeros: numerosArray
       });
       
-      // TODO: Integrar con tu endpoint de participantes para registrar la participación
-      // Por ahora solo actualizamos la transacción
+      // Obtener información del participante y rifa
+      // Buscar primero por ID y estado pendiente
+      let participanteResult = await query(
+        'SELECT * FROM participantes WHERE id = $1 AND rifa_id = $2 AND estado = $3',
+        [participanteId, rifaId, 'pendiente']
+      );
+      
+      // Si no se encuentra pendiente, verificar si ya fue procesado (confirmado)
+      if (participanteResult.rows.length === 0) {
+        const yaProcesado = await query(
+          'SELECT * FROM participantes WHERE id = $1 AND rifa_id = $2 AND estado = $3',
+          [participanteId, rifaId, 'confirmado']
+        );
+        
+        if (yaProcesado.rows.length > 0) {
+          logger.info('Participante ya procesado desde frontend, webhook ignorado', {
+            participanteId,
+            rifaId,
+            paymentIntentId: paymentIntent.id
+          });
+          return; // Ya fue procesado, no hacer nada
+        }
+      }
+      
+      const rifaResult = await query(
+        'SELECT usuario_id, precio, nombre FROM rifas WHERE id = $1',
+        [rifaId]
+      );
+      
+      if (participanteResult.rows.length > 0 && rifaResult.rows.length > 0) {
+        const participante = participanteResult.rows[0];
+        const rifa = rifaResult.rows[0];
+        const total = (parseFloat(rifa.precio) * numerosArray.length).toFixed(2);
+        
+        // Iniciar transacción para actualizar estado
+        const { getClient } = require('../config/database');
+        const client = await getClient();
+        await client.query('BEGIN');
+        
+        try {
+          // 1. Actualizar participante a confirmado
+          await client.query(`
+            UPDATE participantes 
+            SET estado = 'confirmado', fecha_confirmacion = CURRENT_TIMESTAMP
+            WHERE id = $1
+          `, [participanteId]);
+          
+          // 2. Obtener elementos reservados
+          const elementosReservados = await client.query(`
+            SELECT elemento FROM elementos_reservados 
+            WHERE participante_id = $1 AND rifa_id = $2 AND activo = true
+          `, [participanteId, rifaId]);
+          
+          // 3. Mover elementos de reservados a vendidos
+          for (const row of elementosReservados.rows) {
+            await client.query(`
+              INSERT INTO elementos_vendidos (rifa_id, participante_id, elemento, fecha_venta)
+              VALUES ($1, $2, $3, CURRENT_TIMESTAMP)
+              ON CONFLICT (rifa_id, elemento) DO NOTHING
+            `, [rifaId, participanteId, row.elemento]);
+          }
+          
+          // 4. Marcar elementos reservados como inactivos
+          await client.query(`
+            UPDATE elementos_reservados 
+            SET activo = false 
+            WHERE participante_id = $1 AND rifa_id = $2
+          `, [participanteId, rifaId]);
+          
+          await client.query('COMMIT');
+          
+          logger.info('Participación auto-registrada exitosamente desde webhook', {
+            participanteId,
+            rifaId,
+            numeros: numerosArray
+          });
+          
+          // 5. Enviar email de confirmación de pago
+          try {
+            const emailService = require('../config/email');
+            await emailService.sendPaymentValidated(
+              {
+                nombre: participante.nombre,
+                email: participante.email,
+                numerosSeleccionados: numerosArray,
+                totalPagado: total
+              },
+              {
+                id: rifaId,
+                nombre: rifa.nombre
+              }
+            );
+            logger.info('Email de pago validado enviado al participante');
+          } catch (emailError) {
+            logger.error('Error enviando email de pago validado', {
+              error: emailError.message,
+              participanteId,
+              rifaId
+            });
+            // No fallar el webhook por error de email
+          }
+          
+          // 6. Notificar al creador sobre el pago confirmado
+          try {
+            await notifyPaymentConfirmed(
+              participanteId,
+              rifaId,
+              {
+                usuario_id: null,
+                total: total
+              },
+              rifa.usuario_id,
+              io
+            );
+          } catch (notifError) {
+            logger.error('Error enviando notificación de pago desde webhook', {
+              error: notifError.message,
+              participanteId,
+              rifaId
+            });
+            // No fallar el webhook por error de notificación
+          }
+          
+        } catch (error) {
+          await client.query('ROLLBACK');
+          logger.error('Error auto-registrando participación desde webhook', {
+            error: error.message,
+            participanteId,
+            rifaId
+          });
+          throw error;
+        } finally {
+          client.release();
+        }
+      } else {
+        logger.warn('Participante no encontrado o ya procesado en webhook', {
+          participanteId,
+          rifaId,
+          estado: participanteResult.rows.length > 0 ? participanteResult.rows[0].estado : 'no encontrado'
+        });
+      }
     }
     
   } catch (error) {
@@ -719,6 +1055,148 @@ router.get('/transactions', authenticateToken, requireAdmin, async (req, res) =>
   } catch (error) {
     logger.error('Error obteniendo transacciones', { error: error.message });
     res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * POST /api/stripe/simulate-payment
+ * Endpoint de prueba para simular un pago confirmado (solo desarrollo/testing)
+ * Simula el webhook de Stripe sin necesidad de hacer un pago real
+ */
+router.post('/simulate-payment', authenticateToken, async (req, res) => {
+  try {
+    // Solo permitir en desarrollo
+    if (process.env.NODE_ENV === 'production') {
+      return res.status(403).json({
+        success: false,
+        error: 'Este endpoint solo está disponible en desarrollo'
+      });
+    }
+
+    const { rifa_id, participante_id, numeros, monto } = req.body;
+
+    // Validar parámetros requeridos
+    if (!rifa_id || !participante_id) {
+      return res.status(400).json({
+        success: false,
+        error: 'Faltan parámetros requeridos: rifa_id y participante_id son obligatorios'
+      });
+    }
+
+    const io = req.app.get('io');
+
+    // Obtener información del participante y rifa
+    const participanteResult = await query(
+      'SELECT * FROM participantes WHERE id = $1',
+      [participante_id]
+    );
+
+    const rifaResult = await query(
+      'SELECT usuario_id, precio, nombre FROM rifas WHERE id = $1',
+      [rifa_id]
+    );
+
+    if (participanteResult.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Participante no encontrado'
+      });
+    }
+
+    if (rifaResult.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Rifa no encontrada'
+      });
+    }
+
+    const participante = participanteResult.rows[0];
+    const rifa = rifaResult.rows[0];
+    
+    // Calcular monto si no se proporciona
+    const numerosArray = numeros ? (Array.isArray(numeros) ? numeros : numeros.split(',').map(n => n.trim())) : participante.numeros_seleccionados || [];
+    const total = monto || (parseFloat(rifa.precio) * numerosArray.length).toFixed(2);
+
+    logger.info('Simulando pago confirmado', {
+      rifa_id,
+      participante_id,
+      total,
+      usuario_id: req.user.id
+    });
+
+    // Simular el flujo de pago confirmado
+    // 1. Actualizar estado del participante a confirmado
+    await query(`
+      UPDATE participantes 
+      SET estado = 'confirmado', fecha_confirmacion = CURRENT_TIMESTAMP
+      WHERE id = $1
+    `, [participante_id]);
+
+    // 2. Mover elementos de reservados a vendidos
+    await query(`
+      DELETE FROM elementos_reservados 
+      WHERE rifa_id = $1 AND participante_id = $2
+    `, [rifa_id, participante_id]);
+
+    for (const elemento of numerosArray) {
+      await query(`
+        INSERT INTO elementos_vendidos (rifa_id, participante_id, elemento, fecha_venta)
+        VALUES ($1, $2, $3, CURRENT_TIMESTAMP)
+        ON CONFLICT (rifa_id, elemento) DO NOTHING
+      `, [rifa_id, participante_id, elemento]);
+    }
+
+    // 3. Registrar transacción simulada (opcional)
+    await query(`
+      INSERT INTO stripe_transactions (
+        rifa_id, participante_id, stripe_payment_intent_id, 
+        monto, status, tipo, created_at
+      ) VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP)
+    `, [
+      rifa_id,
+      participante_id,
+      `simulated_${Date.now()}`,
+      total,
+      'succeeded',
+      'raffle_payment'
+    ]);
+
+    // 4. Enviar notificación de pago confirmado
+    await notifyPaymentConfirmed(
+      participante_id,
+      rifa_id,
+      {
+        usuario_id: null, // El participante puede no tener cuenta de usuario
+        total: total
+      },
+      rifa.usuario_id,
+      io
+    );
+
+    res.json({
+      success: true,
+      message: 'Pago simulado exitosamente',
+      data: {
+        rifa_id,
+        participante_id,
+        total,
+        numeros: numerosArray,
+        rifa_nombre: rifa.nombre,
+        participante_nombre: participante.nombre
+      }
+    });
+
+  } catch (error) {
+    logger.error('Error simulando pago', {
+      error: error.message,
+      userId: req.user.id,
+      body: req.body
+    });
+    res.status(500).json({
+      success: false,
+      error: 'Error simulando pago',
+      message: error.message
+    });
   }
 });
 

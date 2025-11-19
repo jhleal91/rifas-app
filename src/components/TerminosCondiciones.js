@@ -1,296 +1,217 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import SEO from './SEO';
 import './TerminosCondiciones.css';
 
 const TerminosCondiciones = () => {
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language === 'en' ? 'en-US' : 'es-MX';
+  
   return (
     <div className="legal-page">
       <SEO
-        title="Términos y Condiciones - SorteoHub"
-        description="Términos y condiciones de uso de la plataforma SorteoHub"
-        keywords="términos y condiciones, legal, SorteoHub"
+        title={t('legalPages.termsAndConditions.seo.title')}
+        description={t('legalPages.termsAndConditions.seo.description')}
+        keywords={t('legalPages.termsAndConditions.seo.keywords')}
       />
       
       <div className="legal-container">
         <div className="legal-header">
-          <h1>📋 Términos y Condiciones de Uso</h1>
-          <p className="legal-updated">Última actualización: {new Date().toLocaleDateString('es-MX')}</p>
+          <h1>{t('legalPages.termsAndConditions.title')}</h1>
+          <p className="legal-updated">{t('legalPages.lastUpdated')} {new Date().toLocaleDateString(locale)}</p>
         </div>
 
         <div className="legal-content">
           <section className="legal-section">
-            <h2>1. Aceptación de los Términos</h2>
-            <p>
-              Al acceder y utilizar SorteoHub ("la Plataforma", "nosotros", "nuestro"), usted acepta 
-              cumplir con estos Términos y Condiciones de Uso. Si no está de acuerdo con alguna parte 
-              de estos términos, no debe utilizar nuestros servicios.
-            </p>
-            <p>
-              Estos términos constituyen un acuerdo legalmente vinculante entre usted y SorteoHub. 
-              Nos reservamos el derecho de modificar estos términos en cualquier momento, y su uso 
-              continuado de la Plataforma después de dichas modificaciones constituye su aceptación 
-              de los términos modificados.
-            </p>
+            <h2>{t('legalPages.termsAndConditions.sections.acceptance.title')}</h2>
+            <p>{t('legalPages.termsAndConditions.sections.acceptance.p1')}</p>
+            <p>{t('legalPages.termsAndConditions.sections.acceptance.p2')}</p>
           </section>
 
           <section className="legal-section">
-            <h2>2. Descripción del Servicio</h2>
-            <p>
-              SorteoHub es una plataforma digital que permite a los usuarios crear, gestionar y 
-              participar en rifas en línea. La Plataforma proporciona herramientas para:
-            </p>
+            <h2>{t('legalPages.termsAndConditions.sections.description.title')}</h2>
+            <p>{t('legalPages.termsAndConditions.sections.description.p1')}</p>
             <ul>
-              <li>Crear y administrar rifas digitales</li>
-              <li>Gestionar participantes y números</li>
-              <li>Realizar sorteos y publicar resultados</li>
-              <li>Gestionar pagos y transacciones</li>
-              <li>Publicar anuncios y promociones</li>
+              <li>{t('legalPages.termsAndConditions.sections.description.create')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.description.manage')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.description.draws')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.description.payments')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.description.ads')}</li>
             </ul>
-            <p>
-              SorteoHub actúa únicamente como intermediario tecnológico y no se hace responsable 
-              de la legalidad de las rifas creadas por los usuarios, ni de los premios ofrecidos.
-            </p>
+            <p>{t('legalPages.termsAndConditions.sections.description.p2')}</p>
           </section>
 
           <section className="legal-section">
-            <h2>3. Registro y Cuentas de Usuario</h2>
-            <h3>3.1. Requisitos de Registro</h3>
-            <p>
-              Para utilizar ciertas funcionalidades de la Plataforma, debe crear una cuenta. 
-              Al registrarse, usted se compromete a:
-            </p>
+            <h2>{t('legalPages.termsAndConditions.sections.registration.title')}</h2>
+            <h3>{t('legalPages.termsAndConditions.sections.registration.requirements.title')}</h3>
+            <p>{t('legalPages.termsAndConditions.sections.registration.requirements.text')}</p>
             <ul>
-              <li>Proporcionar información precisa, actual y completa</li>
-              <li>Mantener y actualizar su información de cuenta</li>
-              <li>Mantener la confidencialidad de su contraseña</li>
-              <li>Notificarnos inmediatamente de cualquier uso no autorizado</li>
-              <li>Ser responsable de todas las actividades bajo su cuenta</li>
+              <li>{t('legalPages.termsAndConditions.sections.registration.requirements.accurate')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.registration.requirements.maintain')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.registration.requirements.confidentiality')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.registration.requirements.notify')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.registration.requirements.responsible')}</li>
             </ul>
 
-            <h3>3.2. Elegibilidad</h3>
-            <p>
-              Debe tener al menos 18 años de edad para crear una cuenta y utilizar nuestros servicios. 
-              Al registrarse, declara y garantiza que cumple con este requisito de edad.
-            </p>
+            <h3>{t('legalPages.termsAndConditions.sections.registration.eligibility.title')}</h3>
+            <p>{t('legalPages.termsAndConditions.sections.registration.eligibility.text')}</p>
           </section>
 
           <section className="legal-section">
-            <h2>4. Uso de la Plataforma</h2>
-            <h3>4.1. Uso Permitido</h3>
-            <p>Usted puede utilizar la Plataforma para:</p>
+            <h2>{t('legalPages.termsAndConditions.sections.usage.title')}</h2>
+            <h3>{t('legalPages.termsAndConditions.sections.usage.allowed.title')}</h3>
+            <p>{t('legalPages.termsAndConditions.sections.usage.allowed.text')}</p>
             <ul>
-              <li>Crear rifas legales y legítimas</li>
-              <li>Participar en rifas creadas por otros usuarios</li>
-              <li>Gestionar sus rifas y participantes</li>
-              <li>Publicar contenido relacionado con rifas</li>
+              <li>{t('legalPages.termsAndConditions.sections.usage.allowed.legal')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.usage.allowed.participate')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.usage.allowed.manage')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.usage.allowed.content')}</li>
             </ul>
 
-            <h3>4.2. Uso Prohibido</h3>
-            <p>Está estrictamente prohibido:</p>
+            <h3>{t('legalPages.termsAndConditions.sections.usage.prohibited.title')}</h3>
+            <p>{t('legalPages.termsAndConditions.sections.usage.prohibited.text')}</p>
             <ul>
-              <li>Utilizar la Plataforma para actividades ilegales o fraudulentas</li>
-              <li>Crear rifas que violen leyes locales, estatales o federales</li>
-              <li>Manipular resultados de rifas o sorteos</li>
-              <li>Usar información falsa o engañosa</li>
-              <li>Interferir con el funcionamiento de la Plataforma</li>
-              <li>Intentar acceder a cuentas de otros usuarios</li>
-              <li>Transmitir virus, malware o código malicioso</li>
-              <li>Realizar ingeniería inversa o copiar el código</li>
-              <li>Spam o comunicación no solicitada</li>
-              <li>Violar derechos de propiedad intelectual</li>
+              <li>{t('legalPages.termsAndConditions.sections.usage.prohibited.illegal')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.usage.prohibited.violate')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.usage.prohibited.manipulate')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.usage.prohibited.false')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.usage.prohibited.interfere')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.usage.prohibited.access')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.usage.prohibited.viruses')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.usage.prohibited.reverse')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.usage.prohibited.spam')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.usage.prohibited.intellectual')}</li>
             </ul>
           </section>
 
           <section className="legal-section">
-            <h2>5. Rifas y Responsabilidades</h2>
-            <h3>5.1. Responsabilidad del Creador de Rifa</h3>
-            <p>
-              Como creador de una rifa, usted es completamente responsable de:
-            </p>
+            <h2>{t('legalPages.termsAndConditions.sections.raffles.title')}</h2>
+            <h3>{t('legalPages.termsAndConditions.sections.raffles.creator.title')}</h3>
+            <p>{t('legalPages.termsAndConditions.sections.raffles.creator.text')}</p>
             <ul>
-              <li>Cumplir con todas las leyes y regulaciones aplicables</li>
-              <li>Obtener los permisos necesarios para realizar la rifa</li>
-              <li>Entregar los premios prometidos a los ganadores</li>
-              <li>Gestionar los pagos y transacciones de manera transparente</li>
-              <li>Realizar el sorteo de manera justa y aleatoria</li>
-              <li>Publicar resultados de manera transparente</li>
-              <li>Responder a consultas de participantes</li>
+              <li>{t('legalPages.termsAndConditions.sections.raffles.creator.laws')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.raffles.creator.permits')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.raffles.creator.deliver')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.raffles.creator.transparent')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.raffles.creator.fair')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.raffles.creator.publish')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.raffles.creator.respond')}</li>
             </ul>
 
-            <h3>5.2. SorteoHub como Intermediario</h3>
-            <p>
-              SorteoHub NO es responsable de:
-            </p>
+            <h3>{t('legalPages.termsAndConditions.sections.raffles.intermediary.title')}</h3>
+            <p>{t('legalPages.termsAndConditions.sections.raffles.intermediary.text')}</p>
             <ul>
-              <li>La legalidad de las rifas creadas por usuarios</li>
-              <li>La entrega de premios por parte de los creadores</li>
-              <li>Disputas entre creadores y participantes</li>
-              <li>Pagos no realizados o reembolsos</li>
-              <li>Fraudes o actividades ilegales de usuarios</li>
+              <li>{t('legalPages.termsAndConditions.sections.raffles.intermediary.legality')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.raffles.intermediary.delivery')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.raffles.intermediary.disputes')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.raffles.intermediary.payments')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.raffles.intermediary.fraud')}</li>
             </ul>
 
-            <h3>5.3. Participantes</h3>
-            <p>
-              Al participar en una rifa, usted:
-            </p>
+            <h3>{t('legalPages.termsAndConditions.sections.raffles.participants.title')}</h3>
+            <p>{t('legalPages.termsAndConditions.sections.raffles.participants.text')}</p>
             <ul>
-              <li>Reconoce que la participación es voluntaria</li>
-              <li>Acepta que los resultados son aleatorios y finales</li>
-              <li>Comprende que no hay garantía de ganar</li>
-              <li>Es responsable de proporcionar información de contacto válida</li>
-              <li>Debe cumplir con los términos específicos de cada rifa</li>
+              <li>{t('legalPages.termsAndConditions.sections.raffles.participants.voluntary')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.raffles.participants.random')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.raffles.participants.guarantee')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.raffles.participants.contact')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.raffles.participants.terms')}</li>
             </ul>
           </section>
 
           <section className="legal-section">
-            <h2>6. Pagos y Transacciones</h2>
-            <h3>6.1. Procesamiento de Pagos</h3>
-            <p>
-              Los pagos se procesan directamente entre el creador de la rifa y los participantes. 
-              SorteoHub puede cobrar comisiones por el uso de la plataforma según los planes 
-              contratados.
-            </p>
+            <h2>{t('legalPages.termsAndConditions.sections.payments.title')}</h2>
+            <h3>{t('legalPages.termsAndConditions.sections.payments.processing.title')}</h3>
+            <p>{t('legalPages.termsAndConditions.sections.payments.processing.text')}</p>
 
-            <h3>6.2. Reembolsos</h3>
-            <p>
-              Las políticas de reembolso son determinadas por cada creador de rifa. SorteoHub 
-              no garantiza reembolsos y no es responsable de procesar reembolsos. Cualquier 
-              solicitud de reembolso debe dirigirse directamente al creador de la rifa.
-            </p>
+            <h3>{t('legalPages.termsAndConditions.sections.payments.refunds.title')}</h3>
+            <p>{t('legalPages.termsAndConditions.sections.payments.refunds.text')}</p>
 
-            <h3>6.3. Comisiones</h3>
-            <p>
-              SorteoHub puede cobrar comisiones por el uso de la plataforma. Las comisiones 
-              se detallan en los planes de suscripción y se deducen automáticamente según 
-              corresponda.
-            </p>
+            <h3>{t('legalPages.termsAndConditions.sections.payments.commissions.title')}</h3>
+            <p>{t('legalPages.termsAndConditions.sections.payments.commissions.text')}</p>
           </section>
 
           <section className="legal-section">
-            <h2>7. Propiedad Intelectual</h2>
-            <p>
-              Todo el contenido de la Plataforma, incluyendo pero no limitado a texto, gráficos, 
-              logos, iconos, imágenes, clips de audio, descargas digitales y compilaciones de datos, 
-              es propiedad de SorteoHub o sus proveedores de contenido y está protegido por leyes 
-              de derechos de autor.
-            </p>
-            <p>
-              Usted no puede reproducir, distribuir, modificar, crear trabajos derivados, mostrar 
-              públicamente, realizar públicamente, republicar, descargar, almacenar o transmitir 
-              ningún material de la Plataforma sin nuestro permiso previo por escrito.
-            </p>
+            <h2>{t('legalPages.termsAndConditions.sections.intellectual.title')}</h2>
+            <p>{t('legalPages.termsAndConditions.sections.intellectual.p1')}</p>
+            <p>{t('legalPages.termsAndConditions.sections.intellectual.p2')}</p>
           </section>
 
           <section className="legal-section">
-            <h2>8. Privacidad</h2>
-            <p>
-              Su uso de la Plataforma también se rige por nuestra Política de Privacidad. 
-              Por favor, revise nuestra Política de Privacidad para entender nuestras prácticas 
-              de recopilación y uso de información.
-            </p>
+            <h2>{t('legalPages.termsAndConditions.sections.privacy.title')}</h2>
+            <p>{t('legalPages.termsAndConditions.sections.privacy.text')}</p>
             <Link to="/politica-privacidad" className="legal-link">
-              Ver Política de Privacidad →
+              {t('legalPages.termsAndConditions.sections.privacy.link')}
             </Link>
           </section>
 
           <section className="legal-section">
-            <h2>9. Limitación de Responsabilidad</h2>
-            <p>
-              EN LA MÁXIMA MEDIDA PERMITIDA POR LA LEY, SORTEOHUB Y SUS AFILIADOS NO SERÁN 
-              RESPONSABLES DE DAÑOS DIRECTOS, INDIRECTOS, INCIDENTALES, ESPECIALES, CONSECUENCIALES 
-              O PUNITIVOS RESULTANTES DE:
-            </p>
+            <h2>{t('legalPages.termsAndConditions.sections.liability.title')}</h2>
+            <p>{t('legalPages.termsAndConditions.sections.liability.text')}</p>
             <ul>
-              <li>El uso o la imposibilidad de usar la Plataforma</li>
-              <li>Rifas creadas por otros usuarios</li>
-              <li>No entrega de premios por parte de creadores</li>
-              <li>Pérdida de datos o información</li>
-              <li>Interrupciones del servicio</li>
-              <li>Errores o omisiones en el contenido</li>
+              <li>{t('legalPages.termsAndConditions.sections.liability.use')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.liability.raffles')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.liability.delivery')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.liability.data')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.liability.interruptions')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.liability.errors')}</li>
             </ul>
           </section>
 
           <section className="legal-section">
-            <h2>10. Indemnización</h2>
-            <p>
-              Usted acepta indemnizar, defender y eximir de responsabilidad a SorteoHub, sus 
-              afiliados, directores, funcionarios, empleados y agentes de cualquier reclamo, 
-              responsabilidad, daño, pérdida y gasto (incluyendo honorarios de abogados) que 
-              surjan de o estén relacionados con:
-            </p>
+            <h2>{t('legalPages.termsAndConditions.sections.indemnification.title')}</h2>
+            <p>{t('legalPages.termsAndConditions.sections.indemnification.text')}</p>
             <ul>
-              <li>Su uso de la Plataforma</li>
-              <li>Violación de estos Términos y Condiciones</li>
-              <li>Violación de cualquier ley o derecho de terceros</li>
-              <li>Rifas que usted cree o en las que participe</li>
+              <li>{t('legalPages.termsAndConditions.sections.indemnification.use')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.indemnification.violation')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.indemnification.law')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.indemnification.raffles')}</li>
             </ul>
           </section>
 
           <section className="legal-section">
-            <h2>11. Terminación</h2>
-            <p>
-              Nos reservamos el derecho de terminar o suspender su cuenta y acceso a la Plataforma 
-              inmediatamente, sin previo aviso, por cualquier motivo, incluyendo pero no limitado a:
-            </p>
+            <h2>{t('legalPages.termsAndConditions.sections.termination.title')}</h2>
+            <p>{t('legalPages.termsAndConditions.sections.termination.p1')}</p>
             <ul>
-              <li>Violación de estos Términos y Condiciones</li>
-              <li>Actividad fraudulenta o ilegal</li>
-              <li>Uso no autorizado de la Plataforma</li>
-              <li>Solicitud del usuario</li>
+              <li>{t('legalPages.termsAndConditions.sections.termination.violation')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.termination.fraud')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.termination.unauthorized')}</li>
+              <li>{t('legalPages.termsAndConditions.sections.termination.request')}</li>
             </ul>
-            <p>
-              Tras la terminación, su derecho a usar la Plataforma cesará inmediatamente.
-            </p>
+            <p>{t('legalPages.termsAndConditions.sections.termination.p2')}</p>
           </section>
 
           <section className="legal-section">
-            <h2>12. Ley Aplicable y Jurisdicción</h2>
-            <p>
-              Estos Términos y Condiciones se rigen por las leyes de México. Cualquier disputa 
-              relacionada con estos términos o la Plataforma será sometida a la jurisdicción 
-              exclusiva de los tribunales de México.
-            </p>
+            <h2>{t('legalPages.termsAndConditions.sections.law.title')}</h2>
+            <p>{t('legalPages.termsAndConditions.sections.law.text')}</p>
           </section>
 
           <section className="legal-section">
-            <h2>13. Modificaciones</h2>
-            <p>
-              Nos reservamos el derecho de modificar estos Términos y Condiciones en cualquier 
-              momento. Las modificaciones entrarán en vigor inmediatamente después de su publicación 
-              en la Plataforma. Su uso continuado de la Plataforma después de dichas modificaciones 
-              constituye su aceptación de los términos modificados.
-            </p>
-            <p>
-              Le recomendamos revisar periódicamente esta página para estar informado de cualquier 
-              cambio.
-            </p>
+            <h2>{t('legalPages.termsAndConditions.sections.modifications.title')}</h2>
+            <p>{t('legalPages.termsAndConditions.sections.modifications.p1')}</p>
+            <p>{t('legalPages.termsAndConditions.sections.modifications.p2')}</p>
           </section>
 
           <section className="legal-section">
-            <h2>14. Contacto</h2>
-            <p>
-              Si tiene preguntas sobre estos Términos y Condiciones, puede contactarnos a través de:
-            </p>
+            <h2>{t('legalPages.termsAndConditions.sections.contact.title')}</h2>
+            <p>{t('legalPages.termsAndConditions.sections.contact.text')}</p>
             <ul>
-              <li><strong>Email:</strong> legal@sorteohub.com</li>
-              <li><strong>Teléfono:</strong> [Número de contacto]</li>
-              <li><strong>Dirección:</strong> [Dirección de la empresa]</li>
+              <li><strong>{t('legalPages.termsAndConditions.sections.contact.email')}</strong> legal@sorteohub.com</li>
+              <li><strong>{t('legalPages.termsAndConditions.sections.contact.phone')}</strong> [Número de contacto]</li>
+              <li><strong>{t('legalPages.termsAndConditions.sections.contact.address')}</strong> [Dirección de la empresa]</li>
             </ul>
           </section>
 
           <section className="legal-section">
-            <h2>15. Aceptación</h2>
-            <p>
-              Al utilizar SorteoHub, usted reconoce que ha leído, entendido y acepta estar 
-              legalmente vinculado por estos Términos y Condiciones.
-            </p>
+            <h2>{t('legalPages.termsAndConditions.sections.acceptance.title')}</h2>
+            <p>{t('legalPages.termsAndConditions.sections.acceptance.text')}</p>
           </section>
         </div>
 
         <div className="legal-footer">
-          <Link to="/" className="btn-legal-back">← Volver al Inicio</Link>
-          <Link to="/politica-privacidad" className="btn-legal-next">Política de Privacidad →</Link>
+          <Link to="/" className="btn-legal-back">{t('legalPages.termsAndConditions.footer.home')}</Link>
+          <Link to="/politica-privacidad" className="btn-legal-next">{t('legalPages.termsAndConditions.footer.privacy')}</Link>
         </div>
       </div>
     </div>

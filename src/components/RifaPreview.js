@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { showSuccess, showError, showInfo } from '../utils/swal';
+import { showSuccess, showError } from '../utils/swal';
 import { useParams, useNavigate } from 'react-router-dom';
+import { API_BASE } from '../config/api';
 
 const RifaPreview = () => {
   const { id } = useParams();
@@ -21,7 +22,7 @@ const RifaPreview = () => {
     const cargarRifa = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:5001/api/rifas/preview/${id}`);
+        const response = await fetch(`${API_BASE}/rifas/preview/${id}`);
         
         if (!response.ok) {
           const errorData = await response.json();
@@ -66,7 +67,7 @@ const RifaPreview = () => {
   const handleParticipate = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:5001/api/participantes/registro`, {
+      const response = await fetch(`${API_BASE}/participantes/registro`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -87,17 +88,6 @@ const RifaPreview = () => {
     }
   };
 
-  const handleBuy = async (e) => {
-    e.preventDefault();
-    try {
-      // Aquí implementarías la lógica de venta directa
-      // Por ahora solo mostramos un mensaje
-      showInfo('Contactar organizador', 'Para comprar números directamente, contacta al organizador de la rifa.');
-    } catch (error) {
-      console.error('Error en compra:', error);
-      showError('Error', 'Error al procesar la compra. Por favor, intenta nuevamente.');
-    }
-  };
 
   if (loading) {
     return (
@@ -213,7 +203,6 @@ const RifaPreview = () => {
             {rifa.elementos_personalizados.map((elemento, index) => {
               const vendido = rifa.numerosVendidos.includes(String(elemento));
               const reservado = rifa.numerosReservados.includes(String(elemento));
-              const disponible = !vendido && !reservado;
               
               return (
                 <div 

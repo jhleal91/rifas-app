@@ -48,6 +48,28 @@ router.post('/register', sanitizeInput, validateUser, async (req, res) => {
       [user.id]
     );
 
+    // Enviar email de bienvenida (no bloquea el registro si falla)
+    try {
+      const emailService = require('../config/email');
+      const emailResult = await emailService.sendWelcomeEmail({
+        nombre: user.nombre,
+        email: user.email
+      });
+      
+      if (emailResult.success) {
+        console.log('✅ Email de bienvenida enviado al nuevo usuario:', user.email);
+      } else {
+        console.warn('⚠️  No se pudo enviar email de bienvenida:', emailResult.error || emailResult.message);
+        if (emailResult.message) {
+          console.warn('💡 Sugerencia:', emailResult.message);
+        }
+      }
+    } catch (emailError) {
+      console.error('❌ Error enviando email de bienvenida:', emailError);
+      console.error('❌ Stack trace:', emailError.stack);
+      // No fallar el registro por error de email
+    }
+
     res.status(201).json({
       message: 'Usuario registrado exitosamente',
       user: {
